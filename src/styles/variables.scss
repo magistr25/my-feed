@@ -1,0 +1,62 @@
+$primary-color: #F2F2F2;
+$secondary-color: #212121;
+
+// Grayscale
+$black: #101010;
+$darkest-grey: #212121;
+$very-dark-grey: #303030;
+$grey: #686868;
+$lighter-grey: #B0B0B0;
+$lighter-grey-0: #E1E1E1;
+$very-light-grey: #F2F2F2;
+$lightest-grey: #F6F6F6;
+$white: #FCFCFC;
+
+// Primary Colors
+$primary-default: #EE632E;
+$primary-dark: #CD4E27;
+$primary-light: #FE825D;
+$primary-lighter: #D2B7AF;
+$primary-lightest: #FFD1C3;
+
+// Additional Colors
+$red: #FA5252;
+$green: #20C997;
+
+// Shadows
+$shadow-1: 0px 12px 40px rgba(0, 0, 0, 0.4);
+
+// Gradients
+$gradient-1: linear-gradient(90deg, #DBDBDB 5%, rgba(219, 219, 219, 0) 100%);
+
+// Font Family
+$font-family: 'Gilroy', sans-serif;
+
+// Font sizes (in pixels)
+$title-bold-24: 24px;
+$title-semibold-18: 18px;
+$body-bold-20: 20px;
+$body-semibold-16: 16px;
+$body-medium-16: 16px;
+$body-medium-14: 14px;
+$body-regular-16: 16px;
+$body-regular-14: 14px;
+$caption-regular-12: 12px;
+
+// line-height
+$line-height-title-bold-24: 28px;
+$line-height-title-semibold-18: 21px;
+$line-height-body-bold-20: 20px;
+$line-height-body-semibold-16: 20px;
+$line-height-body-medium-16: 20px;
+$line-height-body-medium-14: 16px;
+$line-height-body-regular-16: 22px;
+$line-height-body-regular-14: 16px;
+$line-height-caption-regular-12: 14px;
+
+// font-weight
+$font-weight-bold: 700;
+$font-weight-semibold: 600;
+$font-weight-medium: 500;
+$font-weight-regular: 400;
+
