@@ -1,0 +1,188 @@
+@use '../../styles/variables.scss'  as *;
+.header {
+  max-width: 1440px;
+  width: 100vw;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 64px;
+  background: $white;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+
+  &__left {
+    display: flex;
+    align-items: center;
+  }
+
+  &__logo {
+    height: 32px;
+  }
+
+  &__burger {
+    display: none;
+    font-size: 24px;
+    border: none;
+    background: none;
+    cursor: pointer;
+  }
+
+  &__nav {
+    margin: 0 auto;
+    padding-left: 20px;
+    width: 50% ;
+    display: flex;
+    justify-content: flex-end;
+    gap: 100px;
+
+
+    &--open {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      top: 64px;
+      left: 0;
+      width: 100%;
+      background: $white;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      z-index: 100;
+    }
+  }
+
+  &__link {
+    text-decoration: none;
+    color: $lighter-grey;
+    font-weight: $font-weight-medium;
+    &--active {
+      color: $darkest-grey;
+    }
+
+    &:hover {
+      color: $primary-dark;
+    }
+  }
+
+  &__right {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 20px;
+    width: 309px;
+  }
+
+  &__toggle {
+    display: none;
+  }
+
+  &__toggle-label {
+    width: 31px;
+    height: 19px;
+    background: $darkest-grey;
+    border-radius: 10px;
+    position: relative;
+    cursor: pointer;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 16px;
+      height: 16px;
+      background: $white;
+      border-radius: 50%;
+      transition: 0.3s;
+    }
+  }
+
+  &__profile {
+    width: 209px;
+    height: 44px;
+    display: flex;
+    flex-direction: row;
+  }
+
+  &__avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-top: 2px;
+  }
+
+  &__username {
+    font-weight: $font-weight-semibold;
+    margin: 0 auto;
+    line-height: 44px;
+  }
+ }
+
+// ====== Адаптивность ======
+
+// Мобильные (320px и выше)
+@media (max-width: 823px) {
+  .header {
+    margin-top: 44px;
+    justify-content: start;
+    &__burger {
+      display: block;
+    }
+
+    &__logo {
+      display: none;
+    }
+
+    &__right {
+      display: none;
+    }
+
+    &__nav {
+      display: none;
+      gap: 30px;
+    }
+
+    &__nav--open {
+      display: flex;
+      padding:0 20px 20px;
+    }
+    &__mobile-active-tab {
+      width: 100%;
+      padding: 8px;
+      color: $darkest-grey;
+      text-align: center;
+      font-weight: $font-weight-semibold;
+    }
+  }
+}
+@media (min-width: 824px) and (max-width: 1020px){
+  .header {
+    &__nav {
+      gap: 30px;
+    }
+  }
+}
+
+// Планшеты и выше (769px - 1440px)
+@media (min-width: 769px) and (max-width: 1440px) {
+  .header {
+    padding: 0 32px;
+  }
+  .header__username {
+    font-weight: $font-weight-semibold;
+    color: $darkest-grey;
+    font-size: 16px;
+  }
+}
+
+// ПК (1440px и выше)
+@media (min-width: 1441px) {
+  .header {
+    padding: 0 64px;
+  }
+  .header__username {
+    font-weight: $font-weight-semibold;
+    color: $darkest-grey;
+    font-size: 16px;
+  }
+
+}
