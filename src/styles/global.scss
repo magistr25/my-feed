@@ -1,4 +1,4 @@
-@import './variables.scss';
+@use'./variables.scss'  as *;
 :root {
   font-family: 'Gilroy', sans-serif;
   line-height: 1.5;
@@ -13,14 +13,15 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
-body {
-  font-family: 'Gilroy', sans-serif;
-  background-color: $secondary-color;
-  color: $primary-color;
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+* {
+  box-sizing: border-box;
 }
+html, body {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center; // Центрирование всего контента
+  align-items: flex-start; // Контент прижат к верху
+  height: 100vh;
+}
+
