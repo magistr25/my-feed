@@ -1,83 +1,44 @@
-module.exports = {
-  root: true,
-  env: { browser: true, es2020: true },
-  extends: [
-    'eslint:recommended',
-    'plugin:@typescript-eslint/recommended',
-    'plugin:react-hooks/recommended',
-    'airbnb',
-    'prettier',
-  ],
-  ignorePatterns: ['dist', '.eslintrc.cjs', 'public', 'vite.config.d.ts', 'node_modules'],
-  parser: '@typescript-eslint/parser',
-  plugins: [
-    'react-refresh',
-    '@typescript-eslint',
-    'unused-imports',
-    'simple-import-sort',
-    'react',
-    'react-hooks',
-    'react-refresh',
-  ],
-  rules: {
-    'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
-    'react/react-in-jsx-scope': 'off',
-    'jsx-a11y/control-has-associated-label': 'off',
-    'no-plusplus': 'off',
-    'guard-for-in': 'off',
-    'no-param-reassign': 'off',
-    'react-hooks/exhaustive-deps': 'off',
-    'react/function-component-definition': [
-      2,
-      {
-        namedComponents: 'arrow-function',
+// eslint.config.js (исправленный)
+import js from '@eslint/js';
+import tseslint from '@typescript-eslint/eslint-plugin';
+import tsParser from '@typescript-eslint/parser';
+import react from 'eslint-plugin-react';
+import reactHooks from 'eslint-plugin-react-hooks';
+import simpleImportSort from 'eslint-plugin-simple-import-sort';
+import unusedImports from 'eslint-plugin-unused-imports';
+import reactRefresh from 'eslint-plugin-react-refresh';
+
+export default [
+  js.configs.recommended,
+  {
+    files: ['**/*.ts', '**/*.tsx'],
+    languageOptions: {
+      parser: tsParser,
+      sourceType: 'module',
+      ecmaVersion: 'latest',
+      globals: {
+        window: 'readonly',
+        localStorage: 'readonly',
+        console: 'readonly',
       },
-    ],
-    'react/no-array-index-key': 'off',
-    'react/jsx-filename-extension': [1, { extensions: ['.tsx', '.jsx'], ignoreFilesWithoutCode: true }],
-    'import/prefer-default-export': 'off',
-    'react/jsx-props-no-spreading': 'off',
-    'no-shadow': 'off',
-    'react/require-default-props': 'off',
-    'import/extensions': 'off',
-    'import/no-extraneous-dependencies': 'off',
-    'react/no-unstable-nested-components': [
-      'off',
-      {
-        allowAsProps: true,
-        customValidators: [],
-      },
-    ],
-    'simple-import-sort/imports': 'error',
-    'simple-import-sort/exports': 'error',
-    'unused-imports/no-unused-imports': 'error',
-    'no-multiple-empty-lines': 'error',
-    'react/jsx-indent': 'error',
-    'import/no-unresolved': 'off',
-    'jsx-a11y/label-has-associated-control': 'off',
-    'react/prop-types': 'off',
-    'arrow-body-style': 'off',
-    'consistent-return': 'off',
-    'lines-between-class-members': 'off',
-    'default-case': 'off',
-    'no-unused-vars': 'off',
-    'no-return-assign': 'off',
-    '@typescript-eslint/no-unused-vars': [
-      'warn',
-      {
-        argsIgnorePattern: '^',
-        varsIgnorePattern: '^',
-        caughtErrorsIgnorePattern: '^_',
-      },
-    ],
-    '@typescript-eslint/ban-ts-comment': 'warn',
-    'react/button-has-type': 'warn',
-    'max-classes-per-file': 'off',
-    '@typescript-eslint/no-explicit-any': 'off',
-    'no-use-before-define': 'off',
-    'class-methods-use-this': 'off',
-    'no-restricted-syntax': 'warn',
-    'no-new': 'off',
-    'no-console': ['error', { allow: ['warn', 'error'] }],
-  },
-};
+    },
+    plugins: {
+      '@typescript-eslint': tseslint,
+      react,
+      'react-hooks': reactHooks,
+      'simple-import-sort': simpleImportSort,
+      'unused-imports': unusedImports,
+      'react-refresh': reactRefresh,
+    },
+    rules: {
+      '@typescript-eslint/no-unused-vars': ['warn'],
+      'react/react-in-jsx-scope': 'off',
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
+      'simple-import-sort/imports': 'error',
+      'simple-import-sort/exports': 'error',
+      'unused-imports/no-unused-imports': 'error',
+      'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+    }
+  }
+];
