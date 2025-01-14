@@ -1,0 +1,145 @@
+@use '../../styles/variables'  as *;
+
+.select-dropdown {
+  position: relative;
+  width: 120px;
+
+
+  &__button {
+    width: 82px;
+    height: 44px;
+    padding: 10px;
+    background: $color-white;
+    border: none;
+    border-radius: $border-radius;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 500;
+
+  }
+
+  &__arrow {
+    width: 24px;
+    height: 24px;
+    margin-top: 3px;
+  }
+
+  &__list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: $color-white;
+    border: 1px solid $very-light-grey;
+    border-radius: $border-radius;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 5px;
+    z-index: 10;
+    padding: 0;
+    list-style: none;
+    overflow: hidden;
+  }
+
+  &__item {
+    padding: 10px;
+    cursor: pointer;
+    transition: background 0.2s;
+
+    &--active {
+      background: $rose;
+      color: $darkest-grey;
+    }
+  }
+}
+
+@media (max-width: 824px) {
+  .select {
+    padding-left: 20px;
+    background: $color-white;
+    height: 46px;
+    width: 95vw;
+    max-width: 743px;
+    margin: 10px auto;
+    border-radius: 8px;
+
+  }
+  .select-dropdown {
+    &__button {
+      width: 85vw;
+      max-width: 723px;
+      height: 46px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: none;
+      cursor: pointer;
+      border-radius: 8px;
+      padding-left: 40%;
+
+      &_inner {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+      }
+
+      &__arrow {
+        width: 16px;
+        height: 16px;
+      }
+    }
+    &__list {
+      position: absolute;
+      top: 100%;
+      left: -22px;
+      width: 96vw;
+      max-width: 743px;
+      background: $color-white;
+      border: 1px solid $very-light-grey;
+      border-radius: $border-radius;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin-top: 5px;
+      z-index: 10;
+      padding: 0;
+      list-style: none;
+      overflow: hidden;
+    }
+    &__item {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 12px;
+      text-align: center;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.2s;
+      width: 100%;
+      box-sizing: border-box;
+
+      &--active {
+        background: $rose;
+        color: $darkest-grey;
+      }
+    }
+  }
+}
+
+@media (min-width: 825px) {
+  .select-dropdown {
+    &__button {
+      background: $very-light-grey;
+      padding-left: 10px;
+      padding-right: 0;
+      &_inner {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+      }
+    }
+
+  }
+}
