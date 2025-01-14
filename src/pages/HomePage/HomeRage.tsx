@@ -2,13 +2,13 @@ import './HomePage.scss';
 
 import React, { useState } from 'react';
 
-import HeartIcon from "../../shared/ui/HeartIcon/HeartIcon";
-import SelectDropdown from "../../shared/ui/SelectDropdown/SelectDropdown";
-import SharePopup from "../../shared/ui/SharePopup/SharePopup.tsx";
 import avatar1 from '../../assets/images/avatar1.png';
 import avatar2 from '../../assets/images/avatar2.png';
 import post1 from '../../assets/images/post1.png';
 import post2 from '../../assets/images/post2.png';
+import HeartIcon from "../../shared/ui/HeartIcon/HeartIcon";
+import SelectDropdown from "../../shared/ui/SelectDropdown/SelectDropdown";
+import SharePopup from "../../shared/ui/SharePopup/SharePopup.tsx";
 
 interface Post {
     id: number;
