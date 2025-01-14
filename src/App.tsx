@@ -1,6 +1,8 @@
+import './shared/styles/global.scss';
+
 import { Outlet } from 'react-router-dom';
 
-import Header from './components/Header/Header';
+import Header from './widgets/Header/Header';
 
 const App = () => {
     return (
