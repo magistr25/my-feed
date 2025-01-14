@@ -1,6 +1,6 @@
-@use '../../styles/variables.scss'  as *;
+@use '../../shared/styles/variables'  as *;
 .header {
-  max-width: 1440px;
+  max-width: 1310px;
   width: 100vw;
   margin: 0 auto;
   padding: 0 24px;
@@ -41,7 +41,7 @@
       display: flex;
       flex-direction: column;
       position: absolute;
-      top: 64px;
+      top: 60px;
       left: 0;
       width: 100%;
       background: $white;
@@ -119,10 +119,10 @@
 
 // ====== Адаптивность ======
 
-// Мобильные (320px и выше)
 @media (max-width: 823px) {
   .header {
     margin-top: 44px;
+    height: 64px;
     justify-content: start;
     &__burger {
       display: block;
@@ -162,10 +162,12 @@
   }
 }
 
-// Планшеты и выше (769px - 1440px)
-@media (min-width: 769px) and (max-width: 1440px) {
+@media (min-width: 824px) and (max-width: 1440px) {
   .header {
     padding: 0 32px;
+    &__mobile-active-tab {
+      display: none;
+    }
   }
   .header__username {
     font-weight: $font-weight-semibold;
@@ -174,10 +176,13 @@
   }
 }
 
-// ПК (1440px и выше)
+
 @media (min-width: 1441px) {
   .header {
     padding: 0 64px;
+    &__mobile-active-tab {
+      display: none;
+    }
   }
   .header__username {
     font-weight: $font-weight-semibold;

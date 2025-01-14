@@ -5,8 +5,8 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 
-import client from "./app/apollo/client.ts";
 import App from "./App.tsx";
+import client from "./app/apollo/client.ts";
 import HomePage from "./pages/HomePage/HomeRage.tsx";
 
 createRoot(window.document.getElementById('root')!).render(
