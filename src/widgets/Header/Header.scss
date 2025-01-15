@@ -1,6 +1,6 @@
 @use '../../shared/styles/variables'  as *;
 .header {
-  max-width: 1310px;
+  max-width: 1440px;
   width: 100vw;
   margin: 0 auto;
   padding: 0 24px;
@@ -8,7 +8,7 @@
   justify-content: space-between;
   align-items: center;
   height: 64px;
-  background: $white;
+  background: var(--select-btn-color);
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 
   &__left {
@@ -52,10 +52,10 @@
 
   &__link {
     text-decoration: none;
-    color: $lighter-grey;
+    color: var(--primary-link-color);
     font-weight: $font-weight-medium;
     &--active {
-      color: $darkest-grey;
+      color:  var(--primary-link-active);
     }
 
     &:hover {
@@ -121,8 +121,8 @@
 
 @media (max-width: 823px) {
   .header {
-    margin-top: 44px;
-    height: 64px;
+    padding-top: 44px;
+    height: 108px;
     justify-content: start;
     &__burger {
       display: block;
@@ -153,12 +153,17 @@
       font-weight: $font-weight-semibold;
     }
   }
+
 }
 @media (min-width: 824px) and (max-width: 1020px){
   .header {
     &__nav {
       gap: 30px;
     }
+  }
+  .header__logo {
+    width: 144px;
+    height: 35px;
   }
 }
 
@@ -174,6 +179,11 @@
     color: $darkest-grey;
     font-size: 16px;
   }
+  .header__logo {
+    width: 144px;
+    height: 35px;
+  }
+
 }
 
 
@@ -189,5 +199,10 @@
     color: $darkest-grey;
     font-size: 16px;
   }
+  .header__logo {
+    width: 144px;
+    height: 35px;
+  }
 
 }
+

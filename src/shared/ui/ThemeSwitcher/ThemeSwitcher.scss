@@ -1,0 +1,49 @@
+@use '@/shared/styles/variables'  as *;
+.theme-switcher {
+  position: relative;
+  display: inline-block;
+  width: 31px;
+  height: 19px;
+
+  input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  &__slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--theme-toggle-bg);  ;
+    border-radius: 24px;
+    transition: 0.4s;
+    width: 31px;
+    height: 19px;
+
+    &:before {
+      position: absolute;
+      content: "";
+      height: var(--theme-circle-size, 16.57px);
+      width: var(--theme-circle-size, 16.57px);
+      left: 1px;
+      bottom: 1px;
+      background-color:  var(--theme-circle);
+      border-radius: 50%;
+      transition: 0.4s;
+    }
+  }
+
+  input:checked + &__slider {
+    background-color: var(--theme-toggle-bg);
+
+    &:before {
+      transform: translateX(12px) translateY(0%);
+      background-color: var(--theme-circle);
+
+    }
+  }
+}

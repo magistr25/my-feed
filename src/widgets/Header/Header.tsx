@@ -3,11 +3,12 @@ import './Header.scss';
 import { useState } from 'react';
 import {Link, useLocation} from 'react-router-dom';
 
-import logo from '@/assets/icons/logo.svg';
+import logo from '@/assets/images/logo.png';
+import ThemeSwitcher from "@/shared/ui/ThemeSwitcher/ThemeSwitcher.tsx";
 
 const Header = () => {
     const [menuOpen, setMenuOpen] = useState(false);
-    const location = useLocation(); // Получаем текущий путь
+    const location = useLocation();
 
     const isActive = (path: string) => location.pathname === path;
 
@@ -53,8 +54,7 @@ const Header = () => {
             </div>
             {/* Правый блок с переключателем темы и аватаром */}
             <div className="header__right">
-                <input type="checkbox" id="theme-toggle" className="header__toggle"/>
-                <label htmlFor="theme-toggle" className="header__toggle-label"></label>
+                <ThemeSwitcher />
 
                 <div className="header__profile">
                 <div className="header__avatar">

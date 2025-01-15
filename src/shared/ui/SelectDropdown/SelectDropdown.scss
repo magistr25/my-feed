@@ -9,7 +9,7 @@
     width: 82px;
     height: 44px;
     padding: 10px;
-    background: $color-white;
+    background: var(--select-btn-color);
     border: none;
     border-radius: $border-radius;
     cursor: pointer;
@@ -32,7 +32,7 @@
     top: 100%;
     left: 0;
     width: 100%;
-    background: $color-white;
+    background: var(--content-bg-color);
     border: 1px solid $very-light-grey;
     border-radius: $border-radius;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -58,7 +58,7 @@
 @media (max-width: 824px) {
   .select {
     padding-left: 20px;
-    background: $color-white;
+    background: var(--select-btn-color);
     height: 46px;
     width: 95vw;
     max-width: 743px;
@@ -139,6 +139,16 @@
         align-items: center;
         gap: 8px;
       }
+    }
+    &__arrow {
+      width: 24px;
+      height: 24px;
+      margin-top: 3px;
+      filter: brightness(0) saturate(100%) invert(0);
+    }
+
+    [data-theme="dark"] &__arrow {
+      filter: brightness(0) saturate(100%) invert(1);
     }
 
   }

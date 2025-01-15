@@ -1,46 +1,67 @@
-$very-light-grey: #F2F2F2;
-$darkest-grey: #212121;
-
-:root {
-  --primary-bg: #{$very-light-grey};
-  --primary-text: #000000;
-}
-
-[data-theme="dark"] {
-  --primary-bg: #{$darkest-grey};
-  --primary-text: #ffffff;
-}
-
-// Grayscale
 $black: #101010;
-$very-dark-grey: #303030;
+$darkest-grey: #212121;
+$lighter-grey: #BDBDBD;
 $grey: #686868;
-$lighter-grey: #B0B0B0;
+$black-overlay: #212121F5;
+$dark-black-overlay: #101010F5;
+$very-dark-grey: #303030;
 $lighter-grey-0: #E1E1E1;
-$lighter-grey: #f5f5f5;
+$very-light-grey: #F2F2F2;
 $lightest-grey: #F6F6F6;
 $white: #FCFCFC;
-
-// Primary Colors
-$primary-default: #EE632E;
+$color-white: #fff;
+$primary-default: #EE683E;
 $primary-dark: #CD4E27;
 $primary-light: #FE825D;
 $primary-lighter: #D2B7AF;
 $primary-lightest: #FFD1C3;
-
-// Additional Colors
 $red: #FA5252;
 $green: #20C997;
 $rose: #FFD1C3;
+$grey-darker: #BEB9B4;
 
 
 
-$color-primary: #007bff;
-$color-background: #f9f9f9;
-$color-text: #333;
-$color-white: #fff;
+:root {
+  --body-bg:#{#686868};
+  --primary-bg: #{$very-light-grey};
+  --primary-text: #000000;
+  --primary-link-color: #{$lighter-grey};
+  --primary-link-active: #212121;
+  --post-author-color: #212121;;
+  --homepage-header-color: #{$darkest-grey};
+  --homepage-header-bg: #{$very-light-grey};
+  --select-btn-color: #{$color-white};
+  --content-bg-color: #{$white};
+  --post-content-color: #686868;
+  --post-actions-color:#BDBDBD;
+  --post-data-color: #BEB9B4;
+  --theme-circle: #FCFCFC;
+  --theme-toggle-bg: #212121;
+
+
+}
+
+[data-theme="dark"] {
+  --body-bg:#{#686868};
+  --primary-bg: #{$darkest-grey};
+  --primary-text: #ffffff;
+  --primary-link-color: #{$grey};
+  --primary-link-active: #F6F6F6;
+  --post-author-color: #F6F6F6;
+  --homepage-header-color: #{$very-light-grey};
+  --homepage-header-bg: #{$darkest-grey};
+  --select-btn-color: #{$very-dark-grey};
+  --content-bg-color: #{$darkest-grey};
+  --post-content-color: #BDBDBD;
+  --post-actions-color:#686868;
+  --post-data-color: #666666;
+  --theme-circle: #212121;
+  --theme-toggle-bg: #FCFCFC;
+}
+
 $border-radius: 8px;
-$very-light-grey: #F2F2F2;
+
 
 // Shadows
 $shadow-1: 0px 12px 40px rgba(0, 0, 0, 0.4);
