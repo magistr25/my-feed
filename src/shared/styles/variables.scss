@@ -40,6 +40,9 @@ $grey-darker: #BEB9B4;
   --theme-toggle-bg: #212121;
   --mobile-active-tab-color: #212121;
   --burger-menu-color: #212121;
+  --select-item-active-bg: #FFD1C3;
+  --select-item-bg: #FCFCFC;
+  --mobile-btn-select-color:#212121;
 
 }
 
@@ -61,6 +64,11 @@ $grey-darker: #BEB9B4;
   --theme-toggle-bg: #FCFCFC;
   --mobile-active-tab-color: #F6F6F6;
   --burger-menu-color: #686868;
+  --select-item-active-bg: #FD825D;
+  --select-item-bg: #303030;
+  --mobile-btn-select-bg:#303030;
+  --mobile-btn-select-color:#F6F6F6;
+
 }
 
 $border-radius: 8px;

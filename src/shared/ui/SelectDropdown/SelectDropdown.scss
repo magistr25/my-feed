@@ -34,7 +34,7 @@
     left: 0;
     width: 100%;
     background: var(--content-bg-color);
-    border: 1px solid $very-light-grey;
+    border: none;
     border-radius: $border-radius;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin-top: 5px;
@@ -61,7 +61,7 @@
     padding-left: 20px;
     background: var(--select-btn-color);
     height: 46px;
-    width: 95vw;
+    width: 92vw;
     max-width: 743px;
     margin: 10px auto;
     border-radius: 8px;
@@ -78,7 +78,7 @@
       border: none;
       cursor: pointer;
       border-radius: 8px;
-      padding-left: 40%;
+
 
       &_inner {
         display: flex;
@@ -98,12 +98,12 @@
       position: absolute;
       top: 100%;
       left: -22px;
-      width: 96vw;
+      width: 92vw;
       max-width: 743px;
       background: $color-white;
-      border: 1px solid $very-light-grey;
+      border: none;
       border-radius: $border-radius;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       margin-top: 5px;
       z-index: 10;
       padding: 0;
@@ -112,6 +112,7 @@
     }
     &__item {
       display: flex;
+      height: 46px;
       justify-content: center;
       align-items: center;
       padding: 12px;
@@ -121,10 +122,12 @@
       transition: background 0.2s;
       width: 100%;
       box-sizing: border-box;
+      background: var(--mobile-btn-select-bg);
+      color: var(--mobile-btn-select-color);
 
       &--active {
-        background: $rose;
-        color: $darkest-grey;
+       color: var(--select-item-color);
+        background: var(--select-item-active-bg);
       }
     }
   }
@@ -132,11 +135,21 @@
 
 @media (min-width: 825px) {
   .select-dropdown {
+    &__item {
+      background: var(--mobile-btn-select-bg);
+      color: var(--mobile-btn-select-color);
+
+      &--active {
+        color: var(--select-item-color);
+        background: var(--select-item-active-bg);
+      }
+    }
     &__button {
       background: $very-light-grey;
       padding-left: 10px;
       padding-right: 0;
       &_inner {
+        padding-top: 8px;
         display: flex;
         justify-content: center;
         align-items: center;

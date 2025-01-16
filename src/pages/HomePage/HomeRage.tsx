@@ -69,19 +69,21 @@ const HomePage: React.FC = () => {
                 {posts.map((post) => (
                     <article key={post.id} className="post">
                         <header className="post__header">
-                            <img className="post__avatar" src={post.avatarUrl} alt={`${post.author} avatar`} />
+                            <img className="post__avatar" src={post.avatarUrl} alt={`${post.author} avatar`}/>
                             <div className="post__meta">
                                 <h3 className="post__author">{post.author}</h3>
                                 <time className="post__date">{post.date}</time>
                             </div>
                         </header>
                         <h2 className="post__title">{post.title}</h2>
-                        <img className="post__image" src={post.imageUrl} alt={post.title} />
-                        <p className="post__content">{post.content}</p>
-                        <a href="#" className="post__read-more">Читать больше</a>
+                        <img className="post__image" src={post.imageUrl} alt={post.title}/>
+                        <p className="post__content">
+                            <span>{post.content}</span>
+                            <a href="#" className="post__read-more">Читать больше</a>
+                        </p>
                         <div className="post__actions">
-                            <HeartIcon onClick={handleLike} isActive={liked} />
-                            <SharePopup />
+                            <HeartIcon onClick={handleLike} isActive={liked}/>
+                            <SharePopup/>
                         </div>
                     </article>
                 ))}
