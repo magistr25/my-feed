@@ -2,8 +2,8 @@ import './SelectDropdown.scss';
 
 import React, { useState } from 'react';
 
-import arrow_down from '../../../assets/images/arrow_down.png';
-import arrow_up from '../../../assets/images/arrow_up.png';
+import arrow_down from '../../../assets/images/arrow_down.svg';
+import arrow_up from '../../../assets/images/arrow_up.svg';
 
 interface SelectDropdownProps {
     options: { value: string; label: string }[];
