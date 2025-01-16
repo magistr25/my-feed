@@ -1,5 +1,7 @@
 @use '../../shared/styles/variables'  as *;
-
+.homepage-wrapper {
+  width: 1440px;
+}
 .homepage {
   display: flex;
   flex-direction: column;
@@ -10,7 +12,7 @@
   box-sizing: border-box;
   width: 100%;
   max-width: 1440px;
-  margin: 0 auto;
+  margin: 64px auto 0;
   overflow: hidden;
   background: var(--primary-bg);
 
@@ -202,6 +204,9 @@
 }
 
 @media (min-width: 320px) and (max-width: 823px) {
+  .homepage-wrapper {
+    margin-top: 100px;
+  }
   .homepage {
     &__content {
       width: 99vw;
@@ -210,7 +215,16 @@
     }
 
     &__select {
-      background: $color-white;
+      position: fixed; /* Фиксируем select на экране */
+      top: 20px; /* Расстояние от верхнего края экрана */
+      left: 50%; /* Центрируем относительно ширины экрана */
+      transform: translateX(-50%); /* Центрируем по горизонтали */
+      z-index: 1000; /* Высокий приоритет отображения */
+      background: $color-white; /* Цвет фона */
+      padding: 8px 16px; /* Отступы */
+      border-radius: $border-radius; /* Скругленные углы */
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1); /* Легкая тень */
+      width: 200px; /* Фиксированная ширина (можно изменить по необходимости) */
     }
 
     &__nav {
@@ -290,44 +304,6 @@
     background: var(--select-btn-color);
     border-radius: 20px;
     padding: 22px 41px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    color: black;
-
-    &__author {
-      font-family: 'Gilroy', sans-serif;
-      font-size: $body-medium-16;
-      font-weight: $font-weight-medium;
-      line-height: 22px;
-      letter-spacing: 0.01em;
-      text-align: left;
-      text-underline-position: from-font;
-      text-decoration-skip-ink: none;
-      color: var(--post-author-color);
-    }
-
-    &__title {
-      font-family: 'Gilroy', sans-serif;
-      font-size: $title-semibold-18;
-      font-weight: 600;
-      line-height: 21px;
-      letter-spacing: 0.01em;
-      text-align: left;
-      text-underline-position: from-font;
-      text-decoration-skip-ink: none;
-      color:  var(--post-author-color);
-    }
-
-    &__date {
-      font-family: 'Gilroy', sans-serif;
-      font-size: $body-regular-14;
-      font-weight: 400;
-      line-height: 14px;
-      letter-spacing: 0.01em;
-      text-align: left;
-      text-underline-position: from-font;
-      text-decoration-skip-ink: none;
-      color: var(--post-data-color);
-    }
 
     &__content {
       font-family: 'Gilroy', sans-serif;
@@ -342,7 +318,6 @@
     }
 
     &__read-more {
-      font-family: 'Gilroy', sans-serif;
       font-size: $body-regular-16;
       font-weight: 400;
       line-height: 22px;

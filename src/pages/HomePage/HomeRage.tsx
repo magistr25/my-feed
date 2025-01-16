@@ -59,7 +59,8 @@ const HomePage: React.FC = () => {
     };
 
     return (
-        <div className="homepage">
+        <div className="homepage-wrapper">
+          <div className="homepage">
             <header className="homepage__header">
                 <nav className="homepage__nav">
                     <SelectDropdown options={options} onSelect={handleSelect} />
@@ -88,6 +89,7 @@ const HomePage: React.FC = () => {
                     </article>
                 ))}
             </main>
+        </div>
         </div>
     );
 };

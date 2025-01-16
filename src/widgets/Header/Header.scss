@@ -1,6 +1,5 @@
 @use '../../shared/styles/variables'  as *;
 .header {
-  max-width: 1440px;
   width: 100vw;
   margin: 0 auto;
   padding: 0 24px;
@@ -87,32 +86,7 @@
     transition: gap 0.3s ease;
   }
 
-  &__toggle {
-    display: none;
-  }
-
-  &__toggle-label {
-    width: 31px;
-    height: 19px;
-    background: $darkest-grey;
-    border-radius: 10px;
-    position: relative;
-    cursor: pointer;
-
-    &::before {
-      content: '';
-      position: absolute;
-      top: 2px;
-      left: 2px;
-      width: 16px;
-      height: 16px;
-      background: $white;
-      border-radius: 50%;
-      transition: 0.3s;
-    }
-  }
-
-  &__profile {
+   &__profile {
     width: 209px;
     height: 44px;
     display: flex;
@@ -237,7 +211,7 @@
 
     &__logo {
       height: 32px;
-      margin-left: -2px;
+      margin-left: 20px;
     }
 
     &__burger {
@@ -318,14 +292,6 @@
       }
     }
 
-    &__profile {
-      width: 209px;
-      height: 44px;
-      display: flex;
-      flex-direction: row;
-      gap: 10px;
-    }
-
     &__avatar {
       width: 32px;
       height: 32px;
@@ -357,5 +323,18 @@
     height: 35px;
   }
 
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 1440px;
+  z-index: 1000;
+  background: var(--select-btn-color);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  padding: 0 24px;
 }
 
