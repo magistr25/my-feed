@@ -38,6 +38,8 @@
     background: none;
     cursor: pointer;
     color: var(--burger-menu-color);
+    position: relative;
+    z-index: 101;
   }
 
   &__nav {
@@ -50,17 +52,6 @@
     text-wrap: nowrap;
     transition: margin 0.3s ease, gap 0.3s ease;
 
-    &--open {
-      display: flex;
-      flex-direction: column;
-      position: absolute;
-      top: 60px;
-      left: 0;
-      width: 100%;
-      background: $white;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      z-index: 100;
-    }
   }
 
   &__link {
@@ -117,6 +108,8 @@
     padding-top: 44px;
     height: 108px;
     justify-content: start;
+    width: 100%;
+    margin-left: -1px;
     &__burger {
       display: block;
     }
@@ -134,10 +127,6 @@
       gap: 30px;
     }
 
-    &__nav--open {
-      display: flex;
-      padding:0 20px 20px;
-    }
     &__mobile-active-tab {
       width: 100%;
       padding: 8px 0;
@@ -230,19 +219,6 @@
       justify-content: flex-end;
       gap: 95px;
       text-wrap: nowrap;
-
-
-      &--open {
-        display: flex;
-        flex-direction: column;
-        position: absolute;
-        top: 60px;
-        left: 0;
-        width: 100%;
-        background: $white;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        z-index: 100;
-      }
     }
 
     &__link {
@@ -332,7 +308,7 @@
   transform: translateX(-50%);
   width: 100%;
   max-width: 1440px;
-  z-index: 1000;
+  z-index: 100;
   background: var(--select-btn-color);
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
   padding: 0 24px;

@@ -3,6 +3,7 @@ import './Header.scss';
 import { useState } from 'react';
 import {Link, useLocation} from 'react-router-dom';
 
+import MobileMenu from "@/features/navigation/MobileMenu.tsx";
 import Logo from "@/shared/ui/Logo/Logo.tsx";
 import ThemeSwitcher from "@/shared/ui/ThemeSwitcher/ThemeSwitcher.tsx";
 
@@ -33,18 +34,21 @@ const Header = () => {
                 <Logo className="header__logo"/>
                 <button
                     className="header__burger"
-                    onClick={() => setMenuOpen(!menuOpen)}
+                    onClick={() => {
+                        setMenuOpen(!menuOpen);
+                    }}
                 >
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M3 8.75C3 8.33579 3.33579 8 3.75 8H20.25C20.6642 8 21 8.33579 21 8.75C21 9.16421 20.6642 9.5 20.25 9.5H3.75C3.33579 9.5 3 9.16421 3 8.75ZM3 15.5C3 15.0858 3.33579 14.75 3.75 14.75H20.25C20.6642 14.75 21 15.0858 21 15.5C21 15.9142 20.6642 16.25 20.25 16.25H3.75C3.33579 16.25 3 15.9142 3 15.5Z" fill="#686868"/>
+                        <path fillRule="evenodd" clipRule="evenodd" d="M3 8.75C3 8.33579 3.33579 8 3.75 8H20.25C20.6642 8 21 8.33579 21 8.75C21 9.16421 20.6642 9.5 20.25 9.5H3.75C3.33579 9.5 3 9.16421 3 8.75ZM3 15.5C3 15.0858 3.33579 14.75 3.75 14.75H20.25C20.6642 14.75 21 15.0858 21 15.5C21 15.9142 20.6642 16.25 20.25 16.25H3.75C3.33579 16.25 3 15.9142 3 15.5Z" fill="#686868"/>
                     </svg>
 
                 </button>
             </div>
 
             {/* Навигация для десктопа */}
-            <nav className={`header__nav ${menuOpen ? 'header__nav--open' : ''}`}>
-                <Link
+            <nav className= "header__nav">
+
+            <Link
                     to="/"
                     className={`header__link ${isActive('/') ? 'header__link--active' : ''}`}
                 >
@@ -69,6 +73,7 @@ const Header = () => {
                 {location.pathname === '/my-posts' && 'Мои посты'}
                 {location.pathname === '/favorites' && 'Избранное'}
             </div>
+            <MobileMenu isOpen={menuOpen} onClose={() => setMenuOpen(false)} />
             {/* Правый блок с переключателем темы и аватаром */}
             <div className="header__right">
                 <ThemeSwitcher />

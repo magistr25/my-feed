@@ -8,6 +8,7 @@ import {BrowserRouter, Route, Routes} from "react-router-dom";
 import { PersistGate } from 'redux-persist/integration/react';
 
 import {persistor,store} from "@/app/store/store";
+import LoginPage from "@/pages/LoginPage/LoginPage.tsx";
 
 import App from "./App.tsx";
 import client from "./app/apollo/client.ts";
@@ -23,9 +24,9 @@ createRoot(window.document.getElementById('root')!).render(
                         <Routes>
                             <Route path="/" element={<App/>}>
                                 <Route index element={<HomePage/>}/>
-                                <Route path="/login" element={''}/>
                                 <Route path="/my-posts" element={''}/>
                                 <Route path="/favorites" element={''}/>
+                                <Route path="/login" element={<LoginPage/>}/>
                             </Route>
                         </Routes>
                     </BrowserRouter>
