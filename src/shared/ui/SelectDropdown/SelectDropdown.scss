@@ -100,7 +100,6 @@
       left: -22px;
       width: 92vw;
       max-width: 743px;
-      background: $color-white;
       border: none;
       border-radius: $border-radius;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -109,6 +108,7 @@
       padding: 0;
       list-style: none;
       overflow: hidden;
+      background-color: transparent;
     }
     &__item {
       display: flex;

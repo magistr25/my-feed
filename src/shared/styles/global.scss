@@ -27,7 +27,7 @@ body {
 }
 @media (max-width: 823px) {
   body {
-    background-color: $white;
+    background-color:var(--body-mobile-bg);
   }
 }
 

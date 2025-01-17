@@ -24,6 +24,7 @@ $grey-darker: #BEB9B4;
 
 :root {
   --body-bg:#{#686868};
+  --body-mobile-bg:#{$white};
   --primary-bg: #{$very-light-grey};
   --primary-text: #000000;
   --primary-link-color: #{$lighter-grey};
@@ -43,11 +44,19 @@ $grey-darker: #BEB9B4;
   --select-item-active-bg: #FFD1C3;
   --select-item-bg: #FCFCFC;
   --mobile-btn-select-color:#212121;
+  --mobile-menu-bg: #FCFCFC;
+  --mobile-profile-color: #212121;
+  --mobile-profile-account-color: #EE683E;
+  --mobile-menu-header-bg:#FCFCFC;
+  --mobile-menu-border: 0.5px solid #F6F6F6;
+  --mobile-theme-color: #BEB9B4;
+
 
 }
 
 [data-theme="dark"] {
   --body-bg:#{#686868};
+  --body-mobile-bg:#303030;
   --primary-bg: #{$darkest-grey};
   --primary-text: #ffffff;
   --primary-link-color: #{$grey};
@@ -68,7 +77,12 @@ $grey-darker: #BEB9B4;
   --select-item-bg: #303030;
   --mobile-btn-select-bg:#303030;
   --mobile-btn-select-color:#F6F6F6;
-
+  --mobile-menu-bg: #212121;
+  --mobile-profile-color: #F6F6F6;
+  --mobile-profile-account-color: #CD4E27;
+  --mobile-menu-header-bg:#303030;
+  --mobile-menu-border: 0.5px solid #373737;
+  --mobile-theme-color: #686868
 }
 
 $border-radius: 8px;

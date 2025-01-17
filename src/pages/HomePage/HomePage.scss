@@ -215,16 +215,16 @@
     }
 
     &__select {
-      position: fixed; /* Фиксируем select на экране */
-      top: 20px; /* Расстояние от верхнего края экрана */
-      left: 50%; /* Центрируем относительно ширины экрана */
-      transform: translateX(-50%); /* Центрируем по горизонтали */
-      z-index: 1000; /* Высокий приоритет отображения */
-      background: $color-white; /* Цвет фона */
-      padding: 8px 16px; /* Отступы */
-      border-radius: $border-radius; /* Скругленные углы */
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1); /* Легкая тень */
-      width: 200px; /* Фиксированная ширина (можно изменить по необходимости) */
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      background: $color-white;
+      padding: 8px 16px;
+      border-radius: $border-radius;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+      width: 200px;
     }
 
     &__nav {
