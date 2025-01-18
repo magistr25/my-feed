@@ -4,7 +4,7 @@ import Header from '@/widgets/Header/Header';
 
 const App = () => {
     const location = useLocation();
-    const hideHeaderPaths = ['/login']; // Пути, где не нужно показывать Header
+    const hideHeaderPaths = ['/login', '/register']; // Пути, где не нужно показывать Header
 
     return (
         <div className="app">

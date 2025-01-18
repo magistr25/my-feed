@@ -1,29 +1,29 @@
-import './LoginPage.scss';
+import './RegisterPage.scss';
 
 import {FC} from "react";
-import {SubmitHandler, useForm} from 'react-hook-form';
-import {Link} from "react-router-dom";
+import { SubmitHandler,useForm } from 'react-hook-form';
 
 import Logo from "@/shared/ui/Logo/Logo.tsx";
+import {Link} from "react-router-dom";
 
-interface LoginFormInputs {
+interface RegisterFormInputs {
     email: string;
     password: string;
 }
 
-const LoginPage: FC = () => {
-    const {register, handleSubmit, formState: {errors}} = useForm<LoginFormInputs>();
+const RegisterPage: FC = () => {
+    const { register, handleSubmit, formState: { errors } } = useForm<RegisterFormInputs>();
 
-    const onSubmit: SubmitHandler<LoginFormInputs> = (data) => {
+    const onSubmit: SubmitHandler<RegisterFormInputs> = (data) => {
         console.log('Submitted data:', data);
         alert(`Email: ${data.email}, Password: ${data.password}`);
     };
 
     return (
-        <div className="login-page">
-            <div className="login-container">
-                <div className="login-container-header">
-                    <div className="login-container-header_top">
+        <div className="register-page">
+            <div className="register-container">
+                <div className="register-container-header">
+                    <div className="register-container-header_top">
                         <svg width="219" height="28" viewBox="0 0 219 28" fill="none"
                              xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -31,23 +31,22 @@ const LoginPage: FC = () => {
                                 fill="black"/>
                         </svg>
                     </div>
-                    <div className="login-container-header_bottom">
+                    <div className="register-container-header_bottom">
                         <Logo/>
                     </div>
                 </div>
 
-                <div className="login-tabs">
-                    <div className="login-tabs">
-                        <Link className="login-tab active" to="/login">
-                            Авторизация
-                        </Link>
-                        <Link className="login-tab " to="/register">
-                            Регистрация
-                        </Link>
-                    </div>
+                <div className="register-tabs">
+                    <Link className="register-tab" to="/login">
+                        Авторизация
+                    </Link>
+                    <Link className="register-tab active" to="/register">
+                        Регистрация
+                    </Link>
                 </div>
-                <form onSubmit={handleSubmit(onSubmit)} className="login-form" autoComplete="off">
-                    <p className="login-description">
+                <div className="registration-step">Шаг 1 из 2</div>
+                <form onSubmit={handleSubmit(onSubmit)} className="register-form" autoComplete="off">
+                    <p className="register-description">
                         Введите Ваш Email и пароль, чтобы войти в&nbsp;аккаунт.
                     </p>
                     <div className="form-group">
@@ -56,7 +55,7 @@ const LoginPage: FC = () => {
                             id="email"
                             type="email"
                             placeholder="Введите email"
-                            {...register('email', {required: 'Email обязателен'})}
+                            {...register('email', { required: 'Email обязателен' })}
                             className={errors.email ? 'input-error' : ''}
                         />
                         {errors.email && <span className="error-message">{errors.email.message}</span>}
@@ -67,12 +66,12 @@ const LoginPage: FC = () => {
                             id="password"
                             type="password"
                             placeholder="Введите пароль"
-                            {...register('password', {required: 'Пароль обязателен'})}
+                            {...register('password', { required: 'Пароль обязателен' })}
                             className={errors.password ? 'input-error' : ''}
                         />
                         {errors.password && <span className="error-message">{errors.password.message}</span>}
                     </div>
-                    <button type="submit" className="login-button" disabled={!!Object.keys(errors).length}>
+                    <button type="submit" className="register-button" disabled={!!Object.keys(errors).length}>
                         Войти
                     </button>
                 </form>
@@ -81,4 +80,4 @@ const LoginPage: FC = () => {
     );
 };
 
-export default LoginPage;
+export default RegisterPage;

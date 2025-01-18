@@ -9,6 +9,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 
 import {persistor,store} from "@/app/store/store";
 import LoginPage from "@/pages/LoginPage/LoginPage.tsx";
+import RegisterPage from "@/pages/RegisterPage/RegisterPage.tsx";
 
 import App from "./App.tsx";
 import client from "./app/apollo/client.ts";
@@ -27,6 +28,7 @@ createRoot(window.document.getElementById('root')!).render(
                                 <Route path="/my-posts" element={''}/>
                                 <Route path="/favorites" element={''}/>
                                 <Route path="/login" element={<LoginPage/>}/>
+                                <Route path="/register" element={<RegisterPage/>}/>
                             </Route>
                         </Routes>
                     </BrowserRouter>

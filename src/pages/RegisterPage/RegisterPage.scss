@@ -1,8 +1,8 @@
-.login-page {
+.register-page {
   height: 100vh;
   background-color: #ffffff;
 
-  .login-container {
+  .register-container {
     width: 100%;
     max-width: 375px;
     box-sizing: border-box;
@@ -22,7 +22,7 @@
       margin-top: 58px;
     }
 
-    .login-title {
+    .register-title {
       font-family: 'Playfair Display', serif;
       font-size: 24px;
       font-weight: bold;
@@ -31,13 +31,12 @@
       margin-bottom: 40px;
     }
 
-    .login-tabs {
+    .register-tabs {
       display: flex;
       justify-content: space-between;
       margin-bottom: 30px;
-      width: 100%;
 
-      .login-tab {
+      .register-tab {
         flex: 1;
         text-decoration: none;
         text-align: center;
@@ -48,10 +47,10 @@
         line-height: 22px;
         letter-spacing: 0.01em;
         border: 1px solid #EE683E;;
-        border-radius: 0 8px 8px 0;
+        border-radius: 8px 0 0 8px;
         cursor: pointer;
         background-color: transparent;
-        color: #EE683E;;
+        color: #EE683E;
         transition: background-color 0.3s;
         text-underline-position: from-font;
         text-decoration-skip-ink: none;
@@ -60,7 +59,7 @@
         &.active {
           background-color: #EE683E;;
           color: #ffffff;
-          border-radius: 8px 0 0 8px;
+          border-radius: 0 8px 8px 0;
           font-family: Gilroy, sans-serif;
           font-size: 16px;
           font-weight: 500;
@@ -74,8 +73,8 @@
       }
     }
 
-    .login-form {
-      .login-description {
+    .register-form {
+      .register-description {
         font-family: Gilroy, sans-serif;
         font-size: 16px;
         font-weight: 400;
@@ -149,7 +148,7 @@
 
       }
 
-      .login-button {
+      .register-button {
         position: absolute;
         bottom: 58px;
         left: 50%;
