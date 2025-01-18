@@ -1,0 +1,19 @@
+.login-container {
+
+  &-header {
+    margin-bottom: 35px;
+  }
+
+  &-header_top {
+    display: flex;
+    justify-content: center;
+    height: 44px;
+    width: 100%;
+  }
+
+  &-header_bottom {
+    display: flex;
+    justify-content: center;
+    margin-top: 58px;
+  }
+}
