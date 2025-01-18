@@ -36,6 +36,9 @@
       transition: 0.4s;
     }
   }
+  &--dragging &__slider:before {
+    transform: translateX(calc(var(--drag-offset, 0) * 1px));
+  }
 
   input:checked + &__slider {
     background-color: var(--theme-toggle-bg);
