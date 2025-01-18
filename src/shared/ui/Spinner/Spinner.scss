@@ -1,0 +1,66 @@
+.spinner {
+  position: relative;
+  width: 24px; /* Диаметр спиннера */
+  height: 24px; /* Диаметр спиннера */
+
+  .spinner-segment {
+    position: absolute;
+    width: 3px; /* Ширина сегмента */
+    height: 8px; /* Высота сегмента */
+    background-color: #ffffff; /* Цвет палочки */
+    border-radius: 2px;
+    top: 0;
+    left: 50%;
+    transform-origin: center 12px; /* Центр вращения */
+    animation: fade 1.2s linear infinite;
+  }
+
+  /* Расположение 8 палочек */
+  .spinner-segment:nth-child(1) {
+    transform: rotate(0deg);
+    animation-delay: -1.05s;
+  }
+  .spinner-segment:nth-child(2) {
+    transform: rotate(45deg);
+    animation-delay: -0.9s;
+  }
+  .spinner-segment:nth-child(3) {
+    transform: rotate(90deg);
+    animation-delay: -0.75s;
+  }
+  .spinner-segment:nth-child(4) {
+    transform: rotate(135deg);
+    animation-delay: -0.6s;
+  }
+  .spinner-segment:nth-child(5) {
+    transform: rotate(180deg);
+    animation-delay: -0.45s;
+  }
+  .spinner-segment:nth-child(6) {
+    transform: rotate(225deg);
+    animation-delay: -0.3s;
+  }
+  .spinner-segment:nth-child(7) {
+    transform: rotate(270deg);
+    animation-delay: -0.15s;
+  }
+  .spinner-segment:nth-child(8) {
+    transform: rotate(315deg);
+    animation-delay: 0s;
+  }
+}
+
+@keyframes fade {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+
+
