@@ -1,0 +1,31 @@
+.auth-tabs {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
+  width: 100%;
+  border: 1px solid #EE683E;
+  border-radius: 8px;
+  overflow: hidden;
+
+  .auth-tab {
+    flex: 1;
+    text-decoration: none;
+    text-align: center;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: 400;
+    font-family: 'Gilroy', sans-serif;
+    line-height: 22px;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    background-color: transparent;
+    color: #EE683E;
+    transition: background-color 0.3s;
+    border: none;
+
+    &.active {
+      background-color: #EE683E;
+      color: #ffffff;
+    }
+  }
+}
