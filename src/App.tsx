@@ -1,13 +1,14 @@
-import './shared/styles/global.scss';
+import { Outlet, useLocation } from 'react-router-dom';
 
-import { Outlet } from 'react-router-dom';
-
-import Header from './widgets/Header/Header';
+import Header from '@/widgets/Header/Header';
 
 const App = () => {
+    const location = useLocation();
+    const hideHeaderPaths = ['/login']; // Пути, где не нужно показывать Header
+
     return (
         <div className="app">
-            <Header />
+            {!hideHeaderPaths.includes(location.pathname) && <Header />}
             <main>
                 <Outlet />
             </main>
@@ -16,4 +17,5 @@ const App = () => {
 };
 
 export default App;
+
 
