@@ -50,7 +50,8 @@ $grey-darker: #BEB9B4;
   --mobile-menu-header-bg:#FCFCFC;
   --mobile-menu-border: 0.5px solid #F6F6F6;
   --mobile-theme-color: #BEB9B4;
-
+  --success-color: #20C997;
+  --error-color: #F03E3E;
 
 }
 
@@ -82,7 +83,10 @@ $grey-darker: #BEB9B4;
   --mobile-profile-account-color: #CD4E27;
   --mobile-menu-header-bg:#303030;
   --mobile-menu-border: 0.5px solid #373737;
-  --mobile-theme-color: #686868
+  --mobile-theme-color: #686868;
+  --success-color: #20C997;
+  --error-color: #FA5252;
+
 }
 
 $border-radius: 8px;
