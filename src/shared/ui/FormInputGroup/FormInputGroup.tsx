@@ -1,7 +1,9 @@
 import './FormInputGroup.scss';
 
-import { FC } from 'react';
-import { UseFormRegisterReturn } from 'react-hook-form';
+import {FC} from 'react';
+import {UseFormRegisterReturn} from "react-hook-form";
+
+import {ErrorIcon, SuccessIcon} from "@/shared/ui/StatusIcons/StatusIcons.tsx";
 
 interface FormInputGroupProps {
     label: string;
@@ -10,12 +12,25 @@ interface FormInputGroupProps {
     placeholder: string;
     register: UseFormRegisterReturn;
     error?: string;
+    statusIcon?: boolean | null;
+    autoComplete?: string;
 }
 
-const FormInputGroup: FC<FormInputGroupProps> = ({ label, id, type, placeholder, register, error }) => (
+const FormInputGroup: FC<FormInputGroupProps> = ({ label, id, type, placeholder, register, error, statusIcon, autoComplete }) => (
     <div className="form-group">
         <label htmlFor={id}>{label}</label>
-        <input id={id} type={type} placeholder={placeholder} {...register} className={error ? 'input-error' : ''} />
+        <div className="input-wrapper">
+            <input
+                id={id}
+                type={type}
+                placeholder={placeholder}
+                {...register}
+                className={error ? 'input-error' : ''}
+                autoComplete={autoComplete}
+            />
+            {statusIcon === true && <SuccessIcon className="status-icon success-icon" />}
+            {statusIcon === false && <ErrorIcon className="status-icon error-icon" />}
+        </div>
         {error && <span className="error-message">{error}</span>}
     </div>
 );
