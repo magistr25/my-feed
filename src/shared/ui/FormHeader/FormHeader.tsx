@@ -1,9 +1,14 @@
 import './FormHeader.scss';
 
+import { FC } from 'react';
+
 import Logo from "@/shared/ui/Logo/Logo.tsx";
 
+interface FormHeaderProps {
+    title: string;
+}
 
-const FormHeader = () => (
+const FormHeader: FC<FormHeaderProps> = () => (
 
     <div className="login-container-header">
         <div className="login-container-header_top">

@@ -1,9 +1,9 @@
 import './FormInputGroup.scss';
 
-import {FC} from 'react';
-import {UseFormRegisterReturn} from "react-hook-form";
+import { FC } from 'react';
+import { UseFormRegisterReturn } from 'react-hook-form';
 
-import {ErrorIcon, SuccessIcon} from "@/shared/ui/StatusIcons/StatusIcons.tsx";
+import { ErrorIcon, SuccessIcon } from '@/shared/ui/StatusIcons/StatusIcons.tsx';
 
 interface FormInputGroupProps {
     label: string;
@@ -14,9 +14,20 @@ interface FormInputGroupProps {
     error?: string;
     statusIcon?: boolean | null;
     autoComplete?: string;
+    isIconVisible?: boolean;
 }
 
-const FormInputGroup: FC<FormInputGroupProps> = ({ label, id, type, placeholder, register, error, statusIcon, autoComplete }) => (
+const FormInputGroup: FC<FormInputGroupProps> = ({
+          label,
+          id,
+          type,
+          placeholder,
+          register,
+          error,
+          statusIcon,
+          autoComplete,
+          isIconVisible,
+    }) => (
     <div className="form-group">
         <label htmlFor={id}>{label}</label>
         <div className="input-wrapper">
@@ -28,8 +39,8 @@ const FormInputGroup: FC<FormInputGroupProps> = ({ label, id, type, placeholder,
                 className={error ? 'input-error' : ''}
                 autoComplete={autoComplete}
             />
-            {statusIcon === true && <SuccessIcon className="status-icon success-icon" />}
-            {statusIcon === false && <ErrorIcon className="status-icon error-icon" />}
+            {isIconVisible && statusIcon === true && <SuccessIcon className="status-icon" />}
+            {isIconVisible && statusIcon === false && <ErrorIcon className="status-icon" />}
         </div>
         {error && <span className="error-message">{error}</span>}
     </div>
