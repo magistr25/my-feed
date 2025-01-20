@@ -86,6 +86,11 @@ const MobileMenu: FC<MobileMenuProps> = ({ isOpen, onClose }) => {
                     ) : (
                         <>
                             <li>
+                                <Link className="mobile-menu__list_open-account" to="/login" onClick={onClose}>
+                                    Войти в аккаунт
+                                </Link>
+                            </li>
+                            <li>
                                 <Link className="mobile-menu__list_a" to="/login" onClick={onClose}>
                                     Главная
                                 </Link>
@@ -96,15 +101,11 @@ const MobileMenu: FC<MobileMenuProps> = ({ isOpen, onClose }) => {
                                 </Link>
                             </li>
                             <li>
-                            <Link className="mobile-menu__list_a" to="/login" onClick={onClose}>
+                                <Link className="mobile-menu__list_a" to="/login" onClick={onClose}>
                                     Избранное
                                 </Link>
                             </li>
-                            <li>
-                                <Link className="mobile-menu__list_open-account" to="/login" onClick={onClose}>
-                                    Войти в аккаунт
-                                </Link>
-                            </li>
+
                         </>
                     )}
 
