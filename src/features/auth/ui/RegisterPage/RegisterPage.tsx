@@ -5,6 +5,7 @@ import { ApolloError } from '@apollo/client/errors';
 import { GraphQLFormattedError } from 'graphql/index';
 import { FC, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import {useNavigate} from "react-router-dom";
 
 import { COMPLETE_PROFILE } from '@/features/auth/api/mutations/completeProfile.ts'; // Второй запрос
 import { REGISTER_USER } from '@/features/auth/api/mutations/registerUser.ts';
@@ -25,6 +26,7 @@ interface RegisterFormInputs {
 }
 
 const RegisterPage: FC = () => {
+    const navigate = useNavigate();
     const [step, setStep] = useState(1); // Управление шагами
     const [email, setEmail] = useState('');
     const [isEmailIconVisible, setIsEmailIconVisible] = useState(false);
@@ -57,7 +59,15 @@ const RegisterPage: FC = () => {
                         },
                     },
                 });
-                localStorage.setItem('authToken', response.data.userSignUp.token);
+                const token = response.data?.userSignUp?.token;
+
+                if (token) {
+                    // Сохраняем токен только если он не null
+                    localStorage.setItem('authToken', token);
+                    console.log('Токен успешно сохранён:', token);
+                } else {
+                    console.warn('Токен не получен, предыдущий токен не изменён.');
+                }
                 console.log('Первый шаг успешен:', response.data);
                 setEmail(data.email);
 
@@ -242,7 +252,10 @@ const RegisterPage: FC = () => {
                     <Notification
                         message={notification.message}
                         type={notification.type}
-                        onClose={() => setNotification(null)}
+                        onClose={() => {
+                            setNotification(null);
+                            navigate('/register');
+                        }}
                     />
                 )}
             </div>
