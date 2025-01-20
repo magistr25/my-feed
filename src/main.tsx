@@ -5,11 +5,11 @@ import {StrictMode} from 'react'
 import {createRoot} from 'react-dom/client'
 import {Provider} from "react-redux";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
-import { PersistGate } from 'redux-persist/integration/react';
+import {PersistGate} from 'redux-persist/integration/react';
 
-import {persistor,store} from "@/app/store/store";
-import LoginPage from "@/pages/LoginPage/LoginPage.tsx";
-import RegisterPage from "@/pages/RegisterPage/RegisterPage.tsx";
+import {persistor, store} from "@/app/store/store";
+import LoginPage from "@/features/auth/ui/LoginPage/LoginPage.tsx";
+import RegisterPage from "@/features/auth/ui/RegisterPage/RegisterPage.tsx";
 
 import App from "./App.tsx";
 import client from "./app/apollo/client.ts";
@@ -17,10 +17,9 @@ import HomePage from "./pages/HomePage/HomeRage.tsx";
 
 createRoot(window.document.getElementById('root')!).render(
     <StrictMode>
-        <Provider store={store}>
-            <PersistGate loading={null} persistor={persistor}>
-                <ApolloProvider client={client}>
-
+        <ApolloProvider client={client}>
+            <Provider store={store}>
+                <PersistGate loading={null} persistor={persistor}>
                     <BrowserRouter>
                         <Routes>
                             <Route path="/" element={<App/>}>
@@ -32,8 +31,8 @@ createRoot(window.document.getElementById('root')!).render(
                             </Route>
                         </Routes>
                     </BrowserRouter>
-                </ApolloProvider>
-            </PersistGate>
-        </Provider>
+                </PersistGate>
+            </Provider>
+        </ApolloProvider>
     </StrictMode>,
 )
