@@ -40,7 +40,11 @@ const RegisterPage: FC = () => {
         mode: 'onBlur',
         reValidateMode: 'onBlur',
     });
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
+    const togglePasswordVisibility = () => {
+        setIsPasswordVisible(!isPasswordVisible);
+    };
     // Мутации для первого и второго шагов
     const [registerUser, {loading: registering, error: registerError}] = useMutation(REGISTER_USER);
     const [completeProfile, {loading: completing, error: completeError}] = useMutation(COMPLETE_PROFILE);
@@ -118,6 +122,9 @@ const RegisterPage: FC = () => {
         }
         if (value.length < 6) {
             return 'Пароль должен содержать минимум 6 символов';
+        }
+        if (!/^[A-Za-z0-9]*$/.test(value)) {
+            return 'Пароль должен содержать только латинские буквы и цифры';
         }
         if (!/[A-Z]/.test(value)) {
             return 'Пароль должен содержать хотя бы одну заглавную букву';
@@ -198,13 +205,17 @@ const RegisterPage: FC = () => {
                                 <FormInputGroup
                                     label="Введите пароль еще раз"
                                     id="confirmPassword"
-                                    type="text"
+                                    type="password"
                                     placeholder="Повторите пароль"
                                     register={register('confirmPassword', {
                                         validate: (value) =>
                                             value === watch('password') || 'Пароли не совпадают',
                                     })}
                                     error={errors.confirmPassword?.message}
+                                    isPassword={true}
+                                    isPasswordVisible={isPasswordVisible}
+                                    onTogglePasswordVisibility={togglePasswordVisibility}
+                                    inputValue={watch('confirmPassword')}
                                 />
                                 <div className="form-button">
                                     <Button
