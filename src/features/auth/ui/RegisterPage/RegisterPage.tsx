@@ -1,14 +1,14 @@
 import './RegisterPage.scss';
 
-import { useMutation } from '@apollo/client';
-import { ApolloError } from '@apollo/client/errors';
-import { GraphQLFormattedError } from 'graphql/index';
-import { FC, useState } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import {useMutation} from '@apollo/client';
+import {ApolloError} from '@apollo/client/errors';
+import {GraphQLFormattedError} from 'graphql/index';
+import {FC, useState} from 'react';
+import {SubmitHandler, useForm} from 'react-hook-form';
 import {useNavigate} from "react-router-dom";
 
-import { COMPLETE_PROFILE } from '@/features/auth/api/mutations/completeProfile.ts'; // Второй запрос
-import { REGISTER_USER } from '@/features/auth/api/mutations/registerUser.ts';
+import {COMPLETE_PROFILE} from '@/features/auth/api/mutations/completeProfile.ts'; // Второй запрос
+import {REGISTER_USER} from '@/features/auth/api/mutations/registerUser.ts';
 import AuthTabs from "@/shared/ui/AuthTabs/AuthTabs.tsx";
 import Button from "@/shared/ui/Button/Button.tsx";
 import FormHeader from "@/shared/ui/FormHeader/FormHeader.tsx";
@@ -31,7 +31,7 @@ const RegisterPage: FC = () => {
     const [email, setEmail] = useState('');
     const [isEmailIconVisible, setIsEmailIconVisible] = useState(false);
     const [isPasswordIconVisible, setIsPasswordIconVisible] = useState(false);
-    const { register, handleSubmit, formState: { errors }, watch, setError, reset } = useForm<RegisterFormInputs>({
+    const {register, handleSubmit, formState: { errors }, watch, setError, reset} = useForm<RegisterFormInputs>({
         defaultValues: {
             firstName: '',
             lastName: '',
@@ -42,8 +42,8 @@ const RegisterPage: FC = () => {
     });
 
     // Мутации для первого и второго шагов
-    const [registerUser, { loading: registering, error: registerError }] = useMutation(REGISTER_USER);
-    const [completeProfile, { loading: completing, error: completeError }] = useMutation(COMPLETE_PROFILE);
+    const [registerUser, {loading: registering, error: registerError}] = useMutation(REGISTER_USER);
+    const [completeProfile, {loading: completing, error: completeError}] = useMutation(COMPLETE_PROFILE);
     const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
     const onSubmit: SubmitHandler<RegisterFormInputs> = async (data) => {
@@ -93,7 +93,7 @@ const RegisterPage: FC = () => {
                     },
                 });
                 console.log('Второй шаг успешен:', response.data);
-                setNotification({ message: 'Регистрация завершена!', type: 'success' });
+                setNotification({message: 'Регистрация завершена!', type: 'success'});
             } catch (e) {
                 handleGraphQLErrors(e);
             }
@@ -131,19 +131,19 @@ const RegisterPage: FC = () => {
         if (e instanceof ApolloError) {
             e.graphQLErrors.forEach((graphQLError: GraphQLFormattedError) => {
                 if (graphQLError.extensions?.field === 'email') {
-                    setError('email', { message: 'Этот email уже используется' });
+                    setError('email', {message: 'Этот email уже используется'});
                 }
                 if (graphQLError.extensions?.field === 'password') {
-                    setError('password', { message: 'Неверный пароль' });
+                    setError('password', {message: 'Неверный пароль'});
                 }
                 if (graphQLError.extensions?.field === 'firstName') {
-                    setError('firstName', { message: 'Введите корректное имя' });
+                    setError('firstName', {message: 'Введите корректное имя'});
                 }
                 if (graphQLError.extensions?.field === 'lastName') {
-                    setError('lastName', { message: 'Введите корректную фамилию' });
+                    setError('lastName', {message: 'Введите корректную фамилию'});
                 }
                 if (graphQLError.extensions?.field === 'middleName') {
-                    setError('middleName', { message: 'Введите корректное отчество' });
+                    setError('middleName', {message: 'Введите корректное отчество'});
                 }
             });
         } else {
@@ -152,112 +152,126 @@ const RegisterPage: FC = () => {
     };
 
     return (
-        <div className="register-page">
-            <div className="register-container">
-                <FormHeader title={`Шаг ${step} из 2`} />
-                <AuthTabs activeTab="register" />
-                <div className="register-container__step-num">{`Шаг ${step} из 2`}</div>
-                <form onSubmit={handleSubmit(onSubmit)} className="register-form" autoComplete="off" noValidate>
-                    {step === 1 ? (
-                        <>
-                            <p className="form-description">Введите Ваш Email и пароль, чтобы зарегистрироваться.</p>
-                            <FormInputGroup
-                                label="Email"
-                                id="email"
-                                type="email"
-                                placeholder="Введите email"
-                                register={register('email', { validate: validateEmail })}
-                                error={errors.email?.message}
-                                isIconVisible={isEmailIconVisible}
-                                statusIcon={!watch('email') ? null : !errors.email}
-                            />
-                            <FormInputGroup
-                                label="Пароль"
-                                id="password"
-                                type="password"
-                                placeholder="Введите пароль"
-                                register={register('password', { validate: validatePassword })}
-                                error={errors.password?.message}
-                                isIconVisible={isPasswordIconVisible}
-                                statusIcon={!watch('password') ? null : !errors.password}
+        <div className="register-wrapper">
+            <div className="register-page">
+                <div className="register-container">
+                    <FormHeader title={`Шаг ${step} из 2`}/>
+                    <AuthTabs activeTab="register"/>
+                    <div className="register-container__step-num">{`Шаг ${step} из 2`}</div>
+                    <form onSubmit={handleSubmit(onSubmit)} className="register-form" autoComplete="off" noValidate>
+                        {step === 1 ? (
+                            <>
+                                <p className="form-description">Введите Ваш Email и пароль, чтобы
+                                    зарегистрироваться.</p>
+                                <FormInputGroup
+                                    label="Email"
+                                    id="email"
+                                    type="text"
+                                    placeholder="Введите email"
+                                    register={{
+                                        ...register('email', {
+                                            validate: validateEmail,
+                                            onBlur: () => validateEmail(watch('email')),
+                                        }),
+                                    }}
+                                    error={errors.email?.message}
+                                    isIconVisible={isEmailIconVisible}
+                                    statusIcon={!watch('email') ? null : !errors.email}
+                                />
+                                <FormInputGroup
+                                    label="Пароль"
+                                    id="password"
+                                    type="text"
+                                    placeholder="Введите пароль"
+                                    register={{
+                                        ...register('password', {
+                                            validate: validatePassword,
+                                            // onFocus: () => clearErrors('password'),
+                                            onBlur: () => validatePassword(watch('password')),
+                                        }),
+                                    }}
+                                    error={errors.password?.message}
+                                    isIconVisible={isPasswordIconVisible}
+                                    statusIcon={!watch('password') ? null : !errors.password}
 
-                            />
-                            <FormInputGroup
-                                label="Введите пароль еще раз"
-                                id="confirmPassword"
-                                type="password"
-                                placeholder="Повторите пароль"
-                                register={register('confirmPassword', {
-                                    validate: (value) =>
-                                        value === watch('password') || 'Пароли не совпадают',
-                                })}
-                                error={errors.confirmPassword?.message}
-                            />
-                            <div className="form-button">
-                                <Button
-                                    text="Далее"
-                                    variant="primary"
-                                    size="large"
-                                    type="submit"
-                                    isLoading={registering}
                                 />
-                            </div>
-                        </>
-                    ) : (
-                        <>
-                            <p className="form-description">Дополните свой профиль личной информацией.</p>
-                            <FormInputGroup
-                                label="Имя"
-                                id="firstName"
-                                type="text"
-                                placeholder="Введите имя"
-                                register={register('firstName', { required: 'Имя обязательно' })}
-                                error={errors.firstName?.message}
-                                autoComplete="new-first-name"
-                            />
-                            <FormInputGroup
-                                label="Фамилия"
-                                id="lastName"
-                                type="text"
-                                placeholder="Введите фамилию"
-                                register={register('lastName', { required: 'Фамилия обязательна' })}
-                                error={errors.lastName?.message}
-                                autoComplete="new-last-name"
-                            />
-                            <FormInputGroup
-                                label="Отчество"
-                                id="middleName"
-                                type="text"
-                                placeholder="Введите отчество"
-                                register={register('middleName', { required: 'Отчество обязательно' })}
-                                error={errors.middleName?.message}
-                                autoComplete="new-middle-name"
-                            />
-                            <div className="form-button">
-                                <Button
-                                    text="Создать аккаунт"
-                                    variant="primary"
-                                    size="large"
-                                    type="submit"
-                                    isLoading={completing}
+                                <FormInputGroup
+                                    label="Введите пароль еще раз"
+                                    id="confirmPassword"
+                                    type="text"
+                                    placeholder="Повторите пароль"
+                                    register={register('confirmPassword', {
+                                        validate: (value) =>
+                                            value === watch('password') || 'Пароли не совпадают',
+                                    })}
+                                    error={errors.confirmPassword?.message}
                                 />
-                            </div>
-                        </>
+                                <div className="form-button">
+                                    <Button
+                                        text="Далее"
+                                        variant="primary"
+                                        size="large"
+                                        type="submit"
+                                        isLoading={registering}
+                                    />
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                <p className="form-description">Дополните свой профиль личной информацией.</p>
+                                <FormInputGroup
+                                    label="Имя"
+                                    id="firstName"
+                                    type="text"
+                                    placeholder="Введите имя"
+                                    register={register('firstName', {required: 'Имя обязательно'})}
+                                    error={errors.firstName?.message}
+                                    autoComplete="new-first-name"
+                                />
+                                <FormInputGroup
+                                    label="Фамилия"
+                                    id="lastName"
+                                    type="text"
+                                    placeholder="Введите фамилию"
+                                    register={register('lastName', {required: 'Фамилия обязательна'})}
+                                    error={errors.lastName?.message}
+                                    autoComplete="new-last-name"
+                                />
+                                <FormInputGroup
+                                    label="Отчество"
+                                    id="middleName"
+                                    type="text"
+                                    placeholder="Введите отчество"
+                                    register={register('middleName', {required: 'Отчество обязательно'})}
+                                    error={errors.middleName?.message}
+                                    autoComplete="new-middle-name"
+                                />
+                                <div className="form-button">
+                                    <Button
+                                        text="Создать аккаунт"
+                                        variant="primary"
+                                        size="large"
+                                        type="submit"
+                                        isLoading={completing}
+                                    />
+                                </div>
+                            </>
+                        )}
+                    </form>
+                    {(registerError || completeError) && (
+                        <p className="error-message">{registerError?.message || completeError?.message}</p>
                     )}
-                </form>
-                {(registerError || completeError) && (
-                    <p className="error-message">{registerError?.message || completeError?.message}</p>
-                )}
-                {notification && (
-                    <Notification
-                        message={notification.message}
-                        type={notification.type}
-                        onClose={() => {
-                            setNotification(null);
-                            navigate('/register');
-                        }}
-                    />
-                )}
+                    {notification && (
+                        <Notification
+                            message={notification.message}
+                            type={notification.type}
+                            onClose={() => {
+                                setNotification(null);
+                                navigate('/register');
+                            }}
+                        />
+                    )}
+                </div>
             </div>
         </div>
     );
