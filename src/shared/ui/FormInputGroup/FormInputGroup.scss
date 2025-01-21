@@ -29,21 +29,69 @@
       &::placeholder {
         color: #bebebe;
       }
+      .password-icon {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+
+        &.error-icon {
+          svg {
+            stroke: #f03e3e;
+          }
+
+        }
+
+        .password-icon-svg {
+          width: 24px;
+          height: 24px;
+          stroke: #bebebe;
+          transition: stroke 0.3s;
+
+          &:hover {
+            stroke: #212121;
+          }
+        }
+      }
     }
 
     .status-icon {
       position: absolute;
-      right: 8px;
+      right: 15px;
       top: 12px;
-      width: 20px;
-      height: 20px;
+      width: 24px;
+      height: 24px;
 
       &.success-icon {
-        fill: #28a745;
+        fill: #20C997;
+
       }
 
       &.error-icon {
         fill: #f03e3e;
+      }
+    }
+    .password-icon {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+
+      svg {
+        width: 24px;
+        height: 24px;
+        color: #bebebe;
+        transition: color 0.3s;
+
+        &:hover {
+          color: #212121;
+        }
+      }
+
+      &.error-icon svg {
+        color: #f03e3e;
       }
     }
   }

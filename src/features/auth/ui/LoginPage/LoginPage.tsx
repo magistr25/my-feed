@@ -20,9 +20,12 @@ const LoginPage: FC = () => {
     const { register, handleSubmit, formState: { errors }, setError, watch } = useForm<LoginFormInputs>({
         mode: 'onSubmit',
 });
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
+    const togglePasswordVisibility = () => {
+        setIsPasswordVisible(!isPasswordVisible);
+    };
     const [isEmailIconVisible, setIsEmailIconVisible] = useState(false);
-    const [isPasswordIconVisible, setIsPasswordIconVisible] = useState(false);
     const navigate = useNavigate();
     const [signInUser] = useMutation(SIGN_IN_USER);
 
@@ -84,7 +87,6 @@ const LoginPage: FC = () => {
     };
 
     const validatePassword = (value: string): string | true => {
-        setIsPasswordIconVisible(true)
         if (!value.length) {
             return 'Пароль обязателен';
         }
@@ -126,18 +128,19 @@ const LoginPage: FC = () => {
                         <FormInputGroup
                             label="Пароль"
                             id="password"
-                            type="text"
+                            type="password"
                             placeholder="Введите пароль"
                             register={{
                                 ...register('password', {
                                     validate: validatePassword,
-                                    // onFocus: () => clearErrors('password'),
                                     onBlur: () => validatePassword(watch('password')),
                                 }),
                             }}
                             error={errors.password?.message}
-                            isIconVisible={isPasswordIconVisible}
-                            statusIcon={!watch('password') ? null : !errors.password}
+                            isPassword={true}
+                            isPasswordVisible={isPasswordVisible}
+                            onTogglePasswordVisibility={togglePasswordVisibility}
+                            inputValue={watch('password')}
                         />
                         <div className="form-button">
                             <Button
