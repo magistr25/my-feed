@@ -48,6 +48,7 @@
     padding: 10px;
     cursor: pointer;
     transition: background 0.2s;
+    background: var(--mobile-btn-select-bg);
 
     &--active {
       background: $rose;
@@ -108,7 +109,6 @@
       padding: 0;
       list-style: none;
       overflow: hidden;
-      background-color: transparent;
     }
     &__item {
       display: flex;
