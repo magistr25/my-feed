@@ -121,7 +121,7 @@ const LoginPage: FC = () => {
                             }}
                             error={errors.email?.message}
                             isIconVisible={isEmailIconVisible}
-                            statusIcon={!errors.email ? isEmailIconVisible : null}
+                            statusIcon={!watch('email') ? null : !errors.email}
                         />
                         <FormInputGroup
                             label="Пароль"
@@ -137,7 +137,7 @@ const LoginPage: FC = () => {
                             }}
                             error={errors.password?.message}
                             isIconVisible={isPasswordIconVisible}
-                            statusIcon={!errors.password ? isPasswordIconVisible : null}
+                            statusIcon={!watch('password') ? null : !errors.password}
                         />
                         <div className="form-button">
                             <Button
