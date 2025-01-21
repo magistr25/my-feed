@@ -1,7 +1,6 @@
-
 .login-page {
   height: 100vh;
-  background-color: #ffffff;
+  background-color: var(--login-page-bg);
 
   .login-container {
     width: 100%;
@@ -33,7 +32,7 @@
   .form-group {
     max-width: 347px;
     height: auto;
-    min-height: 72px;
+    min-height: 82px;
     margin-bottom: 20px;
     overflow: visible;
 
@@ -48,7 +47,7 @@
       text-align: left;
       text-underline-position: from-font;
       text-decoration-skip-ink: none;
-      color: #212121;
+      color: var(--form-label-color);
 
 
     }
@@ -56,8 +55,8 @@
     input {
       width: 100%;
       padding: 10px;
-      border: none;
-      background: #F6F6F6;
+      border: var(--form-input-border);
+      background:var(--form-input-background);
       border-radius: 8px;
       outline: none;
       transition: border-color 0.3s;
@@ -72,18 +71,18 @@
       color: #BDBDBD;
 
       &:focus {
-        border-color: #ff6b35;
+        border-color: var(--form-input-focus);
       }
 
       &.input-error {
-        border: 1px solid #F03E3E;
+        border-color: var(--form-input-focus);
       }
     }
 
     .error-message {
       font-size: 12px;
-      color: #F03E3E;
-      margin-top: 10px;
+      color: var(--form-input-message);
+      margin-top: 20px;
       margin-bottom: 0;
       display: block;
     }
@@ -108,12 +107,15 @@
   .login-wrapper {
     width: 100vw;
     height: 100vh;
-    background: var(--primary-login-bg);
+    background: var(--login-page-max-bg);
 
   }
   .login-form {
   .form-group {
     margin-bottom: 30px;
+      input{
+
+      }
   }}
   .login-page {
     width: 416px;
@@ -122,6 +124,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    background: var(--login-page-bg);
 
     /* Дополнительно для абсолютного центрирования */
     position: absolute;

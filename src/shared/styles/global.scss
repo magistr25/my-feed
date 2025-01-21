@@ -25,9 +25,16 @@ body {
   box-sizing: border-box;
   overflow-x: hidden;
 }
-@media (max-width: 823px) {
+@media (max-width: 824px) {
   body {
     background-color:var(--body-mobile-bg);
+  }
+  .body-login {
+    background-color: var(--body-login-bg);
+  }
+
+  .body-register {
+    background-color: var(--login-page-bg);
   }
 }
 

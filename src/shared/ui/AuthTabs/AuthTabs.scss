@@ -3,7 +3,7 @@
   justify-content: space-between;
   margin-bottom: 30px;
   width: 100%;
-  border: 1px solid #EE683E;
+  border: 1px solid var(--btn-ptimary-bg);
   border-radius: 8px;
   overflow: hidden;
 
@@ -19,25 +19,25 @@
     letter-spacing: 0.01em;
     cursor: pointer;
     background-color: transparent;
-    color: #EE683E;
+    color: var(--btn-ptimary-bg);
     transition: background-color 0.3s;
     border: none;
 
     &.active {
-      background-color: #EE683E;
-      color: #ffffff;
+      background-color: var(--btn-ptimary-bg);
+      color: #FCFCFC;
     }
   }
 }
 @media (min-width: 824px) {
   .auth-tabs {
     height: 32px;
-
     .auth-tab {
       height: 32px;
       display: flex;
       align-items: center;
       justify-content: center;
+      padding-top: 6px;
     }
   }
 }

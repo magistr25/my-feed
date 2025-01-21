@@ -53,7 +53,21 @@ $grey-darker: #BEB9B4;
   --mobile-theme-color: #BEB9B4;
   --success-color: #20C997;
   --error-color: #F03E3E;
-
+  --login-page-bg: #FCFCFC;
+  --form-label-color: #212121;
+  --form-description-color: #BEB9B4;
+  --form-input-background: #F6F6F6;
+  --login-page-max-bg: #F6F6F6;
+  --form-input-border: none;
+  --form-input-focus: #ff6b35;
+  --form-input-message: #F03E3E;
+  --auhh-tab-color: #EE683E;
+  --btn-ptimary-bg: #EE683E;
+  --btn-hover-bg: #FD825D;
+  --btn-focus-bg: #EE683E;
+  --btn-focus-border: #FD825D;
+  --btn-disabled-bg: #BEB9B4;
+  --body-login-bg: #F2F2F2;
 }
 
 [data-theme="dark"] {
@@ -88,6 +102,26 @@ $grey-darker: #BEB9B4;
   --mobile-theme-color: #686868;
   --success-color: #20C997;
   --error-color: #FA5252;
+  --login-page-bg: #212121;
+  --login-page-max: #212121;
+  --form-label-color: #F6F6F6;
+  --form-description-color: #BDBDBD;
+  --form-input-background: #303030;
+  --login-page-max-bg: #303030;
+  --form-input-border: 1px solid #686868;
+  --form-input-focus: #FA5252;
+  --form-input-message: #FA5252;
+  --auhh-tab-color: #CD4E27;
+  --btn-ptimary-bg: #CD4E27;
+  --btn-hover-bg: #EE683E;
+  --btn-focus-bg: #CD4E27;
+  --btn-focus-border: #EE683E;
+  --btn-disabled-bg: #686868;
+  --body-login-bg: #212121;
+
+
+
+
 
 }
 
