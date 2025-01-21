@@ -47,8 +47,9 @@ const FormInputGroup: FC<FormInputGroupProps> = ({
             />
             {isIconVisible && statusIcon === true && <SuccessIcon className="status-icon" />}
             {isIconVisible && statusIcon === false && <ErrorIcon className="status-icon" />}
+            {error && <span className="error-message">{error}</span>}
         </div>
-        {error && <span className="error-message">{error}</span>}
+
     </div>
 );
 

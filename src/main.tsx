@@ -26,6 +26,7 @@ createRoot(window.document.getElementById('root')!).render(
                                 <Route index element={<HomePage/>}/>
                                 <Route path="/my-posts" element={''}/>
                                 <Route path="/favorites" element={''}/>
+                                <Route path="/profile" element={''}/>
                                 <Route path="/login" element={<LoginPage/>}/>
                                 <Route path="/register" element={<RegisterPage/>}/>
                             </Route>

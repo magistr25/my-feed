@@ -17,3 +17,14 @@
     margin-top: 58px;
   }
 }
+
+@media (min-width: 824px) {
+  .login-container {
+    &-header {
+      &_top {
+        display: none;
+      }
+
+    }
+  }
+}

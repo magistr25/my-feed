@@ -26,6 +26,7 @@ $grey-darker: #BEB9B4;
   --body-bg:#{#686868};
   --body-mobile-bg:#{$white};
   --primary-bg: #{$very-light-grey};
+  --primary-login-bg: #{$very-light-grey};
   --primary-text: #000000;
   --primary-link-color: #{$lighter-grey};
   --primary-link-active: #212121;
@@ -58,7 +59,8 @@ $grey-darker: #BEB9B4;
 [data-theme="dark"] {
   --body-bg:#{#686868};
   --body-mobile-bg:#303030;
-  --primary-bg: #{$darkest-grey};
+  --primary-bg: #212121;
+  --primary-login-bg: #212121;
   --primary-text: #ffffff;
   --primary-link-color: #{$grey};
   --primary-link-active: #F6F6F6;
