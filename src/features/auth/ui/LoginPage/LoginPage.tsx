@@ -5,6 +5,7 @@ import { FC, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from "react-router-dom";
 
+import {isInProfileVar, userVar} from "@/app/apollo/client.ts";
 import { SIGN_IN_USER } from "@/features/auth/api/mutations/signInUser.ts";
 import AuthTabs from "@/shared/ui/AuthTabs/AuthTabs.tsx";
 import Button from "@/shared/ui/Button/Button.tsx";
@@ -54,10 +55,21 @@ const LoginPage: FC = () => {
             }
 
             // Сохраняем токен в localStorage, если вход выполнен успешно
-            const token = userSignIn.token;
+            const { token, user } = userSignIn;
             if (token) {
                 localStorage.setItem('authToken', token);
                 console.log('Токен успешно сохранён:', token);
+                // Сохраняем данные пользователя в кэш Apollo
+                userVar({
+                    id: user.id || 'unknown-id',
+                    firstName: user.firstName || 'Гость',
+                    lastName: user.lastName || '',
+                    middleName: user.middleName || '',
+                    avatarUrl: user.avatarUrl || '',
+                    email: user.email || 'unknown-email',
+                });
+                localStorage.setItem('isInProfile', String(true));
+                isInProfileVar(true);
             } else {
                 console.warn('Токен не получен, предыдущий токен не изменён.');
             }

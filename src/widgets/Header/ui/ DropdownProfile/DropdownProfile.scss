@@ -8,7 +8,7 @@
   align-items: center;
   gap: 10px;
   position: relative;
-
+  margin-right: 40px;
 
   &__avatar {
     width: 32px;
@@ -20,9 +20,10 @@
 
   &__username {
     font-weight: $font-weight-semibold;
-    margin: 0;
+    margin-left: 10px;
     line-height: 44px;
     color: var(--post-author-color);
+    text-wrap: nowrap;
   }
 
   &__btn {
