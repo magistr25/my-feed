@@ -6,7 +6,7 @@ import Header from '@/widgets/Header/Header';
 
 const App = () => {
     const location = useLocation();
-    const hideHeaderPaths = ['/login', '/register']; // Пути, где не нужно показывать Header
+    const hideHeaderPaths = ['/login', '/register', '/error-500']; // Пути, где не нужно показывать Header
     useEffect(() => {
         // Восстанавливаем состояние при загрузке приложения
         const initializeState = () => {
@@ -44,7 +44,7 @@ const App = () => {
         // Убираем старые классы
         window.document.body.className = '';
         // Добавляем класс на основе маршрута
-        if (location.pathname === '/login') {
+        if (location.pathname === '/login' || location.pathname === '/error-500') {
             window.document.body.classList.add('body-login');
         } else if (location.pathname === '/register') {
             window.document.body.classList.add('body-register');

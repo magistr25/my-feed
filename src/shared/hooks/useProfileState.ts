@@ -34,6 +34,13 @@ const useProfileState = () => {
         return () => unsubscribe();
     }, []);
 
+    useEffect(() => {
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+            isInProfileVar(false); // Сбрасываем состояние профиля
+        }
+    }, []);
+
     // Методы для изменения состояния
     const enterProfile = () => isInProfileVar(true);
     const leaveProfile = () => isInProfileVar(false);

@@ -1,9 +1,10 @@
-import { ApolloClient, createHttpLink, InMemoryCache, makeVar } from '@apollo/client';
+import {ApolloClient, createHttpLink, from, InMemoryCache, makeVar} from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
+import { onError } from "@apollo/client/link/error";
 
 import GET_USER from "@/features/auth/api/queries/getUser.ts";
 
-interface User {
+export interface User {
     avatarUrl?: string;
     birthDate?: string;
     country?: string;
@@ -18,7 +19,27 @@ interface User {
     phone?: string;
     updatedAt?: string;
 }
+// Обработчик ошибок Apollo
+const errorLink = onError(({ graphQLErrors, networkError }) => {
+    if (graphQLErrors) {
+        graphQLErrors.forEach(({ message, locations, path }) => {
+            console.error(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`);
+        });
 
+        // Если возникает ошибка авторизации, можно перенаправить пользователя
+        const authError = graphQLErrors.find((error) => error.extensions?.code === 'UNAUTHENTICATED');
+        if (authError) {
+            localStorage.removeItem('authToken');
+            window.location.href = '/login'; // Перенаправляем на страницу логина
+        }
+    }
+
+    if (networkError) {
+        console.error(`[Network error]: ${networkError}`);
+        // Если сеть недоступна, перенаправляем на страницу ошибки
+        window.location.href = '/error-500';
+    }
+});
 // Создаем ссылку на GraphQL endpoint
 const httpLink = createHttpLink({
     uri: 'https://internship-social-media.purrweb.com/graphql',
@@ -55,6 +76,8 @@ const cache = new InMemoryCache({
         },
     },
 });
+// Глобальная переменная для хранения состояния загрузки
+export const loadingStateVar = makeVar(false);
 
 // Локальная переменная для хранения данных пользователя
 export const userVar = makeVar<User | null>(
@@ -85,14 +108,12 @@ export const isInProfileVar = makeVar<boolean>(
 userVar.onNextChange((value) => {
     if (value) {
         localStorage.setItem('user', JSON.stringify(value));
-    } else {
-        localStorage.removeItem('user');
     }
 });
 
 const client = new ApolloClient({
-    link: authLink.concat(httpLink),
-    cache,
+    link: from([errorLink, authLink.concat(httpLink)]),
+    cache: new InMemoryCache(),
 });
 
 export default client;

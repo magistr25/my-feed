@@ -154,7 +154,7 @@ const RegisterPage: FC = () => {
                 }
             });
         } else {
-            console.error('Неизвестная ошибка:', e);
+            navigate('/error-500');
         }
     };
 
@@ -273,14 +273,16 @@ const RegisterPage: FC = () => {
                         <p className="error-message">{registerError?.message || completeError?.message}</p>
                     )}
                     {notification && (
-                        <Notification
-                            message={notification.message}
-                            type={notification.type}
-                            onClose={() => {
-                                setNotification(null);
-                                navigate('/register');
-                            }}
-                        />
+                        <div className="register-container__notification">
+                            <Notification
+                                message={notification.message}
+                                type={notification.type}
+                                onClose={() => {
+                                    setNotification(null);
+                                    navigate('/login');
+                                }}
+                            />
+                        </div>
                     )}
                 </div>
             </div>

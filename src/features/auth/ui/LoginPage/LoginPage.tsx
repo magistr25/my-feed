@@ -77,6 +77,7 @@ const LoginPage: FC = () => {
             // Перенаправляем пользователя
             navigate('/');
         } catch (e) {
+            navigate('/error-500');
             console.error('Ошибка при входе:', e);
 
             // Устанавливаем общую ошибку сервера

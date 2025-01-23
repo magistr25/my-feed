@@ -69,6 +69,8 @@ $grey-darker: #BEB9B4;
   --btn-disabled-bg: #BEB9B4;
   --body-login-bg: #F2F2F2;
   --input-text-color: #212121;
+  --error-description-color: #303030;
+
 }
 
 [data-theme="dark"] {
@@ -120,6 +122,8 @@ $grey-darker: #BEB9B4;
   --btn-disabled-bg: #686868;
   --body-login-bg: #212121;
   --input-text-color: #F6F6F6;
+  --error-description-color: #BDBDBD;
+
 }
 
 $border-radius: 8px;
