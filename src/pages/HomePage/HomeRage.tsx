@@ -1,14 +1,18 @@
 import './HomePage.scss';
 
-import React, { useState } from 'react';
+import { useReactiveVar } from '@apollo/client';
+import {FC, useEffect, useState} from 'react';
+
+import { isInProfileVar } from '@/app/apollo/client';
+import MobileMenu from '@/features/navigation/MobileMenu';
 
 import avatar1 from '../../assets/images/avatar1.png';
 import avatar2 from '../../assets/images/avatar2.png';
 import post1 from '../../assets/images/post1.png';
 import post2 from '../../assets/images/post2.png';
-import HeartIcon from "../../shared/ui/HeartIcon/HeartIcon";
-import SelectDropdown from "../../shared/ui/SelectDropdown/SelectDropdown";
-import SharePopup from "../../shared/ui/SharePopup/SharePopup.tsx";
+import HeartIcon from '../../shared/ui/HeartIcon/HeartIcon';
+import SelectDropdown from '../../shared/ui/SelectDropdown/SelectDropdown';
+import SharePopup from '../../shared/ui/SharePopup/SharePopup.tsx';
 
 interface Post {
     id: number;
@@ -46,8 +50,17 @@ const options = [
     { value: 'popular', label: 'Лучшее' },
 ];
 
-const HomePage: React.FC = () => {
+const HomePage: FC = () => {
+    const isInProfile = useReactiveVar(isInProfileVar);
     const [liked, setLiked] = useState(false);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const isMobile = window.innerWidth <= 768;
+
+    useEffect(() => {
+        if (!isInProfile) {
+            setDropdownOpen(true);
+        }
+    }, [isInProfile]);
 
     const handleLike = () => {
         setLiked(!liked);
@@ -57,42 +70,55 @@ const HomePage: React.FC = () => {
     const handleSelect = (value: string) => {
         console.log('Выбрано:', value);
     };
+    const handleMenuClose = () => {
+        setDropdownOpen(false); // Закрыть меню
+    };
+
+
+    if (!isInProfile) {
+        return (
+            <div className="homepage-wrapper">
+                {isMobile && <MobileMenu isOpen={dropdownOpen} onClose={handleMenuClose} />}
+            </div>
+        );
+    }
 
     return (
         <div className="homepage-wrapper">
-          <div className="homepage">
-            <header className="homepage__header">
-                <nav className="homepage__nav">
-                    <SelectDropdown options={options} onSelect={handleSelect} />
-                </nav>
-            </header>
-            <main className="homepage__content">
-                {posts.map((post) => (
-                    <article key={post.id} className="post">
-                        <header className="post__header">
-                            <img className="post__avatar" src={post.avatarUrl} alt={`${post.author} avatar`}/>
-                            <div className="post__meta">
-                                <h3 className="post__author">{post.author}</h3>
-                                <time className="post__date">{post.date}</time>
+            <div className="homepage">
+                <header className="homepage__header">
+                    <nav className="homepage__nav">
+                        <SelectDropdown options={options} onSelect={handleSelect} />
+                    </nav>
+                </header>
+                <main className="homepage__content">
+                    {posts.map((post) => (
+                        <article key={post.id} className="post">
+                            <header className="post__header">
+                                <img className="post__avatar" src={post.avatarUrl} alt={`${post.author} avatar`} />
+                                <div className="post__meta">
+                                    <h3 className="post__author">{post.author}</h3>
+                                    <time className="post__date">{post.date}</time>
+                                </div>
+                            </header>
+                            <h2 className="post__title">{post.title}</h2>
+                            <img className="post__image" src={post.imageUrl} alt={post.title} />
+                            <p className="post__content">
+                                <span>{post.content}</span>
+                                <a href="#" className="post__read-more">Читать больше</a>
+                            </p>
+                            <div className="post__actions">
+                                <HeartIcon onClick={handleLike} isActive={liked} />
+                                <SharePopup />
                             </div>
-                        </header>
-                        <h2 className="post__title">{post.title}</h2>
-                        <img className="post__image" src={post.imageUrl} alt={post.title}/>
-                        <p className="post__content">
-                            <span>{post.content}</span>
-                            <a href="#" className="post__read-more">Читать больше</a>
-                        </p>
-                        <div className="post__actions">
-                            <HeartIcon onClick={handleLike} isActive={liked}/>
-                            <SharePopup/>
-                        </div>
-                    </article>
-                ))}
-            </main>
-        </div>
+                        </article>
+                    ))}
+                </main>
+            </div>
         </div>
     );
 };
 
 export default HomePage;
+
 

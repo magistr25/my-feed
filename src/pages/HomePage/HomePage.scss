@@ -1,6 +1,8 @@
 @use '../../shared/styles/variables'  as *;
 .homepage-wrapper {
   width: 1440px;
+  min-height: 100vh;
+  background: var(--primary-bg);
 }
 .homepage {
   display: flex;

@@ -1,7 +1,7 @@
 import './DropdownProfile.scss';
 
 import { useReactiveVar } from '@apollo/client';
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { isInProfileVar, loadingStateVar, userVar } from '@/app/apollo/client.ts';
@@ -18,7 +18,11 @@ const DropdownProfile = () => {
     // Переключение состояния выпадающего меню
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const toggleDropdown = () => setDropdownOpen((prev) => !prev);
-
+    useEffect(() => {
+        if (!isInProfile) {
+            setDropdownOpen(true);
+        }
+    }, [isInProfile]);
     const handleLogOut = async () => {
         loadingStateVar(true); // Устанавливаем состояние загрузки
 

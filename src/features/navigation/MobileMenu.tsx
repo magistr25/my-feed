@@ -71,7 +71,7 @@ const MobileMenu: FC<MobileMenuProps> = ({ isOpen, onClose }) => {
                     {isInProfile  ? (
                         <>
                             <li>
-                                <Link className="mobile-menu__list_open-account" to="/login" onClick={handleLogOut}>
+                                <Link className="mobile-menu__list_open-account" to="/" onClick={handleLogOut}>
                                     Выйти из аккаунта
                                 </Link>
 
