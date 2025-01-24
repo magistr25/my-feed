@@ -4,15 +4,15 @@ import { useReactiveVar } from '@apollo/client';
 import {FC, useEffect, useState} from 'react';
 
 import { isInProfileVar } from '@/app/apollo/client';
-import MobileMenu from '@/features/navigation/MobileMenu';
+import MobileMenu from '@/features/navigation/MobileMenu/MobileMenu.tsx';
+import PostList from "@/features/posts/ui/PostList/PostList.tsx";
+import SelectDropdown from "@/shared/ui/SelectDropdown/SelectDropdown.tsx";
 
 import avatar1 from '../../assets/images/avatar1.png';
 import avatar2 from '../../assets/images/avatar2.png';
 import post1 from '../../assets/images/post1.png';
 import post2 from '../../assets/images/post2.png';
-import HeartIcon from '../../shared/ui/HeartIcon/HeartIcon';
-import SelectDropdown from '../../shared/ui/SelectDropdown/SelectDropdown';
-import SharePopup from '../../shared/ui/SharePopup/SharePopup.tsx';
+
 
 interface Post {
     id: number;
@@ -52,7 +52,6 @@ const options = [
 
 const HomePage: FC = () => {
     const isInProfile = useReactiveVar(isInProfileVar);
-    const [liked, setLiked] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const isMobile = window.innerWidth <= 768;
 
@@ -62,10 +61,6 @@ const HomePage: FC = () => {
         }
     }, [isInProfile]);
 
-    const handleLike = () => {
-        setLiked(!liked);
-        console.log('Лайкнут:', liked);
-    };
 
     const handleSelect = (value: string) => {
         console.log('Выбрано:', value);
@@ -92,27 +87,7 @@ const HomePage: FC = () => {
                     </nav>
                 </header>
                 <main className="homepage__content">
-                    {posts.map((post) => (
-                        <article key={post.id} className="post">
-                            <header className="post__header">
-                                <img className="post__avatar" src={post.avatarUrl} alt={`${post.author} avatar`} />
-                                <div className="post__meta">
-                                    <h3 className="post__author">{post.author}</h3>
-                                    <time className="post__date">{post.date}</time>
-                                </div>
-                            </header>
-                            <h2 className="post__title">{post.title}</h2>
-                            <img className="post__image" src={post.imageUrl} alt={post.title} />
-                            <p className="post__content">
-                                <span>{post.content}</span>
-                                <a href="#" className="post__read-more">Читать больше</a>
-                            </p>
-                            <div className="post__actions">
-                                <HeartIcon onClick={handleLike} isActive={liked} />
-                                <SharePopup />
-                            </div>
-                        </article>
-                    ))}
+                    <PostList posts={posts} />
                 </main>
             </div>
         </div>

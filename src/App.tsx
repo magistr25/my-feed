@@ -35,6 +35,7 @@ const App = () => {
                 userVar(null); // Очищаем данные пользователя
                 localStorage.removeItem('user');
                 localStorage.removeItem('authToken');
+                localStorage.removeItem('isInProfile')
             }
         });
         return () => unsubscribe(); // Очистка подписки при размонтировании

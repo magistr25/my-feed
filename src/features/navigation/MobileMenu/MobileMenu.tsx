@@ -25,9 +25,9 @@ const MobileMenu: FC<MobileMenuProps> = ({ isOpen, onClose }) => {
 // Чтение данных пользователя
     const user = useReactiveVar(userVar);
     const handleLogOut = () => {
-        localStorage.removeItem('authToken'); // Удаляем токен
-        localStorage.removeItem('user'); // Удаляем данные пользователя
-        localStorage.removeItem('isInProfile'); // Удаляем состояние профиля
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('user');
+        localStorage.removeItem('isInProfile');
         userVar(null); // Очищаем данные пользователя в Apollo
         isInProfileVar(false); // Сбрасываем состояние профиля
         navigate('/');
