@@ -30,7 +30,6 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
         const authError = graphQLErrors.find((error) => error.extensions?.code === 'UNAUTHENTICATED');
         if (authError) {
             localStorage.removeItem('authToken');
-            window.location.href = '/login'; // Перенаправляем на страницу логина
         }
     }
 

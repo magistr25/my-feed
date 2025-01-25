@@ -58,6 +58,9 @@
     line-height: 22px;
     margin-bottom: 10px;
     color: var(--post-content-color);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
   }
 
   &__read-more {
@@ -65,15 +68,13 @@
     font-size: $body-regular-16;
     font-weight: 400;
     line-height: 22px;
-    color: $primary-default;
+    color: #EE683E;
     text-decoration: none;
+    white-space: normal;
+    word-break: break-word;
 
     &:hover {
-      font-weight: 600;
-    }
-
-    &:active {
-      font-weight: 400;
+      color: #CD4E27;
     }
   }
 
@@ -91,7 +92,7 @@
     color: var(--post-actions-color);
   }
 }
-@media (min-width: 320px) and (max-width: 823px) {
+@media (max-width: 823px) {
   .post {
     padding: 16px;
     margin-bottom: 10px;
@@ -101,17 +102,24 @@
   }
   .post__title {
     font-size: 16px;
+
   }
-  .post__content >span {
-    display: -webkit-box;
-    -webkit-line-clamp: 2; /* Ограничение в 2 строки */
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  .post__content {
+    &__description {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-clamp: 2;
+      -webkit-line-clamp: 2;
+      line-height: 1.5;
+      max-height: calc(1.5em * 2);
+    }
+
   }
   .post__read-more {
-    display: block;
     text-align: left;
+    display: block;
   }
   .post__image {
     min-height: 212px;
@@ -134,6 +142,19 @@
       text-underline-position: from-font;
       text-decoration-skip-ink: none;
       color:  var(--post-content-color);
+      display: block;
+      &__description {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-clamp: 3;
+        -webkit-line-clamp: 3;
+        line-height: 1.5;
+        max-height: calc(1.5em * 3);
+        display: inline;
+      }
+
     }
 
     &__read-more {
@@ -144,17 +165,11 @@
       text-align: center;
       text-underline-position: from-font;
       text-decoration-skip-ink: none;
-      color: $primary-default;
       text-decoration: none;
       margin-left: 5px;
+      white-space: nowrap;
+      display: inline;
 
-
-      &:hover {
-        font-weight: 600;
-      }
-      &:active {
-        font-weight: 400;
-      }
     }
     &__actions {
       display: flex;

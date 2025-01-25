@@ -1,43 +1,33 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
+
+import { PostData } from '@/features/posts/model/types/types';
 
 import Post from '../Post/Post';
-
-interface PostData {
-    id: number;
-    author: string;
-    date: string;
-    title: string;
-    content: string;
-    imageUrl: string;
-    avatarUrl: string;
-}
 
 interface PostListProps {
     posts: PostData[];
 }
 
 const PostList: FC<PostListProps> = ({ posts }) => {
-    const [likedPosts, setLikedPosts] = useState<number[]>([]); // Список ID лайкнутых постов
-
-    const handleLike = (id: number) => {
-        setLikedPosts((prevLikedPosts) =>
-            prevLikedPosts.includes(id)
-                ? prevLikedPosts.filter((postId) => postId !== id) // Убираем лайк
-                : [...prevLikedPosts, id] // Добавляем лайк
-        );
-    };
-
     return (
         <div className="post-list">
-            {posts.map((post, index) => (
+            {posts.map((post) => (
                 <Post
-                    key={`${post.id}-${index}`}
-                    {...post}
-                    onLike={handleLike}
-                    isLiked={likedPosts.includes(post.id)}
+                    key={post.id}
+                    id={post.id}
+                    title={post.title}
+                    description={post.description}
+                    mediaUrl={post.mediaUrl}
+                    createdAt={post.createdAt}
+                    author={{
+                        avatarUrl: post.author.avatarUrl,
+                        firstName: post.author.firstName,
+                        lastName: post.author.lastName,
+                    }}
+                    onLike={() => {}} // Заглушка для onLike
+                    isLiked={false} // Заглушка для isLiked
                 />
             ))}
-
         </div>
     );
 };
