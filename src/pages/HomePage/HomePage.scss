@@ -26,6 +26,9 @@
     border-radius: $border-radius;
     margin-top: 0;
     margin-bottom: -20px;
+    &__loading {
+      background: none;
+    }
   }
 
   &__nav {
@@ -34,6 +37,9 @@
     padding-left: 0;
     margin-left: -10px;
     background: var(--homepage-header-bg);
+   &__loadingSelectDropdown {
+      margin-top: 20px;
+    }
   }
 
   &__select {
@@ -133,8 +139,17 @@
 }
 @media (min-width: 825px) {
   .homepage {
+    &__content {
+      gap: 25px;
+    }
     &__nav {
       background: var(--homepage-header-bg);
+      justify-content: left;
+
+      &__loadingSelectDropdown {
+        margin-top: 20px;
+        margin-left: -320px;
+      }
     }
     &__header {
       width: 100%;
@@ -157,10 +172,4 @@
     }
   }
 }
-@media (min-width: 825px) {
-  .homepage {
-    &__content {
-      gap: 25px;
-    }
-  }
-}
+

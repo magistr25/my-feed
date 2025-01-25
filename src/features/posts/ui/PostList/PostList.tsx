@@ -1,17 +1,33 @@
 import { FC } from 'react';
 
 import { PostData } from '@/features/posts/model/types/types';
+import LoadingPost from '@/shared/ui/LoadingPost/LoadingPost';
 
 import Post from '../Post/Post';
 
 interface PostListProps {
-    posts: PostData[];
+    posts?: PostData[];
+    isLoading: boolean;
 }
 
-const PostList: FC<PostListProps> = ({ posts }) => {
+const PostList: FC<PostListProps> = ({ posts, isLoading }) => {
+    // Если данные загружаются, отображаем "загрузочные" посты
+    if (isLoading) {
+        return (
+            <div className="post-list">
+                {Array.from({ length: 5 }, (_, index) => (
+                    <div key={index} className="post-list__loading">
+                        <LoadingPost />
+                    </div>
+                ))}
+            </div>
+        );
+    }
+
+    // Отображаем реальные посты, если загрузка завершена
     return (
         <div className="post-list">
-            {posts.map((post) => (
+            {posts?.map((post) => (
                 <Post
                     key={post.id}
                     id={post.id}
@@ -33,3 +49,4 @@ const PostList: FC<PostListProps> = ({ posts }) => {
 };
 
 export default PostList;
+

@@ -1,7 +1,7 @@
 import {gql} from "@apollo/client";
 
 const GET_POSTS = gql(`
-   query GetPosts($input: FindPostsRequest!) {
+query GetPosts($input: FindPostsRequest!) {
   posts(input: $input) {
     data {
       id

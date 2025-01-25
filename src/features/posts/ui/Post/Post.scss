@@ -131,6 +131,9 @@
     background: var(--select-btn-color);
     border-radius: 20px;
     padding: 22px 41px;
+    height: 626px;
+    display: flex;
+    flex-direction: column;
 
     &__content {
       font-family: 'Gilroy', sans-serif;
@@ -210,6 +213,10 @@
       width: 100%;
       border-radius: 18px;
       margin: 10px 0;
+      min-height: 346px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
   }
 }

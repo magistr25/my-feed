@@ -1,6 +1,6 @@
 import './Post.scss';
 
-import {FC, useState} from 'react';
+import {FC, useEffect, useState} from 'react';
 
 import DefaultAvatar from "@/shared/ui/DefaultAvatar/DefaultAvatar.tsx";
 import HeartIcon from "@/shared/ui/HeartIcon/HeartIcon.tsx";
@@ -23,6 +23,16 @@ interface PostProps {
 
 const Post: FC<PostProps> = ({ id, author, createdAt, title, description, mediaUrl, onLike, isLiked }) => {
     const [avatarError, setAvatarError] = useState(false); // Состояние для отслеживания ошибки загрузки аватарки
+    const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth >= 768);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsLargeScreen(window.innerWidth >= 768);
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
@@ -35,7 +45,11 @@ const Post: FC<PostProps> = ({ id, author, createdAt, title, description, mediaU
         // Возвращаем дату в формате дд.мм.гггг
         return `${day}.${month}.${year}`;
     };
-
+    const formattedDescription = isLargeScreen
+        ? description.length > 200
+            ? description.slice(0, 197).replace(/.{3}$/, '…')
+            : description.replace(/.{3}$/, '…')
+        : description.replace(/.{3}$/, '…');
     return (
         <article className="post">
             <header className="post__header">
@@ -57,7 +71,7 @@ const Post: FC<PostProps> = ({ id, author, createdAt, title, description, mediaU
             <h2 className="post__title">{title}</h2>
             <img className="post__image" src={mediaUrl} alt={title} />
             <p className="post__content">
-                <span className="post__content__description">{description.replace(/.{3}$/, '…')}</span>
+                <span className="post__content__description">{formattedDescription}</span>
                 <a href="#" className="post__read-more">Читать больше</a>
             </p>
             <div className="post__actions">
