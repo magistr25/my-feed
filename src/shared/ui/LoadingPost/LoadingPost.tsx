@@ -30,12 +30,11 @@ const LoadingPost: React.FC = () => {
             {isMobile ? (
                 <svg
                     width="100%"
-                    height="auto"
                     viewBox="0 0 343 474"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
                     preserveAspectRatio="none"
-                    style={{ maxHeight: "584px" }}
+                    style={{ height: "auto", maxHeight: "584px" }}
                 >
                     {/* Круг (аватар) */}
                     <circle
@@ -57,11 +56,10 @@ const LoadingPost: React.FC = () => {
                     <rect
                         x="16.5"
                         y="116.5"
-                        width="calc(100% - 33px)" // Адаптивная ширина
-                        height="calc(40%)"
-                        rx="17.5"
+                                                rx="17.5"
                         fill="url(#youtubeGradient)"
                         stroke="url(#youtubeGradientStroke)"
+                        style={{ width: "calc(100% - 33px)", height: "calc(40%)" }} // Адаптивная ширина
                     />
 
                     {/* Текстовые блоки под постом */}
@@ -121,11 +119,11 @@ const LoadingPost: React.FC = () => {
                 // Версия SVG для больших экранов
                 <svg
                     width="100%"
-                    height="auto"
                     viewBox="0 0 743 625"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
                     preserveAspectRatio="none"
+                    style={{ height: "auto" }}
                 >
                     {/* Круг (аватар) */}
                     <circle

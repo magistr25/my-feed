@@ -1,7 +1,10 @@
 import './Post.scss';
 
-import {FC, useEffect, useState} from 'react';
+import { useMutation } from '@apollo/client';
+import { FC, useEffect, useState } from 'react';
 
+import { POST_LIKE } from '@/features/posts/api/mutations/postLike';
+import {  POST_UNLIKE } from '@/features/posts/api/mutations/postUnlike';
 import DefaultAvatar from "@/shared/ui/DefaultAvatar/DefaultAvatar.tsx";
 import HeartIcon from "@/shared/ui/HeartIcon/HeartIcon.tsx";
 import SharePopup from "@/shared/ui/SharePopup/SharePopup.tsx";
@@ -21,9 +24,13 @@ interface PostProps {
     isLiked: boolean;
 }
 
-const Post: FC<PostProps> = ({ id, author, createdAt, title, description, mediaUrl, onLike, isLiked }) => {
+const Post: FC<PostProps> = ({ id, author, createdAt, title, description, mediaUrl, isLiked }) => {
     const [avatarError, setAvatarError] = useState(false); // Состояние для отслеживания ошибки загрузки аватарки
     const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth >= 768);
+    const [localIsLiked, setLocalIsLiked] = useState(isLiked); // Локальное состояние лайков
+
+    const [likePost] = useMutation(POST_LIKE);
+    const [unlikePost] = useMutation(POST_UNLIKE);
 
     useEffect(() => {
         const handleResize = () => {
@@ -37,19 +44,37 @@ const Post: FC<PostProps> = ({ id, author, createdAt, title, description, mediaU
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
 
-        // Получаем день, месяц и год
-        const day = String(date.getDate()).padStart(2, '0'); // Добавляем ведущий ноль, если нужно
-        const month = String(date.getMonth() + 1).padStart(2, '0'); // Месяцы начинаются с 0, поэтому +1
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
         const year = date.getFullYear();
 
-        // Возвращаем дату в формате дд.мм.гггг
         return `${day}.${month}.${year}`;
     };
+
     const formattedDescription = isLargeScreen
         ? description.length > 200
             ? description.slice(0, 197).replace(/.{3}$/, '…')
             : description.replace(/.{3}$/, '…')
         : description.replace(/.{3}$/, '…');
+
+    const handleLike = async () => {
+        try {
+            if (localIsLiked) {
+                // Снятие лайка
+                const { data } = await unlikePost({ variables: { input: { id } } });
+                setLocalIsLiked(data.postUnlike.isLiked);
+
+            } else {
+                // Установка лайка
+                const { data } = await likePost({ variables: { input: { id } } });
+                setLocalIsLiked(data.postLike.isLiked);
+
+            }
+        } catch (error) {
+            console.error('Ошибка при обновлении лайка:', error);
+        }
+    };
+
     return (
         <article className="post">
             <header className="post__header">
@@ -58,7 +83,7 @@ const Post: FC<PostProps> = ({ id, author, createdAt, title, description, mediaU
                         className="post__avatar"
                         src={author.avatarUrl}
                         alt={`${author.firstName} ${author.lastName}`}
-                        onError={() => setAvatarError(true)} // Обработчик ошибки загрузки
+                        onError={() => setAvatarError(true)}
                     />
                 ) : (
                     <DefaultAvatar />
@@ -75,7 +100,7 @@ const Post: FC<PostProps> = ({ id, author, createdAt, title, description, mediaU
                 <a href="#" className="post__read-more">Читать больше</a>
             </p>
             <div className="post__actions">
-            <HeartIcon onClick={() => onLike(id)} isActive={isLiked} />
+                <HeartIcon onClick={handleLike} isActive={localIsLiked} />
                 <SharePopup />
             </div>
         </article>

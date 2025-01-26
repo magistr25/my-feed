@@ -12,6 +12,7 @@ export interface Post {
     mediaUrl: string;
     createdAt: string;
     author: Author;
+    isLiked: boolean;
 }
 
 export interface PageInfo {
@@ -27,4 +28,5 @@ export interface PostData {
     mediaUrl: string;
     createdAt: string;
     author: Author;
+    isLiked: boolean;
 }

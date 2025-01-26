@@ -8,9 +8,10 @@ import Post from '../Post/Post';
 interface PostListProps {
     posts?: PostData[];
     isLoading: boolean;
+    onLike: (id: string) => void;
 }
 
-const PostList: FC<PostListProps> = ({ posts, isLoading }) => {
+const PostList: FC<PostListProps> = ({ posts, isLoading, onLike }) => {
     // Если данные загружаются, отображаем "загрузочные" посты
     if (isLoading) {
         return (
@@ -40,8 +41,8 @@ const PostList: FC<PostListProps> = ({ posts, isLoading }) => {
                         firstName: post.author.firstName,
                         lastName: post.author.lastName,
                     }}
-                    onLike={() => {}} // Заглушка для onLike
-                    isLiked={false} // Заглушка для isLiked
+                    onLike={onLike}
+                    isLiked={post.isLiked}
                 />
             ))}
         </div>

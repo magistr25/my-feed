@@ -9,6 +9,7 @@ query GetPosts($input: FindPostsRequest!) {
       description
       mediaUrl
       createdAt
+      isLiked    
       author {
         id
         firstName
