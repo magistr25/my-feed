@@ -11,7 +11,7 @@ interface PostListProps {
     onLike: (id: string) => void;
 }
 
-const PostList: FC<PostListProps> = ({ posts, isLoading, onLike }) => {
+const PostList: FC<PostListProps> = ({ posts, isLoading }) => {
     // Если данные загружаются, отображаем "загрузочные" посты
     if (isLoading) {
         return (
@@ -41,7 +41,6 @@ const PostList: FC<PostListProps> = ({ posts, isLoading, onLike }) => {
                         firstName: post.author.firstName,
                         lastName: post.author.lastName,
                     }}
-                    onLike={onLike}
                     isLiked={post.isLiked}
                 />
             ))}

@@ -1,5 +1,8 @@
 import { ApolloClient, gql } from '@apollo/client';
 
+import {GET_FULL_POST_QUERY} from "@/features/posts/api/queries/getPost";
+import {FullPostData} from "@/features/posts/model/types/types";
+
 // Интерфейс для данных поста
 interface PostData {
     id: string;
@@ -58,3 +61,22 @@ export const toggleLike = async (
         return await likePost(client, postId);
     }
 };
+
+// Функция для получения поста по его id
+export const getFullPost = async (
+    client: ApolloClient<any>,
+    id: string
+): Promise<FullPostData> => {
+    const { data } = await client.query<{ post: FullPostData }>({
+        query: GET_FULL_POST_QUERY,
+        variables: { input: { id } },
+    });
+
+    if (!data || !data.post) {
+        throw new Error('Пост не найден');
+    }
+
+    return data.post;
+};
+
+

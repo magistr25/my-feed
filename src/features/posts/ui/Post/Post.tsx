@@ -1,109 +1,121 @@
 import './Post.scss';
 
-import { useMutation } from '@apollo/client';
-import { FC, useEffect, useState } from 'react';
+import {useReactiveVar} from '@apollo/client';
+import {FC, useState} from 'react';
 
-import { POST_LIKE } from '@/features/posts/api/mutations/postLike';
-import {  POST_UNLIKE } from '@/features/posts/api/mutations/postUnlike';
-import DefaultAvatar from "@/shared/ui/DefaultAvatar/DefaultAvatar.tsx";
-import HeartIcon from "@/shared/ui/HeartIcon/HeartIcon.tsx";
-import SharePopup from "@/shared/ui/SharePopup/SharePopup.tsx";
+import {likeVar} from "@/app/apollo/client.ts";
+import closeIcon from '@/assets/images/close.png';
+import {formatDate} from '@/features/posts/lib/formatDate';
+import { formatDescription } from '@/features/posts/lib/formatDescription';
+import {useAvatarError} from '@/features/posts/lib/handleAvatarError';
+import {useLikePost} from '@/features/posts/lib/handleLike';
+import {useReadMore} from '@/features/posts/lib/handleReadMore';
+import {useScreenSize} from '@/features/posts/lib/useScreenSize';
+import {PostProps} from '@/features/posts/model/types/types';
+import DefaultAvatar from '@/shared/ui/DefaultAvatar/DefaultAvatar.tsx';
+import HeartIcon from '@/shared/ui/HeartIcon/HeartIcon.tsx';
+import SharePopup from '@/shared/ui/SharePopup/SharePopup.tsx';
 
-interface PostProps {
-    id: string;
-    title: string;
-    description: string;
-    mediaUrl: string;
-    createdAt: string;
-    author: {
-        avatarUrl: string;
-        firstName: string;
-        lastName: string;
-    };
-    onLike: (id: string) => void;
-    isLiked: boolean;
-}
 
-const Post: FC<PostProps> = ({ id, author, createdAt, title, description, mediaUrl, isLiked }) => {
-    const [avatarError, setAvatarError] = useState(false); // Состояние для отслеживания ошибки загрузки аватарки
-    const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth >= 768);
-    const [localIsLiked, setLocalIsLiked] = useState(isLiked); // Локальное состояние лайков
+const Post: FC<PostProps> = ({id, author, createdAt, title, description, mediaUrl, isLiked}) => {
+    const {avatarError, setAvatarError} = useAvatarError();
+    const {isLargeScreen} = useScreenSize();
+    const {showFullPost, fullDescription, loading, error, handleReadMore, handleClosePost} = useReadMore(id);
+    const {handleLike} = useLikePost(id, isLiked);
+    const isLikedState = useReactiveVar(likeVar)[id] ?? isLiked;
+    const [isExpanded, setIsExpanded] = useState(false);
 
-    const [likePost] = useMutation(POST_LIKE);
-    const [unlikePost] = useMutation(POST_UNLIKE);
+    const formattedDescription = formatDescription(description, fullDescription, showFullPost, isLargeScreen);
 
-    useEffect(() => {
-        const handleResize = () => {
-            setIsLargeScreen(window.innerWidth >= 768);
-        };
+    const handleExpand = async () => {
+        setIsExpanded(true);
 
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
+        // Сохраняем текущую позицию прокрутки
+        const scrollPosition = window.scrollY;
 
-    const formatDate = (dateString: string) => {
-        const date = new Date(dateString);
+        // Устанавливаем фиксированное позиционирование для body
+        window.document.body.style.position = 'fixed';
+         window.document.body.style.top = `-${scrollPosition}px`;
+         window.document.body.style.left = '0';
+         window.document.body.style.right = '0';
+         window.document.body.style.overflow = 'hidden';
 
-        const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const year = date.getFullYear();
-
-        return `${day}.${month}.${year}`;
-    };
-
-    const formattedDescription = isLargeScreen
-        ? description.length > 200
-            ? description.slice(0, 197).replace(/.{3}$/, '…')
-            : description.replace(/.{3}$/, '…')
-        : description.replace(/.{3}$/, '…');
-
-    const handleLike = async () => {
         try {
-            if (localIsLiked) {
-                // Снятие лайка
-                const { data } = await unlikePost({ variables: { input: { id } } });
-                setLocalIsLiked(data.postUnlike.isLiked);
-
-            } else {
-                // Установка лайка
-                const { data } = await likePost({ variables: { input: { id } } });
-                setLocalIsLiked(data.postLike.isLiked);
-
-            }
+            await handleReadMore(); // Загрузка полного текста
         } catch (error) {
-            console.error('Ошибка при обновлении лайка:', error);
+            console.error("Ошибка при загрузке полного текста:", error);
         }
     };
 
+    const handleClose = () => {
+        setIsExpanded(false);
+
+        // Получаем сохранённую позицию прокрутки
+        const scrollPosition = parseInt( window.document.body.style.top || '0', 10) * -1;
+
+        // Удаляем фиксированное позиционирование
+         window.document.body.style.position = '';
+         window.document.body.style.top = '';
+         window.document.body.style.left = '';
+         window.document.body.style.right = '';
+         window.document.body.style.overflow = '';
+
+        // Мгновенно восстанавливаем позицию прокрутки
+        window.scrollTo({
+            top: scrollPosition,
+            behavior: 'instant', // Обеспечиваем моментальное перемещение
+        });
+
+        handleClosePost();
+    };
+
     return (
-        <article className="post">
-            <header className="post__header">
-                {author.avatarUrl && !avatarError ? (
-                    <img
-                        className="post__avatar"
-                        src={author.avatarUrl}
-                        alt={`${author.firstName} ${author.lastName}`}
-                        onError={() => setAvatarError(true)}
-                    />
-                ) : (
-                    <DefaultAvatar />
-                )}
-                <div className="post__meta">
-                    <h3 className="post__author">{author.firstName} {author.lastName}</h3>
-                    <time className="post__date">{formatDate(createdAt)}</time>
+        <>
+            <div className={`overlay ${isExpanded ? 'overlay--visible' : ''}`} onClick={handleClose}/>
+            <article className={`post ${isExpanded ? 'post--expanded' : ''}`}>
+                <header className="post__header">
+                    {author.avatarUrl && !avatarError ? (
+                        <img
+                            className="post__avatar"
+                            src={author.avatarUrl}
+                            alt={`${author.firstName} ${author.lastName}`}
+                            onError={() => setAvatarError(true)}
+                        />
+                    ) : (
+                        <DefaultAvatar/>
+                    )}
+                    <div className="post__meta">
+                        <h3 className="post__author">{`${author.firstName} ${author.lastName}`}</h3>
+                        <time className="post__date">{formatDate(createdAt)}</time>
+                    </div>
+                    {showFullPost && (
+                        <button className="post__close-button" onClick={handleClose}>
+                            <img src={closeIcon} alt="Close" />
+                        </button>
+                    )}
+                </header>
+                <h2 className="post__title">{title}</h2>
+                <img className="post__image" src={mediaUrl} alt=''/>
+                <p className="post__content">
+                    <span className={`post__content__description ${showFullPost ? 'post__content__description_full' : ''}`}>
+                        {formattedDescription}
+                        {!showFullPost && !loading && !error && (
+                            <button className="post__read-more_max" onClick={handleExpand}>Читать больше</button>
+                        )}
+                    </span>
+                    {!showFullPost && !loading && !error && (
+                        <button className="post__read-more_min" onClick={handleExpand}>Читать больше</button>
+                    )}
+                    {loading && <span className="post__loading"></span>}
+                    {error && <span className="post__error">{error}</span>}
+                </p>
+
+                <div className="post__actions">
+                    <HeartIcon onClick={handleLike} isActive={isLikedState}/>
+                    <SharePopup isExpanded={showFullPost}/>
                 </div>
-            </header>
-            <h2 className="post__title">{title}</h2>
-            <img className="post__image" src={mediaUrl} alt={title} />
-            <p className="post__content">
-                <span className="post__content__description">{formattedDescription}</span>
-                <a href="#" className="post__read-more">Читать больше</a>
-            </p>
-            <div className="post__actions">
-                <HeartIcon onClick={handleLike} isActive={localIsLiked} />
-                <SharePopup />
-            </div>
-        </article>
+            </article>
+        </>
     );
 };
 

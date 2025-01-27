@@ -1,11 +1,22 @@
 @use '../../styles/variables'  as *;
+
 .share {
   position: relative;
 
-  &__button {
+  &__button-svg {
     background: none;
     border: none;
     cursor: pointer;
+    &:hover .share__icon-path {
+      stroke: var(--share-btn-svg-hover);
+    }
+    &:active .share__icon-path {
+      stroke: var(--share-btn-svg-active)
+    }
+  }
+  &__icon-path {
+    stroke: #bdbdbd;
+    transition: stroke 0.3s ease;
   }
 
   &__title {
@@ -17,10 +28,11 @@
     text-align: left;
     text-underline-position: from-font;
     text-decoration-skip-ink: none;
-    color: $primary-default;
+    color: var(--share-title-color);
   }
   &__description {
     margin-bottom: 20px;
+    color: var(--share-description-color);
   }
 }
 
@@ -50,13 +62,20 @@
   left: 0;
   width: 100%;
   max-width: 824px;
-  background-color: #fff;
+  background-color: var(--share-popup-bg);
   padding: 20px;
   border-radius: 12px 12px 0 0;
   box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
   z-index: 20;
   transform: translateY(100%);
   animation: slideUp 0.3s forwards;
+  &--expanded {
+    position: fixed;
+    bottom: -10px;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 824px;
+  }
   @media (min-width: 825px) {
     top: calc(50vh - 100px);
     left: calc(50vw - 208px);
@@ -64,6 +83,11 @@
     width: 416px;
     height: 268px;
     border-radius: 16px;
+    &--expanded {
+      top: 25%;
+      left: 20%;
+      transform: translate(-50%, -50%);
+    }
   }
 }
 
@@ -80,7 +104,9 @@
   border-radius: 8px;
   font-size: 14px;
   margin-bottom: 25px;
-  background-color: #F6F6F6;
+  background-color: var(--share-link-bg);
+  border: var(--share-link-border);
+  color: var(--share-link-color);
 }
 
 .share__close-button {
@@ -89,6 +115,7 @@
   border: none;
   display: flex;
   justify-content: right;
+  cursor: pointer;
   &-img {
     width: 24px;
     height: 24px;
@@ -101,7 +128,7 @@
   font-size: 16px;
   font-weight: 600;
   color: #fff;
-  background-color: $primary-default;
+  background: var(--btn-ptimary-bg);
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -121,10 +148,17 @@
   animation: fadeInOut 3s forwards;
 
   @media (min-width: 825px) {
-    top: 88px;
-    right: 48px;
+    top: 10%;
+    right: 15%;
     left: auto;
     transform: none;
+  }
+  &--expanded {
+    @media (min-width: 825px) {
+      top: -10%;
+      left: 35vw;
+      transform: translate(-20%, -20%);
+    }
   }
 }
 

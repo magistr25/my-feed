@@ -110,6 +110,9 @@ userVar.onNextChange((value) => {
     }
 });
 
+// Переменная для хранения состояния лайков
+export const likeVar = makeVar<Record<string, boolean>>({});
+
 const client = new ApolloClient({
     link: from([errorLink, authLink.concat(httpLink)]),
     cache: new InMemoryCache(),

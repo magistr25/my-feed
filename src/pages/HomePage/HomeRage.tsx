@@ -10,6 +10,7 @@ import MobileMenu from '@/features/navigation/ui/MobileMenu/MobileMenu.tsx';
 import { toggleLike } from '@/features/posts/lib/postService';
 import { usePostsQuery } from '@/features/posts/model/hooks/UsePostsQuery';
 import PostList from "@/features/posts/ui/PostList/PostList.tsx";
+import LoadingPost from "@/shared/ui/LoadingPost/LoadingPost.tsx";
 import LoadingSelectDropdown from "@/shared/ui/LoadingSelectDropdown/LoadingSelectDropdown.tsx";
 import SelectDropdown from "@/shared/ui/SelectDropdown/SelectDropdown.tsx";
 
@@ -139,7 +140,7 @@ const HomePage: FC = () => {
                         dataLength={localPosts.length} // Текущее количество загруженных постов
                         next={loadMore} // Функция для загрузки следующих постов
                         hasMore={hasMore} // Есть ли еще посты для загрузки
-                        loader={<h4>Загрузка...</h4>} // Индикатор загрузки
+                        loader={<h4><LoadingPost /></h4>} // Индикатор загрузки
                         endMessage={<p>Постов больше нет</p>} // Сообщение, когда посты закончились
                     >
                         <PostList posts={localPosts} isLoading={false} onLike={handleLike} />

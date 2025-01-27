@@ -44,7 +44,7 @@ const LoadingPost: React.FC = () => {
                         fill="url(#youtubeGradient)"
                         stroke="url(#youtubeGradientStroke)"
                         strokeWidth="0.786885"
-                        vector-effect="non-scaling-stroke"
+                        vectorEffect="non-scaling-stroke"
                     />
 
                     {/* Прямоугольники (заголовок и текст) */}
