@@ -1,0 +1,114 @@
+.button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  font-family: "Gilroy", sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  cursor: pointer;
+  text-decoration: none;
+
+  &--primary {
+    background-color: var(--btn-ptimary-bg);
+    color: #FFFFFF;
+    border: none;
+    width: 100%;;
+
+    &:hover {
+      background-color: #FD825D;
+    }
+
+    &:focus {
+      background-color: #EE683E;
+      border: 1px solid #FD825D;;
+    }
+
+    &:disabled {
+      background-color: #bdbdbd;
+      color: #ffffff;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+  }
+
+  &--secondary {
+    background-color: #FCFCFC;
+    color: #EE683E;
+    border: 1px solid #EE683E;
+    width: 100%;
+    max-width: 163px;
+    height: 44px;
+    padding: 0 16px;
+
+    &:hover {
+      background-color: #FCFCFC;
+      color: #FD825D;
+      border: 1px solid #FD825D;
+    }
+
+    &:focus {
+      background-color: #FCFCFC;
+      color:  #EE683E;
+      border: 1px solid #EE683E;
+    }
+
+    &:disabled {
+      background-color: #FCFCFC;
+      color:  #BEB9B4;
+      border: 1px solid #BEB9B4;
+      cursor: not-allowed;
+    }
+  }
+
+  &--flat {
+    background-color: transparent;
+    color: #EE683E;
+    border: none;
+
+    &:hover {
+      border: 1px solid #FD825D;
+      color: #FD825D;
+    }
+
+    &:focus {
+      border: 1px solid #EE683E;
+      color: #FD825D;
+      background: #FCFCFC;
+    }
+
+    &:disabled {
+     color: #BEB9B4;
+      background-color: transparent;
+      cursor: not-allowed;
+      border: none;
+    }
+  }
+
+  &--small {
+    width: 100%;
+    max-width: 164px;
+    height: 44px;
+    padding: 0 16px;
+  }
+
+  &--large {
+    width: 100%;
+    max-width: 343px;
+    height: 44px;
+    padding: 0 24px;
+  }
+
+  &--loading {
+    cursor: wait;
+
+    .button__loader {
+      width: 20px;
+      height: 20px;
+      border: 2px solid transparent;
+      border-top-color: #ffffff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+  }
+}
