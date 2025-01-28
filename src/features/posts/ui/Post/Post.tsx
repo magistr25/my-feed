@@ -1,7 +1,7 @@
 import './Post.scss';
 
 import {useReactiveVar} from '@apollo/client';
-import {FC, useState} from 'react';
+import {FC} from 'react';
 
 import {likeVar} from "@/app/apollo/client.ts";
 import closeIcon from '@/assets/images/close.png';
@@ -10,12 +10,12 @@ import { formatDescription } from '@/features/posts/lib/formatDescription';
 import {useAvatarError} from '@/features/posts/lib/handleAvatarError';
 import {useLikePost} from '@/features/posts/lib/handleLike';
 import {useReadMore} from '@/features/posts/lib/handleReadMore';
+import { usePostExpand } from '@/features/posts/lib/usePostExpand';
 import {useScreenSize} from '@/features/posts/lib/useScreenSize';
 import {PostProps} from '@/features/posts/model/types/types';
 import DefaultAvatar from '@/shared/ui/DefaultAvatar/DefaultAvatar.tsx';
 import HeartIcon from '@/shared/ui/HeartIcon/HeartIcon.tsx';
 import SharePopup from '@/shared/ui/SharePopup/SharePopup.tsx';
-
 
 const Post: FC<PostProps> = ({id, author, createdAt, title, description, mediaUrl, isLiked}) => {
     const {avatarError, setAvatarError} = useAvatarError();
@@ -23,55 +23,14 @@ const Post: FC<PostProps> = ({id, author, createdAt, title, description, mediaUr
     const {showFullPost, fullDescription, loading, error, handleReadMore, handleClosePost} = useReadMore(id);
     const {handleLike} = useLikePost(id, isLiked);
     const isLikedState = useReactiveVar(likeVar)[id] ?? isLiked;
-    const [isExpanded, setIsExpanded] = useState(false);
+
+    const { isExpanded, handleExpand, handleClose } = usePostExpand(handleReadMore, handleClosePost);
 
     const formattedDescription = formatDescription(description, fullDescription, showFullPost, isLargeScreen);
 
-    const handleExpand = async () => {
-        setIsExpanded(true);
-
-        // Сохраняем текущую позицию прокрутки
-        const scrollPosition = window.scrollY;
-
-        // Устанавливаем фиксированное позиционирование для body
-        window.document.body.style.position = 'fixed';
-         window.document.body.style.top = `-${scrollPosition}px`;
-         window.document.body.style.left = '0';
-         window.document.body.style.right = '0';
-         window.document.body.style.overflow = 'hidden';
-
-        try {
-            await handleReadMore(); // Загрузка полного текста
-        } catch (error) {
-            console.error("Ошибка при загрузке полного текста:", error);
-        }
-    };
-
-    const handleClose = () => {
-        setIsExpanded(false);
-
-        // Получаем сохранённую позицию прокрутки
-        const scrollPosition = parseInt( window.document.body.style.top || '0', 10) * -1;
-
-        // Удаляем фиксированное позиционирование
-         window.document.body.style.position = '';
-         window.document.body.style.top = '';
-         window.document.body.style.left = '';
-         window.document.body.style.right = '';
-         window.document.body.style.overflow = '';
-
-        // Мгновенно восстанавливаем позицию прокрутки
-        window.scrollTo({
-            top: scrollPosition,
-            behavior: 'instant', // Обеспечиваем моментальное перемещение
-        });
-
-        handleClosePost();
-    };
-
     return (
         <>
-            <div className={`overlay ${isExpanded ? 'overlay--visible' : ''}`} onClick={handleClose}/>
+            <div className={`overlay ${isExpanded ? 'overlay--visible' : ''}`} onClick={handleClose} />
             <article className={`post ${isExpanded ? 'post--expanded' : ''}`}>
                 <header className="post__header">
                     {author.avatarUrl && !avatarError ? (
@@ -82,7 +41,7 @@ const Post: FC<PostProps> = ({id, author, createdAt, title, description, mediaUr
                             onError={() => setAvatarError(true)}
                         />
                     ) : (
-                        <DefaultAvatar/>
+                        <DefaultAvatar />
                     )}
                     <div className="post__meta">
                         <h3 className="post__author">{`${author.firstName} ${author.lastName}`}</h3>
@@ -95,7 +54,7 @@ const Post: FC<PostProps> = ({id, author, createdAt, title, description, mediaUr
                     )}
                 </header>
                 <h2 className="post__title">{title}</h2>
-                <img className="post__image" src={mediaUrl} alt=''/>
+                <img className="post__image" src={mediaUrl} alt="" />
                 <p className="post__content">
                     <span className={`post__content__description ${showFullPost ? 'post__content__description_full' : ''}`}>
                         {formattedDescription}
@@ -111,8 +70,8 @@ const Post: FC<PostProps> = ({id, author, createdAt, title, description, mediaUr
                 </p>
 
                 <div className="post__actions">
-                    <HeartIcon onClick={handleLike} isActive={isLikedState}/>
-                    <SharePopup isExpanded={showFullPost}/>
+                    <HeartIcon onClick={handleLike} isActive={isLikedState} />
+                    <SharePopup isExpanded={showFullPost} />
                 </div>
             </article>
         </>
