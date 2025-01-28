@@ -59,8 +59,6 @@ const SharePopup: FC<{ isExpanded: boolean }> = ({ isExpanded })  => {
                 </svg>
             </button>
 
-            {isVisible && <div className="popup-overlay" onClick={handleClosePopup}></div>}
-
             {isVisible && (
                 <div className={`share__popup ${isExpanded ? 'share__popup--expanded' : ''}`}>
                     <button className="share__close-button" onClick={handleClosePopup}>
@@ -72,7 +70,7 @@ const SharePopup: FC<{ isExpanded: boolean }> = ({ isExpanded })  => {
                     <button className="share__copy-button" onClick={handleCopyLink}>Скопировать ссылку</button>
                 </div>
             )}
-
+            {isVisible && <div className="popup-overlay" onClick={handleClosePopup}></div>}
             {notification && (
                 <div className={`share__notification ${isExpanded ? 'share__notification--expanded' : ''}`}>
                     <Notification

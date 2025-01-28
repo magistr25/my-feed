@@ -1,0 +1,74 @@
+@use '@/shared/styles/variables'  as *;
+.homepage {
+  &__header {
+    width: 100%;
+    max-width: 743px;
+    background: $color-white;
+    padding: 0;
+    border-radius: $border-radius;
+    margin-top: 0;
+    margin-bottom: -20px;
+    &__loading {
+      background: none;
+    }
+  }
+  &__nav {
+    display: flex;
+    justify-content: flex-start;
+    padding-left: 0;
+    margin-left: -10px;
+    background: var(--homepage-header-bg);
+    &__loadingSelectDropdown {
+      margin-top: 20px;
+    }
+  }
+}
+
+@media (max-width: 743px) {
+  .homepage {
+    &__nav {
+      background: var(--homepage-header-bg);
+    }
+  }
+}
+
+@media (max-width: 320px) {
+  .homepage {
+    &__nav {
+      background: var(--homepage-header-bg);
+    }
+  }
+}
+
+@media (min-width: 320px) and (max-width: 823px) {
+  .homepage {
+    &__nav {
+      background: var(--homepage-header-bg);
+      padding-left: 10px;
+      padding-top: 10px;
+      margin-bottom: -10px;
+    }
+  }
+}
+
+@media (min-width: 825px) {
+  .homepage {
+    &__nav {
+      background: var(--homepage-header-bg);
+      justify-content: left;
+
+      &__loadingSelectDropdown {
+        margin-top: 20px;
+        margin-left: -320px;
+      }
+    }
+    &__header {
+      width: 100%;
+      max-width: 743px;
+      background: var(--homepage-header-bg);
+      padding: 10px;
+      box-shadow: none;
+    }
+  }
+}
+

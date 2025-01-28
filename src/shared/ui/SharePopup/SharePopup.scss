@@ -43,7 +43,7 @@
   width: 100%;
   height: 100%;
   background: var(--popup-overlay);
-  z-index: 10;
+  z-index: 50;
   pointer-events: auto;
   overflow: hidden;
   background: rgba(0, 0, 0, 0.9);
@@ -66,7 +66,7 @@
   padding: 20px;
   border-radius: 12px 12px 0 0;
   box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
-  z-index: 20;
+  z-index: 60;
   transform: translateY(100%);
   animation: slideUp 0.3s forwards;
   &--expanded {

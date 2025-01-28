@@ -31,17 +31,6 @@
     }
   }
 
-  &__nav {
-    display: flex;
-    justify-content: flex-start;
-    padding-left: 0;
-    margin-left: -10px;
-    background: var(--homepage-header-bg);
-   &__loadingSelectDropdown {
-      margin-top: 20px;
-    }
-  }
-
   &__select {
     width: 82px;
     height: 24px;
@@ -122,7 +111,7 @@
     &__nav {
       background: var(--homepage-header-bg);
       padding-left: 10px;
-     padding-top: 10px;
+      padding-top: 10px;
       margin-bottom: -10px;
     }
   }
@@ -172,4 +161,5 @@
     }
   }
 }
+
 
