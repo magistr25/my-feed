@@ -10,12 +10,12 @@ import {PersistGate} from 'redux-persist/integration/react';
 import {persistor, store} from "@/app/store/store";
 import LoginPage from "@/features/auth/ui/LoginPage/LoginPage.tsx";
 import RegisterPage from "@/features/auth/ui/RegisterPage/RegisterPage.tsx";
-import Error500 from "@/pages/Error500/Error500.tsx";
-import FavoritesPage from "@/pages/FavoritesPage/FavoritesPage.tsx";
+import Error500 from "@/pages/ui/Error500/Error500.tsx";
+import FavoritesPage from "@/pages/ui/FavoritesPage/FavoritesPage.tsx";
 
 import App from "./App.tsx";
 import client from "./app/apollo/client.ts";
-import HomePage from "./pages/HomePage/HomePage.tsx";
+import HomePage from "@/pages/ui/HomePage/HomePage.tsx";
 
 createRoot(window.document.getElementById('root')!).render(
     <StrictMode>

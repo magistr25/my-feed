@@ -5,7 +5,7 @@ import { FC, useEffect, useState } from 'react';
 
 import { isInProfileVar, loadingStateVar } from '@/app/apollo/client.ts';
 import MobileMenu from '@/features/navigation/ui/MobileMenu/MobileMenu.tsx';
-import { usePosts } from '@/pages/hooks/usePosts.ts';
+import { usePosts } from '@/pages/model/hooks/usePosts.ts';
 import HomeContent from '@/widgets/HomeContent/HomeContent.tsx';
 import HomeHeader from '@/widgets/HomeHeader/HomeHeader.tsx';
 

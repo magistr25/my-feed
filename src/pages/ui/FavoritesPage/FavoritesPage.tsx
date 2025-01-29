@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { isInProfileVar, loadingStateVar } from '@/app/apollo/client.ts';
 import noPostsImage from "@/assets/images/no_posts_image.png";
 import MobileMenu from '@/features/navigation/ui/MobileMenu/MobileMenu.tsx';
-import { usePosts } from '@/pages/hooks/usePosts.ts';
+import { usePosts } from '@/pages/model/hooks/usePosts.ts';
 import NoPostsBanner from "@/shared/ui/NoPostsBanner/NoPostsBanner.tsx";
 import HomeContent from '@/widgets/HomeContent/HomeContent.tsx';
 
