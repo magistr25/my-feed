@@ -59,12 +59,12 @@
 
 @media (max-width: 824px) {
   .select {
-    padding-left: 20px;
+    padding-left: 30px;
     background: var(--select-btn-color);
     height: 46px;
-    width: 92vw;
+    width: 100vw;
     max-width: 743px;
-    margin: 10px auto;
+    margin: 20px;
     border-radius: 8px;
 
   }
@@ -98,13 +98,13 @@
     &__list {
       position: absolute;
       top: 100%;
-      left: -22px;
-      width: 92vw;
-      max-width: 743px;
+      left: -30px;
+      width: 93vw;
+      max-width: 700px;
       border: none;
       border-radius: $border-radius;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      margin-top: 5px;
+      margin: 5px 0;
       z-index: 10;
       padding: 0;
       list-style: none;
@@ -145,7 +145,7 @@
       }
     }
     &__button {
-      background: $very-light-grey;
+      background: var(--primary-bg);
       padding-left: 10px;
       padding-right: 0;
       &_inner {

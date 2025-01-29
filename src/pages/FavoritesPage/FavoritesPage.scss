@@ -14,14 +14,14 @@
   box-sizing: border-box;
   width: 100%;
   max-width: 1440px;
-  margin: 64px auto 0;
+  margin: 20px auto;
   overflow: hidden;
   background: var(--primary-bg);
 }
 
 @media (min-width: 320px) and (max-width: 823px) {
   .favorites-wrapper {
-    margin-top: 100px;
+    margin-top: 40px;
   }
 }
 

@@ -122,7 +122,7 @@
     border: none;
     cursor: pointer;
     font-size: 16px;
-    z-index: 10;
+    z-index: 5;
 
   }
 }
@@ -216,7 +216,7 @@
       text-decoration-skip-ink: none;
       text-decoration: none;
       margin-left: 5px;
-      white-space: normal; /* Позволяет переносу текста */
+      white-space: normal;
       display: inline;
       color: #EE683E;
       word-break: break-word;

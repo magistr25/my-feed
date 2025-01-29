@@ -3,11 +3,13 @@ import './FavoritesPage.scss';
 import { useReactiveVar } from '@apollo/client';
 import { FC, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 import { isInProfileVar, loadingStateVar } from '@/app/apollo/client.ts';
+import noPostsImage from "@/assets/images/no_posts_image.png";
 import MobileMenu from '@/features/navigation/ui/MobileMenu/MobileMenu.tsx';
 import { usePosts } from '@/pages/hooks/usePosts.ts';
-import LoadingPost from "@/shared/ui/LoadingPost/LoadingPost.tsx";
+import NoPostsBanner from "@/shared/ui/NoPostsBanner/NoPostsBanner.tsx";
 import HomeContent from '@/widgets/HomeContent/HomeContent.tsx';
 
 const FavoritesPage: FC = () => {
@@ -19,6 +21,12 @@ const FavoritesPage: FC = () => {
     const { localPosts = [], loading, hasMore, loadMore, handleLike, fetchLikes } = usePosts('LIKE');
     const [isPageLoading, setIsPageLoading] = useState(true);
     const [dataLoaded, setDataLoaded] = useState(false); // Флаг для предотвращения мигания
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    }, [location.pathname]);
+
 
     // Перезагрузка при изменении маршрута
     useEffect(() => {
@@ -37,9 +45,6 @@ const FavoritesPage: FC = () => {
             });
     }, [fetchLikes, location.pathname]);
 
-    useEffect(() => {
-        console.log('localPosts в FavoritesPage:', localPosts);
-    }, [fetchLikes, localPosts]);
 
     useEffect(() => {
         if (!loading && isPageLoading) {
@@ -78,16 +83,18 @@ const FavoritesPage: FC = () => {
     if (!loading && !isPageLoading && dataLoaded && favoritePosts.length === 0) {
         return (
             <div className="favorites-wrapper">
-                { (loading) && <LoadingPost /> }
                 <div className="favorites">
-                    <p className="favorites__no-posts-message">У вас пока нет избранных постов.</p>
+                    <NoPostsBanner
+                        message="У вас пока нет избранных постов"
+                        buttonText="На главную"
+                        onButtonClick={() => navigate("/")}
+                        imageSrc={noPostsImage}
+
+                    />
                 </div>
             </div>
         );
     }
-
-    console.log('Посты в HomeContent:', favoritePosts);
-    console.log('isLoading в HomeContent:', isLoading);
 
     return (
         <div className="favorites-wrapper">

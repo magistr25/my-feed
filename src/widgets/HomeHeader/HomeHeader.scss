@@ -1,13 +1,19 @@
 @use '@/shared/styles/variables'  as *;
 .homepage {
   &__header {
-    width: 100%;
+    position: fixed;
+    top: 64px;
+    left: 50%;
+    z-index: 50;
+    transform: translateX(-50%);
+    width: 110%;
     max-width: 743px;
+    border-radius: 0;
     background: $color-white;
     padding: 0;
-    border-radius: $border-radius;
     margin-top: 0;
     margin-bottom: -20px;
+    margin-left: -1px;
     &__loading {
       background: none;
     }
@@ -18,16 +24,24 @@
     padding-left: 0;
     margin-left: -10px;
     background: var(--homepage-header-bg);
+    width: 120%;
+
     &__loadingSelectDropdown {
       margin-top: 20px;
     }
   }
 }
 
-@media (max-width: 743px) {
+@media (max-width: 825px) {
   .homepage {
+    &__header {
+      top: 108px;
+      width: 101vw;
+      margin: 0 auto;
+    }
     &__nav {
       background: var(--homepage-header-bg);
+      width: 102%;
     }
   }
 }
@@ -70,5 +84,8 @@
       box-shadow: none;
     }
   }
+}
+.hidden {
+  display: none !important;
 }
 
