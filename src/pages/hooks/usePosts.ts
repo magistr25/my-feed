@@ -1,32 +1,68 @@
-import { useApolloClient } from '@apollo/client';
-import { useEffect,useState } from 'react';
+import { useApolloClient } from "@apollo/client";
+import { useCallback, useEffect, useState } from "react";
 
-import { toggleLike } from '@/features/posts/lib/postService.ts';
-import { usePostsQuery } from '@/features/posts/model/hooks/UsePostsQuery.ts';
+import { likeVar } from "@/app/apollo/client.ts";
+import GET_FAVOURITE_POSTS from "@/features/posts/api/queries/getFavouritePosts.ts";
+import { usePostsQuery } from "@/features/posts/model/hooks/UsePostsQuery";
+import { Post } from "@/features/posts/model/types/types";
 
-export const usePosts = (type: 'NEW' | 'TOP') => {
+export const usePosts = (type: "NEW" | "TOP" | "LIKE") => {
     const { posts, loading, hasMore, loadMore } = usePostsQuery(type);
-    const [localPosts, setLocalPosts] = useState(posts);
+    const [localPosts, setLocalPosts] = useState<Post[]>([]);
+    const [isFetchingLikes, setIsFetchingLikes] = useState(false); // для управления загрузкой лайков
     const client = useApolloClient();
 
+    // Обновляем локальные посты при изменении данных
     useEffect(() => {
-        if (JSON.stringify(localPosts) !== JSON.stringify(posts)) {
+        if (posts.length > 0) {
             setLocalPosts(posts);
         }
-    }, [posts, localPosts]);
+    }, [posts]);
 
+    // Функция для загрузки лайков
+    const fetchLikes = useCallback(async () => {
+        try {
+            setIsFetchingLikes(true);
+            const { data } = await client.query({
+                query: GET_FAVOURITE_POSTS,
+                variables: {
+                    input: {
+                        limit: 10,
+                        afterCursor: null,
+                    },
+                },
+                fetchPolicy: 'network-only',
+            });
+
+            if (data?.favouritePosts?.data) {
+                setLocalPosts(data.favouritePosts.data);
+            }
+        } catch (error) {
+            console.error('Ошибка при загрузке лайков:', error);
+        } finally {
+            setIsFetchingLikes(false);
+        }
+    }, [client, setLocalPosts]);
+
+    // Функция обработки лайков
     const handleLike = async (postId: string) => {
         try {
             const post = localPosts.find((p) => p.id === postId);
             if (!post) return;
 
-            const updatedPost = await toggleLike(client, postId, post.isLiked);
-
+            const updatedPost = { ...post, isLiked: !post.isLiked };
             const updatedPosts = localPosts.map((p) =>
-                p.id === postId ? { ...p, isLiked: updatedPost.isLiked } : p
+                p.id === postId ? updatedPost : p
             );
             setLocalPosts(updatedPosts);
 
+            // Обновляем глобальную переменную likeVar
+            likeVar({
+                ...likeVar(),
+                [postId]: updatedPost.isLiked,
+            });
+
+            // Обновляем Apollo Cache
             client.cache.modify({
                 id: client.cache.identify({ __typename: 'PostModel', id: postId }),
                 fields: {
@@ -42,9 +78,10 @@ export const usePosts = (type: 'NEW' | 'TOP') => {
 
     return {
         localPosts,
-        loading,
+        loading: loading || isFetchingLikes,
         hasMore,
         loadMore,
         handleLike,
+        fetchLikes,
     };
 };

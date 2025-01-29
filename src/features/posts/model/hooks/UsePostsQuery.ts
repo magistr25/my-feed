@@ -1,6 +1,7 @@
 import { useQuery } from '@apollo/client';
 import { useState } from 'react';
 
+import GET_FAVOURITE_POSTS from '@/features/posts/api/queries/getFavouritePosts';
 import GET_POSTS from '@/features/posts/api/queries/getPosts';
 import { PageInfo, Post } from '@/features/posts/model/types/types';
 
@@ -13,15 +14,17 @@ interface UsePostsQueryResult {
     loadMore: () => void; // Функция для загрузки дополнительных постов
 }
 
-export const usePostsQuery = (type: 'NEW' | 'TOP'): UsePostsQueryResult => {
-    const [hasMore, setHasMore] = useState(true); // Состояние для отслеживания наличия дополнительных постов
-    const [localLoading, setLocalLoading] = useState(false); // Локальное состояние загрузки для fetchMore
+export const usePostsQuery = (type: 'NEW' | 'TOP' | 'LIKE'): UsePostsQueryResult => {
+    const [hasMore, setHasMore] = useState(true);
+    const [localLoading, setLocalLoading] = useState(false);
 
-    const { data, loading, error, fetchMore } = useQuery(GET_POSTS, {
+    const query = type === 'LIKE' ? GET_FAVOURITE_POSTS : GET_POSTS;
+
+    const { data, loading, error, fetchMore } = useQuery(query, {
         variables: {
             input: {
                 limit: 10,
-                type: type,
+                type: type !== 'LIKE' ? type : undefined, // Убираем type для избранных постов
                 afterCursor: null, // Изначально курсор отсутствует
             },
         },
@@ -30,34 +33,44 @@ export const usePostsQuery = (type: 'NEW' | 'TOP'): UsePostsQueryResult => {
 
     // Функция для загрузки дополнительных постов
     const loadMore = async () => {
-        if (!data?.posts.pageInfo.afterCursor || !hasMore || localLoading) return;
+        const pageInfo = type === 'LIKE' ? data?.favouritePosts?.pageInfo : data?.posts?.pageInfo;
+        if (!pageInfo?.afterCursor || !hasMore || localLoading) return;
 
-        setLocalLoading(true); // Устанавливаем локальное состояние загрузки
+        setLocalLoading(true);
 
         try {
             const result = await fetchMore({
                 variables: {
                     input: {
                         limit: 10,
-                        type: type,
-                        afterCursor: data.posts.pageInfo.afterCursor, // Используем afterCursor для пагинации
+                        type: type !== 'LIKE' ? type : undefined, // Убираем type для избранных постов
+                        afterCursor: pageInfo.afterCursor,
                     },
                 },
                 updateQuery: (prev, { fetchMoreResult }) => {
                     if (!fetchMoreResult) return prev;
 
-                    return {
-                        posts: {
-                            ...fetchMoreResult.posts,
-                            data: [...prev.posts.data, ...fetchMoreResult.posts.data], // Объединяем старые и новые посты
-                        },
-                    };
+                    return type === 'LIKE'
+                        ? {
+                            favouritePosts: {
+                                ...fetchMoreResult.favouritePosts,
+                                data: [...prev.favouritePosts.data, ...fetchMoreResult.favouritePosts.data],
+                            },
+                        }
+                        : {
+                            posts: {
+                                ...fetchMoreResult.posts,
+                                data: [...prev.posts.data, ...fetchMoreResult.posts.data],
+                            },
+                        };
                 },
             });
 
             // Проверяем, есть ли еще посты для загрузки
-            if (!result.data.posts.pageInfo.afterCursor) {
-                setHasMore(false); // Если afterCursor отсутствует, значит, постов больше нет
+            if (!result.data?.favouritePosts?.pageInfo?.afterCursor && type === 'LIKE') {
+                setHasMore(false);
+            } else if (!result.data?.posts?.pageInfo?.afterCursor && type !== 'LIKE') {
+                setHasMore(false);
             }
         } catch (err) {
             console.error('Ошибка при загрузке дополнительных постов:', err);
@@ -67,11 +80,11 @@ export const usePostsQuery = (type: 'NEW' | 'TOP'): UsePostsQueryResult => {
     };
 
     return {
-        posts: data?.posts.data || [], // Посты
-        pageInfo: data?.posts.pageInfo || null, // Информация о пагинации
-        loading: loading || localLoading, // Общее состояние загрузки (основной запрос или fetchMore)
-        error, // Ошибка, если есть
-        hasMore, // Флаг наличия дополнительных постов
-        loadMore, // Функция для загрузки дополнительных постов
+        posts: type === 'LIKE' ? data?.favouritePosts?.data || [] : data?.posts?.data || [],
+        pageInfo: type === 'LIKE' ? data?.favouritePosts?.pageInfo || null : data?.posts?.pageInfo || null,
+        loading: loading || localLoading,
+        error,
+        hasMore,
+        loadMore,
     };
 };

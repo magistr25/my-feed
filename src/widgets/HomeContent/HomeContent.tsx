@@ -11,17 +11,19 @@ interface HomeContentProps {
     hasMore: boolean;
     loadMore: () => void;
     onLike: (postId: string) => void;
-    isLoading?: boolean;
+    isLoading: boolean;
 }
 
 const HomeContent: FC<HomeContentProps> = ({ posts, hasMore, loadMore, onLike, isLoading }) => {
+    const shouldStopLoading = !hasMore && posts.length > 0;
+
     return (
         <main className="homepage__content">
             <InfiniteScroll
                 dataLength={posts.length}
                 next={loadMore}
-                hasMore={hasMore}
-                loader={<h4><LoadingPost /></h4>}
+                hasMore={!shouldStopLoading} // Прекращаем прокрутку, если больше данных нет
+                loader={isLoading && !shouldStopLoading ? <h4><LoadingPost /></h4> : null} // Показываем скелетон только при загрузке
                 endMessage={<p>Постов больше нет</p>}
             >
                 {isLoading ? (
