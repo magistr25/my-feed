@@ -36,8 +36,7 @@
     border: none;
     background: none;
     cursor: pointer;
-    color: var(--burger-menu-color);
-    position: relative;
+       position: relative;
     z-index: 40;
   }
 
@@ -97,13 +96,15 @@
 @media (max-width: 823px) {
   .header {
     padding-top: 44px;
-    height: 108px;
+    height: 118px;
     justify-content: start;
     width: 100%;
     margin-left: -1px;
     &__burger {
       display: block;
       margin-top: 30px;
+      color: var(--burger-color);
+      transition: color 0.3s ease;
     }
 
     &__logo {
@@ -300,7 +301,7 @@
   transform: translateX(-50%);
   width: 100%;
   max-width: 1440px;
-  z-index: 10;
+  z-index: 1;
   background: var(--select-btn-color);
   //box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
   padding: 0 24px;

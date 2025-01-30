@@ -1,7 +1,7 @@
 import './MobileMenu.scss';
 
 import {useReactiveVar} from "@apollo/client";
-import {FC, useEffect} from 'react';
+import {FC} from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -41,17 +41,6 @@ const MobileMenu: FC<MobileMenuProps> = ({ isOpen, onClose }) => {
         ? <img src={user.avatarUrl} alt="User avatar" />
         : <DefaultAvatar />;
 
-    useEffect(() => {
-        const header = window.document.querySelector(".homepage__header");
-
-        if (header) {
-            if (isOpen) {
-                header.classList.add("hidden"); // Скрываем хедер
-            } else {
-                header.classList.remove("hidden"); // Показываем хедер
-            }
-        }
-    }, [isOpen])
     return (
         <div className={`mobile-menu ${isOpen ? 'mobile-menu_open' : ''}`}>
             <div className="mobile-menu__content" onClick={(e) => e.stopPropagation()}>

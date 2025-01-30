@@ -134,6 +134,9 @@
 }
 @media (min-width: 825px) {
   .homepage {
+    .homepage__header {
+      width: 300px !important;
+    }
     &__content {
       margin-top: 84px;
     }
