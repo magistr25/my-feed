@@ -51,10 +51,13 @@ const App = () => {
             window.document.body.classList.add('body-register');
         }
     }, [location]);
+    const handleSelect = (value: string) => {
+        console.log("Выбрано:", value);
+    };
 
     return (
         <div className="app">
-            {!hideHeaderPaths.includes(location.pathname) && <Header />}
+            {!hideHeaderPaths.includes(location.pathname) && <Header onSelect={handleSelect} />}
             <main>
                 <Outlet />
             </main>
