@@ -23,6 +23,9 @@ interface FormInputGroupProps {
     className?: string;
     onBlur?: () => void;
     onFocus?: () => void;
+    inputMode?: string;
+    pattern?: string;
+    leftIcon?: ReactNode;
 }
 
 const FormInputGroup: FC<FormInputGroupProps> = ({
@@ -40,6 +43,7 @@ const FormInputGroup: FC<FormInputGroupProps> = ({
                                                      onTogglePasswordVisibility,
                                                      className,
                                                      inputValue,
+                                                     leftIcon,
                                                  }) => {
     const [isFocused, setIsFocused] = useState(false);
 
@@ -47,6 +51,7 @@ const FormInputGroup: FC<FormInputGroupProps> = ({
         <div className="form-group">
             <label htmlFor={id}>{label}</label>
             <div className="input-wrapper">
+                {leftIcon && <span className="form-input-group__icon">{leftIcon}</span>}
                 <input
                     id={id}
                     type={isPassword && isPasswordVisible ? 'text' : type}

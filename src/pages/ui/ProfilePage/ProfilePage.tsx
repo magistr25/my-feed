@@ -10,6 +10,7 @@ import FormInputGroup from "@/shared/ui/FormInputGroup/FormInputGroup.tsx";
 import Notification from '@/shared/ui/Notification/Notification';
 import AvatarUpload from "@/shared/ui/AvatarUpload/AvatarUpload.tsx";
 import Button from "@/shared/ui/Button/Button.tsx";
+import CalendarIcon from "@/shared/ui/CalendarIcon/CalendarIcon.tsx";
 
 const ProfilePage: FC = () => {
     const {
@@ -29,7 +30,7 @@ const ProfilePage: FC = () => {
     const [birthDate, setBirthDate] = useState<Date | null>(null);
     const [isFocused, setIsFocused] = useState(false);
     const user = {avatarUrl: "/path-to-user-avatar.jpg"}; // Данные о пользователе
-
+    const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 824);
     const handleAvatarChange = (newAvatar: string) => {
         setValue("avatar", newAvatar);
     };
@@ -45,7 +46,11 @@ const ProfilePage: FC = () => {
             }, 100);
         }
     }, []);
-
+    useEffect(() => {
+        const handleResize = () => setIsDesktop(window.innerWidth >= 824);
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
     return (
         <div className="profile-wrapper">
             <div className="profile-page">
@@ -87,7 +92,21 @@ const ProfilePage: FC = () => {
 
                         <div className="date-picker-container">
                             <h2 className="date-picker-container__title">Дата рождения</h2>
-                            <CustomDatePicker selectedDate={birthDate} onChange={setBirthDate}/>
+                            {isDesktop ? (
+                                <CustomDatePicker selectedDate={birthDate} onChange={setBirthDate} />
+                            ) : (
+                                <FormInputGroup
+                                    label=""
+                                    id="birthDate"
+                                    type="text"
+                                    inputMode="numeric"
+                                    pattern="\d{2}\.\d{2}\.\d{4}"
+                                    placeholder="дд.мм.гггг"
+                                    register={register("birthDate")}
+                                    error={errors.birthDate?.message}
+                                    leftIcon={<CalendarIcon />}
+                                />
+                            )}
                         </div>
 
                         <div className="form-group form-group__radio">
@@ -98,7 +117,7 @@ const ProfilePage: FC = () => {
                                         className='input-radio'
                                         type="radio"
                                         value="male"
-                                        {...register("gender", {required: "Пол обязателен"})}
+                                        {...register("gender", {required: ""})}
                                     />
                                     Мужской
                                 </label>
@@ -107,7 +126,7 @@ const ProfilePage: FC = () => {
                                         className='input-radio'
                                         type="radio"
                                         value="female"
-                                        {...register("gender", {required: "Пол обязателен"})}
+                                        {...register("gender", {required: ""})}
                                     />
                                     Женский
                                 </label>

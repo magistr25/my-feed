@@ -122,8 +122,7 @@
     .error-message {
       font-size: 12px;
       color: var(--form-input-message);
-      margin-top: 10px;
-      margin-bottom: 0;
+      padding-bottom: 8px;
       display: block;
     }
   }
@@ -366,4 +365,25 @@
       }
     }
   }
+}
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.form-input-group__icon {
+  position: absolute;
+  right: 12px;
+  top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.input-field {
+  padding-left: 40px;
+  width: 100%;
 }

@@ -36,7 +36,7 @@
     background-color: var(--btn-secondary-bg);
     color: #EE683E;
     border: 1px solid var(--radio-checked-bg);
-    width: 100%;
+    width:auto;
     max-width: 163px;
     height: 44px;
     padding: 0 16px;
@@ -78,8 +78,8 @@
     }
 
     &:disabled {
-     color: #BEB9B4;
-      background-color: transparent;
+     color: var(--disabled-btn-color);
+      background-color: var(--disabled-btn-bg);
       cursor: not-allowed;
       border: none;
     }
@@ -90,6 +90,12 @@
     width: 164px;
     height: 44px;
     padding: 0 16px;
+    @media (max-width: 374px) {
+      max-width: 164px;
+      width: auto;
+      height: 44px;
+      padding: 0 16px;
+    }
   }
 
   &--large {
