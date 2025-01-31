@@ -9,6 +9,7 @@ import CustomDatePicker from "@/shared/ui/CustomDatePicker/CustomDatePicker.tsx"
 import FormInputGroup from "@/shared/ui/FormInputGroup/FormInputGroup.tsx";
 import Notification from '@/shared/ui/Notification/Notification';
 import AvatarUpload from "@/shared/ui/AvatarUpload/AvatarUpload.tsx";
+import Button from "@/shared/ui/Button/Button.tsx";
 
 const ProfilePage: FC = () => {
     const {
@@ -116,9 +117,9 @@ const ProfilePage: FC = () => {
                         <div className='profile-wrapper-down'>
                             <FormInputGroup
                                 label="Email"
+                                placeholder="Введите email"
                                 id="email"
                                 type="text"
-                                placeholder="Введите email"
                                 register={{
                                     ...register('email', {
                                         validate: (value: string) => {
@@ -175,6 +176,21 @@ const ProfilePage: FC = () => {
                                 placeholder="Введите страну"
                                 register={register("country")}
                                 error={undefined}
+                            />
+                        </div>
+                        <div className="profile-form__actions">
+                            <Button
+                                type="button"
+                                onClick={() => navigate(-1)}
+                                text="Отменить"
+                                variant="secondary"
+                                size="small"
+                            />
+                            <Button
+                                type="submit"
+                                text="Сохранить"
+                                variant="primary"
+                                size="small"
                             />
                         </div>
                     </form>

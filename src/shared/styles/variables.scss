@@ -84,7 +84,7 @@ $grey-darker: #BEB9B4;
   --radio-checked-bg: #EE683E;
   --form-radio-bg: #F2F2F2;
   --radio-checked-bg-hover: #FD825D;
-
+  --btn-secondary-bg: #FCFCFC;
 }
 
 [data-theme="dark"] {
@@ -151,6 +151,7 @@ $grey-darker: #BEB9B4;
   --radio-checked-bg: #CD4E27;
   --radio-checked-bg-hover: #EE683E;
   --form-radio-bg: #666666;
+  --btn-secondary-bg: #303030;
 }
 
 $border-radius: 8px;

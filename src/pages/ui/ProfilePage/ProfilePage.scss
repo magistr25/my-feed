@@ -108,6 +108,7 @@
       text-underline-position: from-font;
       text-decoration-skip-ink: none;
       color: #beb9b4;
+      caret-color: var(--form-input-focus);
 
       &:focus {
         border-color: var(--form-input-focus) !important;
@@ -171,7 +172,6 @@
 .profile-wrapper-down {
   display: flex;
   flex-direction: column;
-  gap: 25px;
 }
 @media (min-width: 824px) {
   .profile-wrapper {
@@ -219,8 +219,8 @@
   cursor: pointer;
 
   input[type="radio"].input-radio {
-    appearance: none; /* Убираем дефолтные стили */
-    -moz-appearance: none; /* Добавляем поддержку для Firefox */
+    appearance: none;
+    -moz-appearance: none;
     width: 24px;
     height: 24px;
     border-radius: 50%;
@@ -232,7 +232,7 @@
     border: 1px solid transparent;
     outline: none;
     background: var(--form-radio-bg);
-    /* 🟠 Hover для НЕ ВЫБРАННОЙ кнопки */
+    /* Hover для НЕ ВЫБРАННОЙ кнопки */
     &:hover {
       border: 1px solid #EE683E;
     }
@@ -241,22 +241,22 @@
       background: #F2F2F2;
 
     }
-    /* 🟢 Состояние :checked */
+    /* Состояние :checked */
     &:checked {
       background: var(--radio-checked-bg);
       border: 2px solid var(--radio-checked-bg);
     }
 
-    /* 🟢 Hover на ВЫБРАННУЮ кнопку */
+    /* Hover на ВЫБРАННУЮ кнопку */
     &:checked:hover {
       background: var(--radio-checked-bg-hover);
-      border: 1px solid  var(--radio-checked-bg-hover);
+      border: 1px solid var(--radio-checked-bg-hover);
     }
     &:checked:active {
       background: var(--radio-checked-bg);
       box-shadow: 1px 1px 4px 0 #EE683E80;
     }
-    /* 🔘 Внутренний кружок при выборе */
+    /* Внутренний кружок при выборе */
     &:checked::after {
       content: "";
       width: 12px;
@@ -271,10 +271,6 @@
   }
 }
 
-
-
-
-
 .profile-form .form-group label {
   display: flex;
   font-family: Gilroy, sans-serif;
@@ -287,6 +283,35 @@
   text-decoration-skip-ink: none;
   color: var(--form-label-color);
 }
+
+.profile-form__actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5px;
+  padding-bottom: 35px;
+
+}
+
+.profile-form__button {
+  width: 48%;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.profile-form__button--cancel {
+  background-color: #fff;
+  color: #ff4d4d;
+  border: 1px solid #ff4d4d;
+}
+
+.profile-form__button--save {
+  background-color: #ff4d4d;
+  color: #fff;
+  border: none;
+}
+
 @media (min-width: 375px) and (max-width: 824px) {
   .profile-page {
     width: 375px;
@@ -315,7 +340,7 @@
     width: 743px;
 
   }
-.profile-page-container {
+  .profile-page-container {
     margin-top: 0 !important;
     width: 415px;
   }
