@@ -12,10 +12,11 @@ import LoginPage from "@/features/auth/ui/LoginPage/LoginPage.tsx";
 import RegisterPage from "@/features/auth/ui/RegisterPage/RegisterPage.tsx";
 import Error500 from "@/pages/ui/Error500/Error500.tsx";
 import FavoritesPage from "@/pages/ui/FavoritesPage/FavoritesPage.tsx";
+import HomePage from "@/pages/ui/HomePage/HomePage.tsx";
+import ProfilePage from "@/pages/ui/ProfilePage/ProfilePage.tsx";
 
 import App from "./App.tsx";
 import client from "./app/apollo/client.ts";
-import HomePage from "@/pages/ui/HomePage/HomePage.tsx";
 
 createRoot(window.document.getElementById('root')!).render(
     <StrictMode>
@@ -28,7 +29,7 @@ createRoot(window.document.getElementById('root')!).render(
                                 <Route index element={<HomePage/>}/>
                                 <Route path="/my-posts" element={''}/>
                                 <Route path="/favorites" element={<FavoritesPage/>}/>
-                                <Route path="/profile" element={''}/>
+                                <Route path="/profile" element={<ProfilePage/>}/>
                                 <Route path="/login" element={<LoginPage/>}/>
                                 <Route path="/register" element={<RegisterPage/>}/>
                                 <Route path="/error-500" element={<Error500 />} />

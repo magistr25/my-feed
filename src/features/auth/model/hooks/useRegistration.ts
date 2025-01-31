@@ -15,6 +15,12 @@ interface RegisterFormInputs {
     firstName: string;
     lastName: string;
     middleName: string;
+    gender?: string;
+    birthDate?: string;
+    phone?: string;
+    placeholder: string;
+    country?: string;
+
 }
 
 export const useRegistration = () => {
@@ -26,11 +32,19 @@ export const useRegistration = () => {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
-    const { register, handleSubmit, formState: { errors }, watch, setError, reset } = useForm<RegisterFormInputs>({
+    const { register, handleSubmit, formState: { errors }, watch, setError, reset, trigger, clearErrors,
+        setValue } = useForm<RegisterFormInputs>({
         defaultValues: {
             firstName: '',
             lastName: '',
             middleName: '',
+            gender: '',
+            birthDate: '',
+            phone: '',
+            email: '',
+            password: '',
+            confirmPassword: '',
+            country: ''
         },
         mode: 'onBlur',
         reValidateMode: 'onBlur',
@@ -167,5 +181,8 @@ export const useRegistration = () => {
         completing,
         setNotification,
         navigate,
+        trigger,
+        clearErrors,
+        setValue,
     };
 };
