@@ -22,6 +22,10 @@ export default [
         console: 'readonly',
       },
     },
+    env: {
+      browser: true,
+      es2021: true,
+    },
     plugins: {
       '@typescript-eslint': tseslint,
       react,
