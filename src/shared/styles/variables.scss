@@ -81,8 +81,9 @@ $grey-darker: #BEB9B4;
   --burger-color: #686868;
   --box-shadow-datepicker: 0 12px 40px 0 #8C8C8C26;
   --datepicker-day-color: #BDBDBD;
-
-
+  --radio-checked-bg: #EE683E;
+  --form-radio-bg: #F2F2F2;
+  --radio-checked-bg-hover: #FD825D;
 
 }
 
@@ -147,9 +148,9 @@ $grey-darker: #BEB9B4;
   --burger-color: #ffffff;
   --box-shadow-datepicker: 4px 12px 40px 0px #00000040;
   --datepicker-day-color: #686868;
-
-
-
+  --radio-checked-bg: #CD4E27;
+  --radio-checked-bg-hover: #EE683E;
+  --form-radio-bg: #666666;
 }
 
 $border-radius: 8px;

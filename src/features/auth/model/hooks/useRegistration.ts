@@ -20,6 +20,7 @@ interface RegisterFormInputs {
     phone?: string;
     placeholder: string;
     country?: string;
+    avatar?: string;
 
 }
 
@@ -44,7 +45,8 @@ export const useRegistration = () => {
             email: '',
             password: '',
             confirmPassword: '',
-            country: ''
+            country: '',
+            avatar: '',
         },
         mode: 'onBlur',
         reValidateMode: 'onBlur',

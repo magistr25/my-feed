@@ -245,3 +245,15 @@
   box-shadow: var(--box-shadow-datepicker) !important;
   border-radius: 16px !important;
 }
+
+@media (min-width: 375px) and (max-width: 823px) {
+  .datepicker__input {
+    width: 343px !important;
+  }
+}
+
+@media (min-width: 824px) {
+  .datepicker__input {
+    width: 415px !important;
+  }
+}
