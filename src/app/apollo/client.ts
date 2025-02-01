@@ -113,6 +113,12 @@ userVar.onNextChange((value) => {
 // Переменная для хранения состояния лайков
 export const likeVar = makeVar<Record<string, boolean>>({});
 
+// Переменная состояния мобильного меню
+export const mobileMenuVar = makeVar<boolean>(false);
+
+// Глобальная переменная для состояния MobileActionBar
+export const mobileActionBarVar = makeVar<boolean>(false);
+export const scrollVar = makeVar<number | null>(null);
 const client = new ApolloClient({
     link: from([errorLink, authLink.concat(httpLink)]),
     cache: new InMemoryCache(),

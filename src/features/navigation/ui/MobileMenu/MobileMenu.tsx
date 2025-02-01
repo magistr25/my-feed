@@ -1,11 +1,11 @@
 import './MobileMenu.scss';
 
 import {useReactiveVar} from "@apollo/client";
-import {FC} from 'react';
+import {FC, useEffect} from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 
-import {isInProfileVar, userVar} from "@/app/apollo/client.ts";
+import {isInProfileVar, mobileMenuVar, userVar} from "@/app/apollo/client.ts";
 import { selectTheme } from '@/app/store/ducks/theme';
 import closeIcon from '@/assets/images/close.png';
 import useProfileState from "@/shared/hooks/useProfileState.ts";
@@ -40,6 +40,15 @@ const MobileMenu: FC<MobileMenuProps> = ({ isOpen, onClose }) => {
     const displayAvatar = user?.avatarUrl
         ? <img src={user.avatarUrl} alt="User avatar" />
         : <DefaultAvatar />;
+    // Синхронизация состояния меню с Apollo Client
+    useEffect(() => {
+        mobileMenuVar(isOpen);
+    }, [isOpen]);
+
+    const handleClose = () => {
+        onClose();
+        mobileMenuVar(false);
+    };
 
     return (
         <div className={`mobile-menu ${isOpen ? 'mobile-menu_open' : ''}`}>
@@ -55,7 +64,7 @@ const MobileMenu: FC<MobileMenuProps> = ({ isOpen, onClose }) => {
                             </svg>
                         </div>
                         <div className="mobile-menu__content__header_down">
-                            <button className="mobile-menu__close" onClick={onClose}>
+                            <button className="mobile-menu__close" onClick={handleClose}>
                                 <img src={closeIcon} alt="Close menu" />
                             </button>
                             <Logo />

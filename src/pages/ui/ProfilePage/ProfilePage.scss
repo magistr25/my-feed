@@ -203,6 +203,20 @@
     margin-top: -120px;
 
   }
+  .form-group {
+    margin-bottom: 25px;
+  }
+  .date-picker-container {
+   padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  .input-field {
+    margin-bottom: 10px;
+  }
+  .profile-wrapper-down {
+   padding-top: 5px;
+    gap: 25px;
+  }
 }
 
 .form-radio-group {
@@ -330,14 +344,23 @@
 
 @media (min-width: 824px) {
   .profile-wrapper {
-    height: 1364px;
+    height: 1386px;
   }
 
   .profile-page {
-    margin-top: 320px;
+    margin-top: 310px;
     height: 1220px;
     width: 743px;
-
+    &__title {
+      margin-top: -35px;
+      font-family: Gilroy, sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 20px;
+      letter-spacing: 0.01em;
+      text-align: center;
+      margin-bottom: 45px;
+    }
   }
   .profile-page-container {
     margin-top: 0 !important;
@@ -364,7 +387,15 @@
         width: 415px;
       }
     }
+
+    .status-icon {
+      left: 380px;
+    }
   }
+  .profile-form__actions {
+    padding-bottom: 0;
+    justify-content: space-around;
+   }
 }
 .input-wrapper {
   position: relative;
@@ -386,4 +417,9 @@
 .input-field {
   padding-left: 40px;
   width: 100%;
+}
+.profile-wrapper {
+  overflow-y: auto !important;
+  max-height: 100vh !important;
+  -webkit-overflow-scrolling: touch;
 }

@@ -11,6 +11,9 @@ import Notification from '@/shared/ui/Notification/Notification';
 import AvatarUpload from "@/shared/ui/AvatarUpload/AvatarUpload.tsx";
 import Button from "@/shared/ui/Button/Button.tsx";
 import CalendarIcon from "@/shared/ui/CalendarIcon/CalendarIcon.tsx";
+import MobileActionBar from "@/shared/ui/MobileActionBar/MobileActionBar.tsx";
+import {useReactiveVar} from "@apollo/client";
+import {mobileActionBarVar, mobileMenuVar} from "@/app/apollo/client.ts";
 
 const ProfilePage: FC = () => {
     const {
@@ -31,6 +34,14 @@ const ProfilePage: FC = () => {
     const [isFocused, setIsFocused] = useState(false);
     const user = {avatarUrl: "/path-to-user-avatar.jpg"}; // Данные о пользователе
     const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 824);
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 824);
+    const isMobileMenuOpen = useReactiveVar(mobileMenuVar);
+    const isMobileActionBarOpen = useReactiveVar(mobileActionBarVar);
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth < 824);
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
     const handleAvatarChange = (newAvatar: string) => {
         setValue("avatar", newAvatar);
     };
@@ -46,13 +57,56 @@ const ProfilePage: FC = () => {
             }, 100);
         }
     }, []);
+
     useEffect(() => {
         const handleResize = () => setIsDesktop(window.innerWidth >= 824);
         window.addEventListener("resize", handleResize);
         return () => window.removeEventListener("resize", handleResize);
     }, []);
+    useEffect(() => {
+        const inputs = document.querySelectorAll("input, textarea");
+        if (inputs.length > 0) {
+            const lastInput = inputs[inputs.length - 1] as HTMLElement;
+
+            if (isMobileActionBarOpen) {
+                lastInput.style.marginBottom = "50px";
+            } else {
+                lastInput.style.marginBottom = "";
+            }
+        }
+    }, [isMobileActionBarOpen]);
+
+    useEffect(() => {
+        if (isMobileActionBarOpen) {
+            const activeElement = document.activeElement as HTMLElement;
+            if (
+                activeElement &&
+                (activeElement.tagName === "INPUT" || activeElement.tagName === "TEXTAREA") &&
+                activeElement.closest(".profile-wrapper-down")
+            )  {
+                setTimeout(() => {
+                    activeElement.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start",
+                    });
+                }, 100);
+            }
+        }
+    }, [isMobileActionBarOpen]);
+    const pageRef = useRef<HTMLDivElement | null>(null);
+    const scrollToTop = () => {
+        const target = document.querySelector(".profile-page") || document.documentElement || document.body;
+        target.scrollTo({ top: 0, behavior: "smooth" });
+    };
+
+    const scrollToBottom = () => {
+        const target = document.querySelector(".profile-page") || document.documentElement || document.body;
+        target.scrollTo({ top: target.scrollHeight, behavior: "smooth" });
+    };
+
+
     return (
-        <div className="profile-wrapper">
+        <div className="profile-wrapper" ref={pageRef}>
             <div className="profile-page">
                 <div className="profile-page-container">
                     <h1 className="profile-page__title">Мой профиль</h1>
@@ -197,7 +251,7 @@ const ProfilePage: FC = () => {
                                 error={undefined}
                             />
                         </div>
-                        <div className="profile-form__actions">
+                        {!isMobileActionBarOpen && (<div className="profile-form__actions">
                             <Button
                                 type="button"
                                 onClick={() => navigate(-1)}
@@ -212,6 +266,7 @@ const ProfilePage: FC = () => {
                                 size="small"
                             />
                         </div>
+                        )}
                     </form>
 
                     {notification && (
@@ -228,6 +283,8 @@ const ProfilePage: FC = () => {
                     )}
                 </div>
             </div>
+            {/* Показываем MobileActionBar только на мобильных */}
+            {isMobile && !isMobileMenuOpen && <MobileActionBar onSave={handleSubmit(onSubmit)} onScrollTop={scrollToTop} onScrollBottom={scrollToBottom}/>}
         </div>
     );
 };
