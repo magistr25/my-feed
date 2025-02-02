@@ -26,6 +26,7 @@ interface FormInputGroupProps {
     inputMode?: string;
     pattern?: string;
     leftIcon?: ReactNode;
+    defaultValue?: string;
 }
 
 const FormInputGroup: FC<FormInputGroupProps> = ({
@@ -44,6 +45,7 @@ const FormInputGroup: FC<FormInputGroupProps> = ({
                                                      className,
                                                      inputValue,
                                                      leftIcon,
+                                                     defaultValue
                                                  }) => {
     const [isFocused, setIsFocused] = useState(false);
 
@@ -57,6 +59,7 @@ const FormInputGroup: FC<FormInputGroupProps> = ({
                     type={isPassword && isPasswordVisible ? 'text' : type}
                     placeholder={placeholder}
                     {...register}
+                    defaultValue={defaultValue}
                     autoComplete={autoComplete}
                     onFocus={() => setIsFocused(true)}
                     onBlur={() => setIsFocused(false)}

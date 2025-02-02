@@ -1,38 +1,41 @@
 import './DropdownProfile.scss';
 
 import { useReactiveVar } from '@apollo/client';
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { isInProfileVar, loadingStateVar, userVar } from '@/app/apollo/client.ts';
+import { isInProfileVar, loadingStateVar, userVar, profileVar } from '@/app/apollo/client.ts';
 import useProfileState from '@/shared/hooks/useProfileState.ts';
 import AnimatedAvatar from "@/shared/ui/AnimatedAvatar/AnimatedAvatar.tsx";
 import DefaultAvatar from "@/shared/ui/DefaultAvatar/DefaultAvatar.tsx";
 
 const DropdownProfile = () => {
     const navigate = useNavigate();
-    const isLoading = useReactiveVar(loadingStateVar); // Состояние загрузки
+    const isLoading = useReactiveVar(loadingStateVar);
     const { isInProfile } = useProfileState();
     const user = useReactiveVar(userVar);
+    const profile = useReactiveVar(profileVar);
 
     // Переключение состояния выпадающего меню
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const toggleDropdown = () => setDropdownOpen((prev) => !prev);
+
     useEffect(() => {
         if (!isInProfile) {
             setDropdownOpen(true);
         }
     }, [isInProfile]);
+
     const handleLogOut = async () => {
         loadingStateVar(true); // Устанавливаем состояние загрузки
 
-        // Пример ожидания загрузки
         await new Promise((resolve) => window.setTimeout(resolve, 2000));
 
         // Очищаем данные
         localStorage.removeItem('authToken');
         localStorage.removeItem('user');
         localStorage.removeItem('isInProfile');
+        profileVar(null);
         userVar(null);
         isInProfileVar(false);
 
@@ -44,16 +47,17 @@ const DropdownProfile = () => {
         navigate('/login');
     };
 
-    // Определение имени пользователя
-    const displayName = user
-        ? `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'Гость'
-        : 'Гость';
+    const displayName = profile?.firstName || profile?.lastName
+        ? `${profile.firstName || ''} ${profile.lastName || ''}`.trim()
+        : user?.firstName || user?.lastName
+            ? `${user.firstName || ''} ${user.lastName || ''}`.trim()
+            : 'Гость';
 
-    const displayAvatar = user?.avatarUrl ? (
-        <img src={user.avatarUrl} alt="User avatar" />
-    ) : (
-        <DefaultAvatar />
-    );
+    const displayAvatar = profile?.avatarUrl
+        ? <img src={profile.avatarUrl} alt="User avatar" className="dropdown-profile__avatar-img" />
+        : user?.avatarUrl
+            ? <img src={user.avatarUrl} alt="User avatar" className="dropdown-profile__avatar-img" />
+            : <DefaultAvatar />;
 
     return (
         <div className="dropdown-profile">

@@ -3,6 +3,7 @@ import { setContext } from '@apollo/client/link/context';
 import { onError } from "@apollo/client/link/error";
 
 import GET_USER from "@/features/auth/api/queries/getUser.ts";
+import {UserProfileData} from "@/pages/model/types/UserProfileData .ts";
 
 export interface User {
     avatarUrl?: string;
@@ -118,7 +119,10 @@ export const mobileMenuVar = makeVar<boolean>(false);
 
 // Глобальная переменная для состояния MobileActionBar
 export const mobileActionBarVar = makeVar<boolean>(false);
-export const scrollVar = makeVar<number | null>(null);
+// export const scrollVar = makeVar<number | null>(null);
+
+export const profileVar = makeVar<UserProfileData | null>(null);
+
 const client = new ApolloClient({
     link: from([errorLink, authLink.concat(httpLink)]),
     cache: new InMemoryCache(),
