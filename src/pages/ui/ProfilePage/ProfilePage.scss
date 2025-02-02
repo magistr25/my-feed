@@ -348,11 +348,11 @@
   }
 
   .profile-page {
-    margin-top: 310px;
+    margin-top: 280px;
     height: 1220px;
     width: 743px;
     &__title {
-      margin-top: -35px;
+      margin-top: 0;
       font-family: Gilroy, sans-serif;
       font-size: 24px;
       font-weight: 700;
@@ -368,6 +368,7 @@
   }
 
   .profile-form {
+    padding-top: 0px;
     .form-description {
       font-family: Gilroy, sans-serif;
       font-size: 16px;
@@ -419,3 +420,16 @@
   width: 100%;
 }
 
+@media (max-width: 824px) {
+.profile-container__notification {
+  position: fixed;
+  top: 132px;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 12px 40px 0 #8C8C8C26;
+}
+  .input-with-margin {
+    margin-bottom: 40px;
+  }
+
+}

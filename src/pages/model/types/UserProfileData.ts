@@ -1,4 +1,5 @@
 export interface UserProfileData {
+    id?: string | null;
     firstName?: string | null;
     lastName?: string | null;
     email: string;
@@ -9,4 +10,3 @@ export interface UserProfileData {
     country?: string | null;
     avatarUrl?: string | null;
 }
-

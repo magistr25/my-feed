@@ -13,11 +13,10 @@ import Button from "@/shared/ui/Button/Button.tsx";
 import CalendarIcon from "@/shared/ui/CalendarIcon/CalendarIcon.tsx";
 import MobileActionBar from "@/shared/ui/MobileActionBar/MobileActionBar.tsx";
 import {useMutation, useQuery, useReactiveVar} from "@apollo/client";
-import {mobileActionBarVar, mobileMenuVar, profileVar} from "@/app/apollo/client.ts";
+import {mobileActionBarVar, mobileMenuVar, profileVar, showActionBarVar, userVar} from "@/app/apollo/client.ts";
 import GET_USER_DATA from "@/pages/api/queries/getUserData.ts";
 import UPDATE_USER_PROFILE from "@/pages/api/mutations/updateUserProfile.ts";
-import {UserProfileData} from "@/pages/model/types/UserProfileData .ts";
-
+import {UserProfileData} from "@/pages/model/types/UserProfileData.ts";
 
 const ProfilePage: FC = () => {
     const [birthDate, setBirthDate] = useState<Date | null>(null);
@@ -27,6 +26,7 @@ const ProfilePage: FC = () => {
     const [isMobile, setIsMobile] = useState(window.innerWidth < 824);
     const pageRef = useRef<HTMLDivElement | null>(null);
 
+    const isShowActionBar = useReactiveVar(showActionBarVar);
     // Запрос для получения данных пользователя
     const { data, loading, error } = useQuery(GET_USER_DATA);
     const {
@@ -68,9 +68,13 @@ const ProfilePage: FC = () => {
     const isMobileActionBarOpen = useReactiveVar(mobileActionBarVar);
     useEffect(() => {
         const handleResize = () => setIsMobile(window.innerWidth < 824);
+
+        handleResize();
+
         window.addEventListener("resize", handleResize);
         return () => window.removeEventListener("resize", handleResize);
     }, []);
+
     const handleAvatarChange = (newAvatar: string) => {
         setValue("avatar", newAvatar);
     };
@@ -88,10 +92,17 @@ const ProfilePage: FC = () => {
     }, []);
 
     useEffect(() => {
-        const handleResize = () => setIsDesktop(window.innerWidth >= 824);
+        const handleResize = () => {
+            const width = window.innerWidth;
+            setIsMobile(width < 824);
+            setIsDesktop(width >= 824);
+        };
+
+        handleResize();
         window.addEventListener("resize", handleResize);
         return () => window.removeEventListener("resize", handleResize);
     }, []);
+
     useEffect(() => {
         const inputs = document.querySelectorAll("input, textarea");
         if (inputs.length > 0) {
@@ -123,8 +134,67 @@ const ProfilePage: FC = () => {
         }
     }, [isMobileActionBarOpen]);
 
-    if (loading) return <div>Загрузка...</div>;
-    if (error) return <div>Ошибка: {error.message}</div>;
+    useEffect(() => {
+        if (data?.userMe) {
+            setValue('gender', data.userMe.gender?.toLowerCase() || ''); // Приводим gender к нижнему регистру
+            setValue('phone', formatPhoneNumber(data.userMe.phone || ''));
+        }
+    }, [data, setValue]);
+    useEffect(() => {
+        if (data?.userMe) {
+            setValue('birthDate', data.userMe.birthDate || '');
+        }
+    }, [data, setValue]);
+
+
+
+
+    useEffect(() => {
+        if (data?.userMe?.birthDate) {
+            const parsedDate = new Date(data.userMe.birthDate);
+            if (!isNaN(parsedDate.getTime())) {
+                setBirthDate(parsedDate);
+            }
+        }
+    }, [data]);
+    useEffect(() => {
+        const handleFocusIn = (event: FocusEvent) => {
+            if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) {
+                showActionBarVar(true); // Показываем MobileActionBar
+            }
+        };
+
+        document.addEventListener("focusin", handleFocusIn);
+
+        return () => {
+            document.removeEventListener("focusin", handleFocusIn);
+        };
+    }, []);
+
+    useEffect(() => {
+        const handleFocusIn = (event: FocusEvent) => {
+            const target = event.target as HTMLElement;
+
+            if (target?.matches("input, textarea")) {
+                showActionBarVar(true); // Показываем MobileActionBar
+
+                setTimeout(() => {
+                    target.scrollIntoView({ behavior: "smooth", block: "center" });
+                }, 200);
+            }
+        };
+
+        document.addEventListener("focusin", handleFocusIn);
+        return () => document.removeEventListener("focusin", handleFocusIn);
+    }, []);
+// Форматирование даты перед отображением в инпуте
+    useEffect(() => {
+        const rawDate = watch("birthDate"); // Получаем значение
+        if (rawDate && /^\d{4}-\d{2}-\d{2}$/.test(rawDate)) {
+            const [year, month, day] = rawDate.split("-");
+            setValue("birthDate", `${day}.${month}.${year}`);
+        }
+    }, [watch("birthDate"), setValue]);
 
     const scrollToTop = () => {
         const target = document.querySelector(".profile-page") || document.documentElement || document.body;
@@ -138,40 +208,53 @@ const ProfilePage: FC = () => {
 
     const handleUpdateProfile = async (formData: UserProfileData) => {
         try {
+            const userProfileData = {
+                firstName: formData.firstName ?? undefined,
+                lastName: formData.lastName ?? undefined,
+                middleName: formData.middleName ?? undefined,
+                birthDate: formData.birthDate ? new Date(formData.birthDate).toISOString().split("T")[0] : undefined,
+                gender: formData.gender?.toUpperCase() ?? undefined,
+                email: formData.email,
+                phone: formData.phone
+                    ? formData.phone.startsWith("+")
+                        ? formData.phone
+                        : `+${formData.phone.replace(/\D/g, "")}`
+                    : undefined,
+                country: formData.country ?? undefined,
+                avatarUrl: formData.avatarUrl ?? undefined,
+            };
+
+            console.log("Отправляемые данные:", userProfileData);
+
             await updateUserProfile({
-                variables: {
-                    input: {
-                        firstName: formData.firstName,
-                        lastName: formData.lastName,
-                        middleName: formData.middleName,
-                        birthDate: formData.birthDate
-                            ? new Date(formData.birthDate).toISOString().split("T")[0]
-                            : null,
-                        gender: formData.gender?.toUpperCase(), // Приведение пола к MALE/FEMALE
-                        email: formData.email,
-                        phone: formData.phone ? `+${formData.phone.replace(/\D/g, "")}` : null,
-                        country: formData.country,
-                        avatarUrl: formData.avatarUrl,
-                    },
-                },
+                variables: { input: userProfileData },
             });
-            profileVar(formData);
-            setNotification({ message: "Профиль обновлен успешно", type: "success" });
+
+            profileVar(userProfileData); // Обновляем локальное состояние профиля
+
+            // ✅ Показываем всплывающее уведомление
+            setNotification({ message: "Изменения успешно сохранены!", type: "success" });
+
+            // Убираем уведомление через 3 секунды
+            setTimeout(() => setNotification(null), 3000);
         } catch (error) {
-            if (error instanceof Error) {
-                setNotification({ message: error.message, type: "error" });
-            } else {
-                setNotification({ message: "Произошла неизвестная ошибка", type: "error" });
-            }
+            setNotification({
+                message: error instanceof Error ? error.message : "Произошла неизвестная ошибка",
+                type: "error",
+            });
         }
     };
+
+    if (loading) return <div>Загрузка...</div>;
+    if (error) return <div>Ошибка: {error.message}</div>;
 
     return (
         <div className="profile-wrapper" ref={pageRef}>
             <div className="profile-page">
                 <div className="profile-page-container">
                     <h1 className="profile-page__title">Мой профиль</h1>
-                    <form onSubmit={handleSubmit(handleUpdateProfile)} className="profile-form" autoComplete="off" noValidate>
+                    <form onSubmit={handleSubmit((data) => handleUpdateProfile({ ...data, id: userVar()?.id ?? "" }))}
+                         className="profile-form" autoComplete="off" noValidate>
                         <div ref={avatarRef}>
                             <AvatarUpload userAvatarUrl={user.avatarUrl} onAvatarChange={handleAvatarChange}/>
                         </div>
@@ -211,7 +294,10 @@ const ProfilePage: FC = () => {
                         <div className="date-picker-container">
                             <h2 className="date-picker-container__title">Дата рождения</h2>
                             {isDesktop ? (
-                                <CustomDatePicker selectedDate={birthDate || null}  onChange={setBirthDate} />
+                                <CustomDatePicker
+                                    selectedDate={birthDate}
+                                    onChange={(date) => setBirthDate(date)}
+                                />
                             ) : (
                                 <FormInputGroup
                                     label=""
@@ -220,7 +306,7 @@ const ProfilePage: FC = () => {
                                     inputMode="numeric"
                                     pattern="\d{2}\.\d{2}\.\d{4}"
                                     placeholder="дд.мм.гггг"
-                                    defaultValue={data?.userMe?.birthDate || ''}
+                                    defaultValue={data?.userMe?.birthDate ? new Date(data.userMe.birthDate).toLocaleDateString('ru-RU') : ''}
                                     register={register("birthDate")}
                                     error={errors.birthDate?.message}
                                     leftIcon={<CalendarIcon />}
@@ -236,7 +322,7 @@ const ProfilePage: FC = () => {
                                         className="input-radio"
                                         type="radio"
                                         value="male"
-                                        defaultChecked={data?.userMe?.gender?.toUpperCase() === "MALE"}
+                                        checked={watch("gender") === "male"}
                                         {...register("gender", { required: "Выберите пол" })}
                                     />
                                     Мужской
@@ -246,7 +332,7 @@ const ProfilePage: FC = () => {
                                         className="input-radio"
                                         type="radio"
                                         value="female"
-                                        defaultChecked={data?.userMe?.gender?.toUpperCase() === "FEMALE"}
+                                        checked={watch("gender") === "female"}
                                         {...register("gender", { required: "Выберите пол" })}
                                     />
                                     Женский
@@ -318,26 +404,30 @@ const ProfilePage: FC = () => {
                                 placeholder="Введите страну"
                                 register={register("country")}
                                 error={undefined}
+                                className={showActionBarVar() ? "input-with-margin" : ""}
                             />
                         </div>
-                        {!isMobileActionBarOpen && (<div className="profile-form__actions">
+                        <div className="profile-form__actions" style={{ display: isShowActionBar ? "none" : "flex" }}>
                             <Button
                                 type="button"
                                 onClick={() => navigate(-1)}
                                 text="Отменить"
                                 variant="secondary"
                                 size="small"
+                                autoFocus={false}
                             />
-                            <Button
-                                type="submit"
-                                text="Сохранить"
-                                variant="primary"
-                                size="small"
-                            />
-                        </div>
-                        )}
-                    </form>
+                        <Button
+                            type="submit"
+                            onClick={() => {
+                                mobileActionBarVar(false);
+                            }}
+                            text="Сохранить"
+                            variant="primary"
+                            size="small"
+                        />
 
+                    </div>
+                    </form>
                     {notification && (
                         <div className="profile-container__notification">
                             <Notification
@@ -351,9 +441,15 @@ const ProfilePage: FC = () => {
                         </div>
                     )}
                 </div>
+                {/* Показываем MobileActionBar только на мобильных */}
+                {isMobile && !isMobileMenuOpen && isShowActionBar && (
+                    <MobileActionBar
+                        onSave={() => showActionBarVar(false)}
+                        onScrollTop={scrollToTop}
+                        onScrollBottom={scrollToBottom}
+                    />
+                )}
             </div>
-            {/* Показываем MobileActionBar только на мобильных */}
-            {isMobile && !isMobileMenuOpen && <MobileActionBar onSave={handleSubmit(handleUpdateProfile)} onScrollTop={scrollToTop} onScrollBottom={scrollToBottom}/>}
         </div>
     );
 };

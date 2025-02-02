@@ -5,7 +5,7 @@ import {FC, useEffect} from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 
-import {isInProfileVar, mobileMenuVar, userVar} from "@/app/apollo/client.ts";
+import {isInProfileVar, mobileMenuVar, profileVar, userVar} from "@/app/apollo/client.ts";
 import { selectTheme } from '@/app/store/ducks/theme';
 import closeIcon from '@/assets/images/close.png';
 import useProfileState from "@/shared/hooks/useProfileState.ts";
@@ -24,6 +24,25 @@ const MobileMenu: FC<MobileMenuProps> = ({ isOpen, onClose }) => {
     const { isInProfile } = useProfileState();
 // Чтение данных пользователя
     const user = useReactiveVar(userVar);
+    const profile = useReactiveVar(profileVar);
+    // Обновляем userVar, если profileVar изменился
+    useEffect(() => {
+        if (profile) {
+            userVar({
+                id: profile.id ?? "",
+                firstName: profile.firstName ?? undefined,
+                lastName: profile.lastName ?? undefined,
+                email: profile.email,
+                phone: profile.phone ?? undefined,
+                gender: profile.gender ?? undefined,
+                middleName: profile.middleName ?? undefined,
+                birthDate: profile.birthDate ?? undefined,
+                country: profile.country ?? undefined,
+                avatarUrl: profile.avatarUrl || undefined,
+            });
+        }
+    }, [profile]);
+
     const handleLogOut = () => {
         localStorage.removeItem('authToken');
         localStorage.removeItem('user');

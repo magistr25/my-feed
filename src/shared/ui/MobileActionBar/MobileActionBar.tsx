@@ -1,30 +1,32 @@
 import './MobileActionBar.scss';
-import {FC, useEffect, useState} from "react";
+import {FC, useEffect} from "react";
 import {useReactiveVar} from "@apollo/client";
-import {mobileActionBarVar} from "@/app/apollo/client.ts";
+import {mobileActionBarVar, showActionBarVar} from "@/app/apollo/client.ts";
 
 interface MobileActionBarProps {
     onSave: () => void;
     onScrollTop: () => void;
     onScrollBottom: () => void;
+    isActionInProgress?: boolean;
 }
-const MobileActionBar: FC<MobileActionBarProps> = ({ onSave, onScrollTop, onScrollBottom }) => {
+const MobileActionBar: FC<MobileActionBarProps> = ({ onSave, onScrollTop, onScrollBottom, isActionInProgress  }) => {
     const isMobileActionBarOpen = useReactiveVar(mobileActionBarVar);
-    const [showActionBar, setShowActionBar] = useState(false);
+    const showActionBar = useReactiveVar(showActionBarVar);
     let focusTimeout: ReturnType<typeof setTimeout>;
-    useEffect(() => {
-        mobileActionBarVar(showActionBar);
-    }, [showActionBar]);
+
 
     useEffect(() => {
         const handleFocus = () => {
-            clearTimeout(focusTimeout);
-            setShowActionBar(true);
+            if (!isActionInProgress) {
+                clearTimeout(focusTimeout);
+                showActionBarVar(true);
+            }
         };
+
 
         const handleBlur = () => {
             focusTimeout = setTimeout(() => {
-                setShowActionBar(false);
+                showActionBarVar(false);
             }, 300);
         };
 
@@ -42,16 +44,19 @@ const MobileActionBar: FC<MobileActionBarProps> = ({ onSave, onScrollTop, onScro
             document.activeElement.blur();
         }
         setTimeout(() => {
-            setShowActionBar(false);
-            mobileActionBarVar(false);
             document.querySelectorAll("input, textarea").forEach((el) => (el as HTMLElement).blur());
         }, 300);
     };
     const handleDoneClick = () => {
         handleKeyboardClose();
         onSave();
+        showActionBarVar(false); // Скрываем MobileActionBar
+        mobileActionBarVar(false);
     };
-    return (showActionBar || isMobileActionBarOpen)  ? (
+
+
+    return ((showActionBar && !isActionInProgress) || (isMobileActionBarOpen && !isActionInProgress)) ? (
+
         <div className="mobile-action-bar">
             <div className="mobile-action-bar__buttons" >
                 <button className="mobile-action-bar__toggle" onClick={() => {
