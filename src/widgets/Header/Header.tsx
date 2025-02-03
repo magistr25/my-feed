@@ -3,7 +3,7 @@ import './Header.scss';
 import { useState } from 'react';
 import {Link, useLocation} from 'react-router-dom';
 
-import MobileMenu from "@/features/navigation/MobileMenu.tsx";
+import MobileMenu from "@/features/navigation/ui/MobileMenu/MobileMenu.tsx";
 import Logo from "@/shared/ui/Logo/Logo.tsx";
 import ThemeSwitcher from "@/shared/ui/ThemeSwitcher/ThemeSwitcher.tsx";
 import DropdownProfile from "@/widgets/Header/ui/ DropdownProfile/DropdownProfile.tsx";

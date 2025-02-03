@@ -1,6 +1,44 @@
-import { ApolloClient, createHttpLink,InMemoryCache } from '@apollo/client';
+import {ApolloClient, createHttpLink, from, InMemoryCache, makeVar} from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
+import { onError } from "@apollo/client/link/error";
 
+import GET_USER from "@/features/auth/api/queries/getUser.ts";
+
+export interface User {
+    avatarUrl?: string;
+    birthDate?: string;
+    country?: string;
+    createdAt?: string;
+    deletedAt?: string;
+    email: string;
+    firstName?: string;
+    gender?: string;
+    id: string;
+    lastName?: string;
+    middleName?: string;
+    phone?: string;
+    updatedAt?: string;
+}
+// Обработчик ошибок Apollo
+const errorLink = onError(({ graphQLErrors, networkError }) => {
+    if (graphQLErrors) {
+        graphQLErrors.forEach(({ message, locations, path }) => {
+            console.error(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`);
+        });
+
+        // Если возникает ошибка авторизации, можно перенаправить пользователя
+        const authError = graphQLErrors.find((error) => error.extensions?.code === 'UNAUTHENTICATED');
+        if (authError) {
+            localStorage.removeItem('authToken');
+        }
+    }
+
+    if (networkError) {
+        console.error(`[Network error]: ${networkError}`);
+        // Если сеть недоступна, перенаправляем на страницу ошибки
+        window.location.href = '/error-500';
+    }
+});
 // Создаем ссылку на GraphQL endpoint
 const httpLink = createHttpLink({
     uri: 'https://internship-social-media.purrweb.com/graphql',
@@ -24,11 +62,63 @@ const authLink = setContext((_, { headers }) => {
 });
 
 // Настройка Apollo Client
+const cache = new InMemoryCache({
+    typePolicies: {
+        Query: {
+            fields: {
+                user: {
+                    read() {
+                        return cache.readQuery({ query: GET_USER });
+                    },
+                },
+            },
+        },
+    },
+});
+// Глобальная переменная для хранения состояния загрузки
+export const loadingStateVar = makeVar(false);
+
+// Локальная переменная для хранения данных пользователя
+export const userVar = makeVar<User | null>(
+    (() => {
+        try {
+            const storedUser = localStorage.getItem('user');
+            return storedUser ? JSON.parse(storedUser) : null;
+        } catch (error) {
+            console.warn('Ошибка чтения user из localStorage:', error);
+            return null;
+        }
+    })()
+);
+
+// Локальная переменная для хранения состояния "находимся ли в профиле"
+export const isInProfileVar = makeVar<boolean>(
+    (() => {
+        try {
+            const storedIsInProfile = localStorage.getItem('isInProfile');
+            return storedIsInProfile === 'true';
+        } catch (error) {
+            console.warn('Ошибка чтения isInProfile из localStorage:', error);
+            return false;
+        }
+    })()
+);
+// Слушаем изменения `userVar` и сохраняем их в localStorage
+userVar.onNextChange((value) => {
+    if (value) {
+        localStorage.setItem('user', JSON.stringify(value));
+    }
+});
+
+// Переменная для хранения состояния лайков
+export const likeVar = makeVar<Record<string, boolean>>({});
+
 const client = new ApolloClient({
-    link: authLink.concat(httpLink), // Объединяем authLink и httpLink
+    link: from([errorLink, authLink.concat(httpLink)]),
     cache: new InMemoryCache(),
 });
 
 export default client;
+
 
 

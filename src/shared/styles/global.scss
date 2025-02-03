@@ -27,7 +27,7 @@ body {
 }
 @media (max-width: 824px) {
   body {
-    background-color:var(--body-mobile-bg);
+    background-color: var(--body-mobile-bg);
   }
   .body-login {
     background-color: var(--body-login-bg);
@@ -36,5 +36,13 @@ body {
   .body-register {
     background-color: var(--login-page-bg);
   }
+}
+
+input:-webkit-autofill {
+  border: var(--form-input-border) !important;
+  background: var(--form-input-background) !important;
+  -webkit-box-shadow: 0 0 0 1000px var(--form-input-background) inset !important;
+  box-shadow: 0 0 0 1000px var(--form-input-background) inset !important;
+  -webkit-text-fill-color: var(--input-text-color) !important;
 }
 

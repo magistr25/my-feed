@@ -1,0 +1,91 @@
+@use '@/shared/styles/variables'  as *;
+.homepage {
+  &__header {
+    position: fixed;
+    top: 64px;
+    left: 50%;
+    z-index: 50;
+    transform: translateX(-50%);
+    width: 110%;
+    max-width: 743px;
+    border-radius: 0;
+    background: $color-white;
+    padding: 0;
+    margin-top: 0;
+    margin-bottom: -20px;
+    margin-left: -1px;
+    &__loading {
+      background: none;
+    }
+  }
+  &__nav {
+    display: flex;
+    justify-content: flex-start;
+    padding-left: 0;
+    margin-left: -10px;
+    background: var(--homepage-header-bg);
+    width: 120%;
+
+    &__loadingSelectDropdown {
+      margin-top: 20px;
+    }
+  }
+}
+
+@media (max-width: 825px) {
+  .homepage {
+    &__header {
+      top: 108px;
+      width: 101vw;
+      margin: 0 auto;
+    }
+    &__nav {
+      background: var(--homepage-header-bg);
+      width: 102%;
+    }
+  }
+}
+
+@media (max-width: 320px) {
+  .homepage {
+    &__nav {
+      background: var(--homepage-header-bg);
+    }
+  }
+}
+
+@media (min-width: 320px) and (max-width: 823px) {
+  .homepage {
+    &__nav {
+      background: var(--homepage-header-bg);
+      padding-left: 10px;
+      padding-top: 10px;
+      margin-bottom: -10px;
+    }
+  }
+}
+
+@media (min-width: 825px) {
+  .homepage {
+    &__nav {
+      background: var(--homepage-header-bg);
+      justify-content: left;
+
+      &__loadingSelectDropdown {
+        margin-top: 20px;
+        margin-left: -320px;
+      }
+    }
+    &__header {
+      width: 100%;
+      max-width: 743px;
+      background: var(--homepage-header-bg);
+      padding: 10px;
+      box-shadow: none;
+    }
+  }
+}
+.hidden {
+  display: none !important;
+}
+

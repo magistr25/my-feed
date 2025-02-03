@@ -1,12 +1,14 @@
 import './MobileMenu.scss';
 
-import { FC } from 'react';
+import {useReactiveVar} from "@apollo/client";
+import {FC, useEffect} from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 
+import {isInProfileVar, userVar} from "@/app/apollo/client.ts";
 import { selectTheme } from '@/app/store/ducks/theme';
 import closeIcon from '@/assets/images/close.png';
-import useAuth from '@/features/auth/hooks/useAuth';
+import useProfileState from "@/shared/hooks/useProfileState.ts";
 import DefaultAvatar from '@/shared/ui/DefaultAvatar/DefaultAvatar.tsx';
 import Logo from '@/shared/ui/Logo/Logo.tsx';
 import ThemeSwitcher from '@/shared/ui/ThemeSwitcher/ThemeSwitcher.tsx';
@@ -18,15 +20,38 @@ interface MobileMenuProps {
 
 const MobileMenu: FC<MobileMenuProps> = ({ isOpen, onClose }) => {
     const currentTheme = useSelector(selectTheme);
-    const { isAuthenticated, logOut } = useAuth();
     const navigate = useNavigate();
-
+    const { isInProfile } = useProfileState();
+// Чтение данных пользователя
+    const user = useReactiveVar(userVar);
     const handleLogOut = () => {
-        logOut(); // Удаляем токен
-        navigate('/login');
-        onClose(); // Закрываем меню
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('user');
+        localStorage.removeItem('isInProfile');
+        userVar(null); // Очищаем данные пользователя в Apollo
+        isInProfileVar(false); // Сбрасываем состояние профиля
+        navigate('/');
     };
+// Определение имени пользователя
+    const displayName = user
+        ? `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'Гость'
+        : 'Гость';
 
+    const displayAvatar = user?.avatarUrl
+        ? <img src={user.avatarUrl} alt="User avatar" />
+        : <DefaultAvatar />;
+
+    useEffect(() => {
+        const header = window.document.querySelector(".homepage__header");
+
+        if (header) {
+            if (isOpen) {
+                header.classList.add("hidden"); // Скрываем хедер
+            } else {
+                header.classList.remove("hidden"); // Показываем хедер
+            }
+        }
+    }, [isOpen])
     return (
         <div className={`mobile-menu ${isOpen ? 'mobile-menu_open' : ''}`}>
             <div className="mobile-menu__content" onClick={(e) => e.stopPropagation()}>
@@ -49,18 +74,18 @@ const MobileMenu: FC<MobileMenuProps> = ({ isOpen, onClose }) => {
                     </div>
                 </div>
                 <div className="mobile-menu__profile">
-                    <DefaultAvatar />
-                    <h2 className="mobile-menu__profile_h2">{isAuthenticated ? 'Мой профиль' : 'Гость'}</h2>
+                    {displayAvatar}
+                    <h2 className="mobile-menu__profile_h2"> {displayName} </h2>
+
                 </div>
                 <ul className="mobile-menu__list">
-                    {isAuthenticated ? (
+                    {isInProfile  ? (
                         <>
                             <li>
-                                <li>
-                                    <Link className="mobile-menu__list_open-account" to="/login" onClick={handleLogOut}>
-                                        Выйти из аккаунта
-                                    </Link>
-                                </li>
+                                <Link className="mobile-menu__list_open-account" to="/" onClick={handleLogOut}>
+                                    Выйти из аккаунта
+                                </Link>
+
                             </li>
                             <li>
                                 <Link className="mobile-menu__list_a" to="/profile" onClick={onClose}>

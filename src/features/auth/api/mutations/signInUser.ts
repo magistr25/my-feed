@@ -9,6 +9,15 @@ export const SIGN_IN_USER = gql(`
                 email
                 firstName
                 lastName
+                avatarUrl
+                birthDate
+                country
+                createdAt
+                deletedAt
+                gender
+                middleName
+                phone
+                updatedAt
             }
             problem {
                 message

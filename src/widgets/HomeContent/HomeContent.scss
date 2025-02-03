@@ -1,0 +1,39 @@
+@use '@/shared/styles/variables'  as *;
+.homepage {
+    &__content {
+    max-width: 743px;
+    width: 100%;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+}
+@media (max-width: 743px) {
+
+  .homepage {
+    &__content {
+      padding: 0 10px;
+      width: 99vw;
+    }
+
+  }
+}
+
+@media (min-width: 320px) and (max-width: 823px) {
+   .homepage {
+     &__content {
+       width: 99vw;
+       padding: 16px;
+       gap: 8px;
+     }
+   }
+}
+
+@media (min-width: 825px) {
+  .homepage {
+    &__content {
+      gap: 25px;
+    }
+  }
+}

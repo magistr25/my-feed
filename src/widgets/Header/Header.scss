@@ -8,7 +8,6 @@
   align-items: center;
   height: 64px;
   background: var(--select-btn-color);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
   position: relative;
 
   &__svg {
@@ -39,7 +38,7 @@
     cursor: pointer;
     color: var(--burger-menu-color);
     position: relative;
-    z-index: 101;
+    z-index: 40;
   }
 
   &__nav {
@@ -182,7 +181,6 @@
     align-items: center;
     height: 64px;
     background: var(--select-btn-color);
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
     &__svg {
       display: none;
     }
@@ -302,9 +300,9 @@
   transform: translateX(-50%);
   width: 100%;
   max-width: 1440px;
-  z-index: 100;
+  z-index: 10;
   background: var(--select-btn-color);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  //box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
   padding: 0 24px;
 }
 
