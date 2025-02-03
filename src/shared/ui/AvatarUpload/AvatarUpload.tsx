@@ -1,55 +1,68 @@
-import { ChangeEvent, FC, useEffect, useState } from "react";
+import { ChangeEvent, FC, useEffect, useRef, useState } from "react";
 import "./AvatarUpload.scss";
 import DefaultAvatar from "@/shared/ui/DefaultAvatar/DefaultAvatar.tsx";
+import ReactDOM from "react-dom";
 
 interface AvatarUploadProps {
     userAvatarUrl?: string | null;
-    onAvatarChange: (avatar: string) => void;
+    onAvatarChange: (file: File) => void;
 }
 
 const AvatarUpload: FC<AvatarUploadProps> = ({ userAvatarUrl, onAvatarChange }) => {
-    const [avatar, setAvatar] = useState<string | null>(null);
+    const [preview, setPreview] = useState<string | null>(userAvatarUrl ?? null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-    // Обновляем аватар
     useEffect(() => {
-        if (userAvatarUrl) {
-            setAvatar(userAvatarUrl);
-        } else {
-            setAvatar(null); // Убираем аватар, чтобы DefaultAvatar корректно отображался
-        }
+        setPreview(userAvatarUrl ?? null);
     }, [userAvatarUrl]);
 
-    const handleAvatarChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const openFileDialog = () => {
+        fileInputRef.current?.click();
+    };
+
+    const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
+            // Сразу отображаем локальное превью
             const reader = new FileReader();
-            reader.onloadend = () => {
-                const base64String = reader.result as string;
-                setAvatar(base64String);
-                onAvatarChange(base64String);
-            };
+            reader.onload = () => setPreview(reader.result as string);
             reader.readAsDataURL(file);
+
+            // Передаём файл родителю
+            onAvatarChange(file);
         }
     };
 
     return (
         <div className="avatar-upload">
-            <div className="avatar-upload__preview">
-                {avatar ? (
-                    <img src={avatar} alt="User avatar" />
-                ) : (
-                    <DefaultAvatar variant="profile" />
-                )}
+            <div className="avatar-upload__preview" onClick={() => setIsModalOpen(true)}>
+                {preview ? <img src={preview} alt="User avatar" /> : <DefaultAvatar variant="profile" />}
             </div>
+
             <input
-                id="avatarInput"
                 type="file"
+                ref={fileInputRef}
+                style={{ display: "none" }}
                 accept="image/*"
-                className="avatar-upload__input"
-                onChange={handleAvatarChange}
+                onChange={handleFileChange}
             />
+
+            {isModalOpen &&
+                ReactDOM.createPortal(
+                    <div className="modal-overlay-profile" onClick={() => setIsModalOpen(false)}>
+                        <div className="modal-overlay-profile__content" onClick={(e) => e.stopPropagation()}>
+                            <h2 className="modal-overlay-profile__title">Аватар профиля</h2>
+                            <button onClick={() => setPreview(null)}>Удалить фото</button>
+                            <button onClick={openFileDialog}>Загрузить фото</button>
+                            <button className="modal-overlay-profile__close-btn" onClick={() => setIsModalOpen(false)}>✕</button>
+                        </div>
+                    </div>,
+                    document.getElementById("modal-root")!
+                )}
         </div>
     );
 };
 
 export default AvatarUpload;
+

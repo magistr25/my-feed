@@ -368,7 +368,7 @@
   }
 
   .profile-form {
-    padding-top: 0px;
+    padding-top: 0;
     .form-description {
       font-family: Gilroy, sans-serif;
       font-size: 16px;
@@ -432,4 +432,14 @@
     margin-bottom: 40px;
   }
 
+}
+
+@media (min-width: 824px) {
+  .profile-container__notification {
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 12px 40px 0 #8C8C8C26;
+  }
 }

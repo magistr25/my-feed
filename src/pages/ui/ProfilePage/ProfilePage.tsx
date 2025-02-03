@@ -17,6 +17,7 @@ import {mobileActionBarVar, mobileMenuVar, profileVar, showActionBarVar, userVar
 import GET_USER_DATA from "@/pages/api/queries/getUserData.ts";
 import UPDATE_USER_PROFILE from "@/pages/api/mutations/updateUserProfile.ts";
 import {UserProfileData} from "@/pages/model/types/UserProfileData.ts";
+import {uploadToS3} from "@/shared/utils/uploadToS3.ts";
 
 const ProfilePage: FC = () => {
     const [birthDate, setBirthDate] = useState<Date | null>(null);
@@ -65,6 +66,8 @@ const ProfilePage: FC = () => {
 
     const isMobileMenuOpen = useReactiveVar(mobileMenuVar);
     const isMobileActionBarOpen = useReactiveVar(mobileActionBarVar);
+    const [avatarFile, setAvatarFile] = useState<File | null>(null); // Файл для загрузки
+    const [avatarUrl, setAvatarUrl] = useState<string | null>(data?.userMe?.avatarUrl ?? null);
     useEffect(() => {
         const handleResize = () => setIsMobile(window.innerWidth < 824);
 
@@ -73,10 +76,6 @@ const ProfilePage: FC = () => {
         window.addEventListener("resize", handleResize);
         return () => window.removeEventListener("resize", handleResize);
     }, []);
-
-    const handleAvatarChange = (newAvatar: string) => {
-        setValue("avatar", newAvatar);
-    };
 
     const avatarRef = useRef<HTMLDivElement | null>(null);
 
@@ -145,9 +144,6 @@ const ProfilePage: FC = () => {
         }
     }, [data, setValue]);
 
-
-
-
     useEffect(() => {
         if (data?.userMe?.birthDate) {
             const parsedDate = new Date(data.userMe.birthDate);
@@ -204,14 +200,71 @@ const ProfilePage: FC = () => {
         const target = document.querySelector(".profile-page") || document.documentElement || document.body;
         target.scrollTo({ top: target.scrollHeight, behavior: "smooth" });
     };
+    useEffect(() => {
+        setAvatarUrl(data?.userMe?.avatarUrl ?? null);
+    }, [data]);
 
+    // Обновляем file, но пока не загружаем
+    const handleAvatarChange = (file: File) => {
+        setAvatarFile(file);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setAvatarUrl(reader.result as string);
+        };
+        reader.readAsDataURL(file);
+    };
     const handleUpdateProfile = async (formData: UserProfileData) => {
         try {
+            const token = localStorage.getItem("authToken");
+            if (!token) {
+                setNotification({ message: "Ошибка: Вы не авторизованы!", type: "error" });
+                return;
+            }
+
+            let finalAvatarUrl = avatarUrl;
+
+            if (avatarFile) {
+                try {
+                    // Загрузка файла на S3
+                    const uploadedUrl = await uploadToS3(avatarFile);
+                    if (!uploadedUrl) throw new Error("Ошибка загрузки файла");
+
+                    finalAvatarUrl = uploadedUrl;
+                    setAvatarUrl(finalAvatarUrl); // Обновляем state
+                } catch (uploadError) {
+                    console.error("Ошибка загрузки файла:", uploadError);
+                    setNotification({
+                        message: "Ошибка загрузки файла на сервер",
+                        type: "error",
+                    });
+                    return;
+                }
+            }
+
+            // Формируем данные для отправки
             const userProfileData = {
                 firstName: formData.firstName ?? undefined,
                 lastName: formData.lastName ?? undefined,
                 middleName: formData.middleName ?? undefined,
-                birthDate: formData.birthDate ? new Date(formData.birthDate).toISOString().split("T")[0] : undefined,
+                birthDate: formData.birthDate
+                    ? (() => {
+                        try {
+                            const [day, month, year] = formData.birthDate.split(".");
+                            const parsedDate = new Date(`${year}-${month}-${day}`);
+                            if (isNaN(parsedDate.getTime())) {
+                                throw new Error("Неверный формат даты");
+                            }
+                            return parsedDate.toISOString().split("T")[0];
+                        } catch (dateError) {
+                            console.error("Ошибка обработки даты:", dateError);
+                            setNotification({
+                                message: "Ошибка формата даты. Используйте ДД.ММ.ГГГГ",
+                                type: "error",
+                            });
+                            return undefined;
+                        }
+                    })()
+                    : undefined,
                 gender: formData.gender?.toUpperCase() ?? undefined,
                 email: formData.email,
                 phone: formData.phone
@@ -220,29 +273,34 @@ const ProfilePage: FC = () => {
                         : `+${formData.phone.replace(/\D/g, "")}`
                     : undefined,
                 country: formData.country ?? undefined,
-                avatarUrl: formData.avatarUrl ?? undefined,
+                avatarUrl: finalAvatarUrl ?? undefined, // Отправляем без query
             };
 
-            console.log("Отправляемые данные:", userProfileData);
+            console.log("📤 Отправляем данные на сервер:", userProfileData);
 
             await updateUserProfile({
                 variables: { input: userProfileData },
+                context: {
+                    headers: {
+                        Authorization: `Bearer ${token}`, // Передаём токен
+                    },
+                },
             });
 
-            profileVar(userProfileData); // Обновляем локальное состояние профиля
+            profileVar(userProfileData); // Обновляем локальное состояние
 
-            // ✅ Показываем всплывающее уведомление
             setNotification({ message: "Изменения успешно сохранены!", type: "success" });
-
-            // Убираем уведомление через 3 секунды
             setTimeout(() => setNotification(null), 3000);
         } catch (error) {
+            console.error("Ошибка обновления профиля:", error);
             setNotification({
                 message: error instanceof Error ? error.message : "Произошла неизвестная ошибка",
                 type: "error",
             });
         }
     };
+
+
 
     if (loading) return <div>Загрузка...</div>;
     if (error) return <div>Ошибка: {error.message}</div>;
