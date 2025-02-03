@@ -54,7 +54,7 @@ const AvatarUpload: FC<AvatarUploadProps> = ({ userAvatarUrl, onAvatarChange }) 
                         <div className="modal-overlay-profile__content" onClick={(e) => e.stopPropagation()}>
                             <h2 className="modal-overlay-profile__title">Аватар профиля</h2>
                             <button onClick={() => setPreview(null)}>Удалить фото</button>
-                            <button onClick={openFileDialog}>Загрузить фото</button>
+                            <button className="last-button" onClick={openFileDialog}>Загрузить фото</button>
                             <button className="modal-overlay-profile__close-btn" onClick={() => setIsModalOpen(false)}>✕</button>
                         </div>
                     </div>,
