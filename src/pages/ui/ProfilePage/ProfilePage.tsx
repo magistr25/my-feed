@@ -21,7 +21,6 @@ import {UserProfileData} from "@/pages/model/types/UserProfileData.ts";
 const ProfilePage: FC = () => {
     const [birthDate, setBirthDate] = useState<Date | null>(null);
     const [isFocused, setIsFocused] = useState(false);
-    const user = {avatarUrl: "/path-to-user-avatar.jpg"}; // Данные о пользователе
     const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 824);
     const [isMobile, setIsMobile] = useState(window.innerWidth < 824);
     const pageRef = useRef<HTMLDivElement | null>(null);
@@ -256,7 +255,8 @@ const ProfilePage: FC = () => {
                     <form onSubmit={handleSubmit((data) => handleUpdateProfile({ ...data, id: userVar()?.id ?? "" }))}
                          className="profile-form" autoComplete="off" noValidate>
                         <div ref={avatarRef}>
-                            <AvatarUpload userAvatarUrl={user.avatarUrl} onAvatarChange={handleAvatarChange}/>
+                            <AvatarUpload userAvatarUrl={data?.userMe?.avatarUrl ?? null} onAvatarChange={handleAvatarChange} />
+
                         </div>
                         <FormInputGroup
                             label="Имя"
@@ -407,7 +407,7 @@ const ProfilePage: FC = () => {
                                 className={showActionBarVar() ? "input-with-margin" : ""}
                             />
                         </div>
-                        <div className="profile-form__actions" style={{ display: isShowActionBar ? "none" : "flex" }}>
+                        <div className="profile-form__actions"   style={{ display: isDesktop || !isShowActionBar ? "flex" : "none" }}>
                             <Button
                                 type="button"
                                 onClick={() => navigate(-1)}

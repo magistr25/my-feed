@@ -9,13 +9,17 @@
     width: 148px;
     height: 148px;
     border-radius: 50%;
-    border: 2px solid var(--login-page-avatar-border);
+    //outline: 1px solid var(--login-page-bg);
     overflow: hidden;
     display: flex;
     justify-content: center;
     margin-top: -15px;
     margin-bottom: 15px;
     background-color: #f0f0f0;
+    img {
+      outline: 2px solid var(--login-page-bg);
+    }
+
 
     img {
       width: 100%;

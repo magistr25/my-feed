@@ -1,14 +1,23 @@
-import {ChangeEvent, FC, useState} from "react";
+import { ChangeEvent, FC, useEffect, useState } from "react";
 import "./AvatarUpload.scss";
 import DefaultAvatar from "@/shared/ui/DefaultAvatar/DefaultAvatar.tsx";
 
 interface AvatarUploadProps {
-    userAvatarUrl?: string;
+    userAvatarUrl?: string | null;
     onAvatarChange: (avatar: string) => void;
 }
 
 const AvatarUpload: FC<AvatarUploadProps> = ({ userAvatarUrl, onAvatarChange }) => {
-    const [avatar, setAvatar] = useState<string | null>(userAvatarUrl || null);
+    const [avatar, setAvatar] = useState<string | null>(null);
+
+    // Обновляем аватар
+    useEffect(() => {
+        if (userAvatarUrl) {
+            setAvatar(userAvatarUrl);
+        } else {
+            setAvatar(null); // Убираем аватар, чтобы DefaultAvatar корректно отображался
+        }
+    }, [userAvatarUrl]);
 
     const handleAvatarChange = (event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -23,16 +32,14 @@ const AvatarUpload: FC<AvatarUploadProps> = ({ userAvatarUrl, onAvatarChange }) 
         }
     };
 
-    const displayAvatar = avatar ? (
-        <img src={avatar} alt="User avatar" />
-    ) : (
-        <DefaultAvatar />
-    );
-
     return (
         <div className="avatar-upload">
             <div className="avatar-upload__preview">
-                {displayAvatar}
+                {avatar ? (
+                    <img src={avatar} alt="User avatar" />
+                ) : (
+                    <DefaultAvatar variant="profile" />
+                )}
             </div>
             <input
                 id="avatarInput"
