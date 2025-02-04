@@ -127,6 +127,11 @@ export const profileVar = makeVar<UserProfileData | null>(null);
 // Глобальная переменная для управления видимостью MobileActionBar
 export const showActionBarVar = makeVar<boolean>(false);
 
+// Глобальная переменная для хранения аватарки
+export const avatarFileVar = makeVar<File | null>(null);
+export const avatarUrlVar = makeVar<string | null>(null);
+
+
 const client = new ApolloClient({
     link: from([errorLink, authLink.concat(httpLink)]),
     cache: new InMemoryCache(),
