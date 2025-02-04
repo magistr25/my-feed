@@ -17,6 +17,7 @@ import ProfilePage from "@/pages/ui/ProfilePage/ProfilePage.tsx";
 
 import App from "./App.tsx";
 import client from "./app/apollo/client.ts";
+import MyPostsPage from "@/pages/ui/MyPostsPage/MyPostsPage.tsx";
 
 createRoot(window.document.getElementById('root')!).render(
     <StrictMode>
@@ -27,7 +28,7 @@ createRoot(window.document.getElementById('root')!).render(
                         <Routes>
                             <Route path="/" element={<App/>}>
                                 <Route index element={<HomePage/>}/>
-                                <Route path="/my-posts" element={''}/>
+                                <Route path="/my-posts" element={<MyPostsPage />}/>
                                 <Route path="/favorites" element={<FavoritesPage/>}/>
                                 <Route path="/profile" element={<ProfilePage/>}/>
                                 <Route path="/login" element={<LoginPage/>}/>
