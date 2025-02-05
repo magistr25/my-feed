@@ -174,7 +174,7 @@
     display: flex;
     justify-content: space-between;
     gap: 10px;
-    background: var(--add-post-page-bg);
+    background: var(--login-page-bg);
   }
 
   .add-posts__button {
@@ -252,11 +252,21 @@
   }
   .add-posts__photo-label {
     max-width: 343px;
-   height: 212px;
+    height: 212px;
 
   }
   .add-posts__photo-placeholder__caption-big {
     display: none;
+  }
+  .add-posts__photo-preview {
+    width: 100%;
+    height: 200px;
+    max-width: 100%;
+    max-height: 200px;
+    object-fit: contain;
+    border-radius: 12px;
+    display: block;
+    margin: auto;
   }
 }
 
@@ -277,9 +287,7 @@
 
   .add-posts__buttons {
     position: fixed;
-    bottom: 46px;
-    left: 50%;
-    transform: translateX(-50%);
+    bottom: 0;
     width: 100%;
     max-width: 375px;
     display: flex;
@@ -287,6 +295,7 @@
     padding: 12px;
     z-index: 1000;
   }
+
   .add-posts__photo-icon {
     width: 53.38px;
     height: 41.94px;
@@ -376,6 +385,7 @@
     justify-content: space-between;
     padding: 12px;
     z-index: 1000;
+   background: var(--add-posts__container-big-bg) !important;
 
   }
   .add-posts__input {
@@ -418,6 +428,16 @@
     display: flex;
     gap: 10px;
   }
+  .add-posts__photo-preview {
+    max-width: 100%;
+    max-height: 340px;
+    object-fit: contain;
+    border-radius: 12px;
+    display: block;
+    margin: auto;
+  }
 }
+
+
 
 
