@@ -1,6 +1,6 @@
 import './MyPostsPage.scss';
 
-import {FC, useRef, useState} from "react";
+import {ChangeEvent, FC, useRef, useState} from "react";
 import {Link} from "react-router-dom";
 import Button from "@/shared/ui/Button/Button.tsx";
 import uploadIcon from "@/assets/images/upload.png";
@@ -9,7 +9,7 @@ const MyPostsPage: FC = () => {
     const [text, setText] = useState("");
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-    const handleInput = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const handleInput = (event: ChangeEvent<HTMLTextAreaElement>) => {
         setText(event.target.value);
 
         // Автоматическое изменение высоты
@@ -50,8 +50,19 @@ const MyPostsPage: FC = () => {
                             <input type="file" className="add-posts__photo-input" accept="image/*"/>
                             <div className="add-posts__photo-placeholder">
                                 <img src={uploadIcon} alt="Upload" className="add-posts__photo-icon"/>
-                                <span
-                                    className="add-posts__photo-placeholder__caption">Загрузите или сделайте фото</span>
+                                <div
+                                    className="add-posts__photo-placeholder__caption">Загрузите или сделайте фото
+                                </div>
+                                <div
+                                    className="add-posts__photo-placeholder__caption-big">
+                                    <div className="add-posts__photo-placeholder__caption-gray">
+                                        Перетащите фото сюда
+                                    </div>
+                                    <div className="add-posts__photo-placeholder__caption-bottom">
+                                        <span className="add-posts__photo-placeholder__caption-gray">или </span>
+                                        <span>выберите фото с вашего компьютера</span>
+                                        </div>
+                                    </div>
                             </div>
                         </label>
                     </div>
@@ -59,13 +70,13 @@ const MyPostsPage: FC = () => {
                     {/* Описание */}
                     <div className="add-posts__textarea-wrapper">
                         <p className="add-posts__label_description">Описание</p>
-                    <textarea
-                         ref={textareaRef}
-                         className="add-posts__input"
-                         placeholder="Придумайте описание для своего поста"
-                         value={text}
-                         onChange={handleInput}
-                    />
+                        <textarea
+                            ref={textareaRef}
+                            className="add-posts__input"
+                            placeholder="Придумайте описание для своего поста"
+                            value={text}
+                            onChange={handleInput}
+                        />
                     </div>
                 </div>
 

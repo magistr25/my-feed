@@ -12,7 +12,6 @@
     max-width: 375px;
     height: auto;
     box-sizing: border-box;
-    padding: 0 15px;
     display: flex;
     justify-content: center;
     position: relative;
@@ -102,6 +101,7 @@
     max-height: 198px;
     padding: 12px 16px;
     border-radius: 8px;
+
     border: var(--add-posts__input-border);
     resize: none;
     overflow-y: auto;
@@ -145,7 +145,6 @@
 
   .add-posts__photo-label {
     width: 100%;
-    max-width: 343px;
     height: 212px;
     display: flex;
     align-items: center;
@@ -252,8 +251,12 @@
     color: var(--add-posts__navigate-color);
   }
   .add-posts__photo-label {
-    width: 343px;
-    height: 212px;
+    max-width: 343px;
+   height: 212px;
+
+  }
+  .add-posts__photo-placeholder__caption-big {
+    display: none;
   }
 }
 
@@ -303,7 +306,6 @@
     margin-bottom: 15px;
   }
 }
-
 @media (min-width: 824px) {
 
   .add-posts__wrapper {
@@ -351,6 +353,7 @@
     align-items: flex-start;
     max-width: 100%;
     padding: 41.5px;
+    background: var(--add-posts__container-big-bg);
 
     &-title {
       margin-left: 0;
@@ -366,15 +369,55 @@
   .add-posts__buttons {
     position: fixed;
     bottom: 58px;
-    left: 0;
+    left: 30px;
     width: 100%;
     max-width: 375px;
     display: flex;
     justify-content: space-between;
     padding: 12px;
-    border-top: 1px solid #ddd;
     z-index: 1000;
 
   }
+  .add-posts__input {
+    width:663px !important;
+    height: 44px;
+    padding: 12px;
+    font-size: 14px;
+    border-radius: 8px;
+    background: var(--add-posts__input-bg);
+
+    color: var(--add-posts__input-color);
+  }
+  .add-posts__photo-label {
+    max-height: 346ppx;
+    width: 663px !important;
+    height: 346px !important;
+  }
+  .add-posts__input {
+    max-width: 660px !important;
+  }
+  .add-posts__photo-placeholder__caption {
+    display: none;
+  }
+  .add-posts__photo-placeholder__caption-big {
+    font-family: Gilroy, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 22px;
+    letter-spacing: 0.01em;
+    text-align: center;
+    margin-top: 20px;
+    display: flex;
+    gap: 5px;
+    flex-direction: column;
+  }
+  .add-posts__photo-placeholder__caption-gray {
+    color: #686868;
+  }
+  .add-posts__photo-placeholder__caption-bottom {
+    display: flex;
+    gap: 10px;
+  }
 }
+
 
