@@ -208,6 +208,14 @@
     }
   }
 }
+.add-posts__photo-label {
+  transition: background-color 0.3s ease;
+
+  &.active {
+    background-color: #ffbfa3;
+    border: 2px dashed #ff784f;
+  }
+}
 
 @media (max-width: 823px) {
 
