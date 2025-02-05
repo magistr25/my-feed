@@ -131,6 +131,11 @@ export const showActionBarVar = makeVar<boolean>(false);
 export const avatarFileVar = makeVar<File | null>(null);
 export const avatarUrlVar = makeVar<string | null>(null);
 
+// Переменные для поста пользователя
+export const imageVar = makeVar<File | null>(null);
+export const titleVar = makeVar<string>("");
+export const descriptionVar = makeVar<string>("");
+export const previewVar = makeVar<string | null>(null);
 
 const client = new ApolloClient({
     link: from([errorLink, authLink.concat(httpLink)]),

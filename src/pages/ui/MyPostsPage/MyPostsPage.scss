@@ -101,7 +101,6 @@
     max-height: 198px;
     padding: 12px 16px;
     border-radius: 8px;
-
     border: var(--add-posts__input-border);
     resize: none;
     overflow-y: auto;
@@ -112,6 +111,12 @@
     line-height: 22px;
     letter-spacing: 0.01em;
     text-align: left;
+    &:focus {
+      border: var(--add-posts__input-border);
+    }
+    &:active {
+      border: var(--add-posts__input-border);
+    }
 
     &::placeholder {
       font-family: Gilroy, sans-serif;
