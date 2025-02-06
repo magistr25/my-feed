@@ -16,6 +16,8 @@ import {PostProps} from '@/features/posts/model/types/types';
 import DefaultAvatar from '@/shared/ui/DefaultAvatar/DefaultAvatar.tsx';
 import HeartIcon from '@/shared/ui/HeartIcon/HeartIcon.tsx';
 import SharePopup from '@/shared/ui/SharePopup/SharePopup.tsx';
+import EditButton from "@/shared/ui/EditButton/EditButton.tsx";
+import {useLocation} from "react-router-dom";
 
 const Post: FC<PostProps> = ({id, author, createdAt, title, description, mediaUrl, isLiked}) => {
     const {avatarError, setAvatarError} = useAvatarError();
@@ -23,11 +25,10 @@ const Post: FC<PostProps> = ({id, author, createdAt, title, description, mediaUr
     const {showFullPost, fullDescription, loading, error, handleReadMore, handleClosePost} = useReadMore(id);
     const {handleLike} = useLikePost(id, isLiked);
     const isLikedState = useReactiveVar(likeVar)[id] ?? isLiked;
-
     const { isExpanded, handleExpand, handleClose } = usePostExpand(handleReadMore, handleClosePost);
-
     const formattedDescription = formatDescription(description, fullDescription, showFullPost, isLargeScreen);
-
+    const location = useLocation();
+    const isViewMode = location.pathname === "/my-posts/view";
     return (
         <>
             <div className={`overlay ${isExpanded ? 'overlay--visible' : ''}`} onClick={handleClose} />
@@ -72,6 +73,7 @@ const Post: FC<PostProps> = ({id, author, createdAt, title, description, mediaUr
                 <div className="post__actions">
                     <HeartIcon onClick={handleLike} isActive={isLikedState} />
                     <SharePopup isExpanded={showFullPost} />
+                    {isViewMode && <EditButton postId={Number(id)} />}
                 </div>
             </article>
         </>
