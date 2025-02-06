@@ -19,6 +19,7 @@ import App from "./App.tsx";
 import client from "./app/apollo/client.ts";
 import MyPostsPage from "@/pages/ui/MyPostsPage/MyPostsPage.tsx";
 import MyPostsListPage from "@/pages/ui/MyPostsListPage/MyPostsListPage.tsx";
+import MyPostsRedactionsPage from "@/pages/ui/MyPostsRedactionsPage/MyPostsRedactionsPage.tsx";
 
 
 createRoot(window.document.getElementById('root')!).render(
@@ -37,8 +38,7 @@ createRoot(window.document.getElementById('root')!).render(
                                 <Route path="/register" element={<RegisterPage/>}/>
                                 <Route path="/error-500" element={<Error500 />} />
                                 <Route path="/my-posts/view" element={<MyPostsListPage />}/>
-                                {/*<Route path="/my-posts/redactions" element={<MyPostsRedactionsPage />}/>*/}
-
+                                <Route path="/my-posts/redactions" element={<MyPostsRedactionsPage />}/>
                             </Route>
                         </Routes>
                     </BrowserRouter>
@@ -46,4 +46,4 @@ createRoot(window.document.getElementById('root')!).render(
             </Provider>
         </ApolloProvider>
     </StrictMode>,
-)
+);

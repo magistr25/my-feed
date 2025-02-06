@@ -73,7 +73,14 @@ const Post: FC<PostProps> = ({id, author, createdAt, title, description, mediaUr
                 <div className="post__actions">
                     <HeartIcon onClick={handleLike} isActive={isLikedState} />
                     <SharePopup isExpanded={showFullPost} />
-                    {isViewMode && <EditButton postId={Number(id)} />}
+                    {isViewMode && (
+                        <EditButton
+                            postId={String(id)}
+                            title={title}
+                            description={description}
+                            image={mediaUrl}
+                        />
+                    )}
                 </div>
             </article>
         </>

@@ -8,6 +8,7 @@ class PostUtils {
 
     handlePostFileChange(file: File) {
         postFileVar(file);
+
         const reader = new FileReader();
         reader.onloadend = () => {
             postUrlVar(reader.result as string);
@@ -18,7 +19,12 @@ class PostUtils {
     async uploadImageAndGetUrl(file: File): Promise<string> {
         try {
             const mediaUrl = await uploadToS3(file);
-            if (!mediaUrl) throw new Error("Ошибка загрузки файла");
+
+            if (!mediaUrl) {
+                console.error("Ошибка: `uploadToS3` не вернул URL");
+                throw new Error("Ошибка загрузки файла");
+            }
+
             return mediaUrl;
         } catch (error) {
             console.error("Ошибка загрузки файла:", error);

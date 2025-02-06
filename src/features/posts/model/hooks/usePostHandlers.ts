@@ -4,8 +4,9 @@ import { ImageService } from "@/entities/image/model/ImageService";
 import { descriptionVar, imageVar, previewVar, titleVar } from "@/app/apollo/client";
 import { CREATE_POST } from "@/features/posts/api/mutations/createPost";
 import PostUtils from "@/features/posts/model/utils/PostUtils";
-import { useMutation} from "@apollo/client";
-import {usePosts} from "@/pages/model/hooks/usePosts";
+import { useMutation } from "@apollo/client";
+import { DELETE_POST } from "@/features/posts/api/mutations/deletePost";
+
 
 interface FormData {
     title: string;
@@ -16,25 +17,34 @@ interface FormData {
 interface UsePostHandlersParams {
     reset: UseFormReset<FormData>;
     trigger: UseFormTrigger<FormData>;
+    setValue?: (name: keyof FormData, value: any) => void;
+    oldPostId?: string; // Добавляем старый ID поста
 }
 
-export const usePostHandlers = ({ reset, trigger }: UsePostHandlersParams) => {
+export const usePostHandlers = ({ reset, trigger, setValue, oldPostId = "" }: UsePostHandlersParams) => {
 
     const [createPostMutation] = useMutation(CREATE_POST);
-    const { addNewPost } = usePosts("MY");
+    const [deletePostMutation] = useMutation(DELETE_POST);
+
     const handleDrop = (event: DragEvent<HTMLDivElement>) => {
         ImageService.handleDrop(event, async (file) => {
             imageVar(file);
             ImageService.generatePreview(file, (preview) => previewVar(preview));
 
             try {
-                const isValid = await trigger("image");
-                if (!isValid) console.error("Валидация изображения не прошла.");
+                if (setValue) { // Проверяем, что setValue определён
+                    setValue("image", file); // Устанавливаем файл в useForm
+                    const isValid = await trigger("image");
+                    if (!isValid) console.error("Валидация изображения не прошла.");
+                } else {
+                    console.warn("setValue не передан в usePostHandlers");
+                }
             } catch (error) {
                 console.error("Ошибка при вызове trigger:", error);
             }
         });
     };
+
 
     const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
         ImageService.handleFileChange(event, (file) => {
@@ -67,12 +77,29 @@ export const usePostHandlers = ({ reset, trigger }: UsePostHandlersParams) => {
                 return;
             }
 
+            // 1. Удаляем старый пост, если есть
+            if (oldPostId) {
+
+                const { data: deleteResponse } = await deletePostMutation({
+                    variables: { input: { id: oldPostId } },
+                });
+
+                if (!deleteResponse?.postDelete?.ok) {
+                    console.error("Ошибка: Не удалось удалить старый пост. Сервер вернул:", deleteResponse);
+                    return;
+                }
+
+            }
+
+            // 2. Загружаем новое изображение
             const mediaUrl = await PostUtils.uploadImageAndGetUrl(imageVar()!);
+
             if (!mediaUrl) {
                 console.error("Ошибка загрузки изображения.");
                 return;
             }
 
+            // 3. Создаём новый пост
             const { data } = await createPostMutation({
                 variables: {
                     input: {
@@ -87,10 +114,8 @@ export const usePostHandlers = ({ reset, trigger }: UsePostHandlersParams) => {
                 console.error("Ошибка: Пост не был создан.");
                 return;
             }
-            const newPost = data.postCreate;
 
-            addNewPost(newPost);
-
+            // 4. Очищаем форму после успешного создания
             handleCancel();
         } catch (error) {
             console.error("Ошибка при отправке поста:", error);
