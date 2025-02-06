@@ -137,6 +137,10 @@ export const titleVar = makeVar<string>("");
 export const descriptionVar = makeVar<string>("");
 export const previewVar = makeVar<string | null>(null);
 
+// Переменные для загрузки изображения поста
+export const postFileVar = makeVar<File | null>(null);
+export const postUrlVar = makeVar<string | null>(null);
+
 const client = new ApolloClient({
     link: from([errorLink, authLink.concat(httpLink)]),
     cache: new InMemoryCache(),

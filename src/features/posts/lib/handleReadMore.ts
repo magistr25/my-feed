@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import  client from '@/app/apollo/client';
-import { getFullPost } from '@/features/posts/lib/postService';
+import { getFullPost } from '@/features/posts/model/services/postService';
 
 export const useReadMore = (id: string) => {
     const [showFullPost, setShowFullPost] = useState(false);

@@ -1,13 +1,14 @@
 import './MyPostsPage.scss';
 
-import {FC, useRef, useState} from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useReactiveVar } from "@apollo/client";
 import { useForm } from "react-hook-form";
 import Button from "@/shared/ui/Button/Button.tsx";
 import uploadIcon from "@/assets/images/upload.png";
-import { usePostHandlers } from "@/features/posts/model/hooks/usePostHandlers";
 import { imageVar, titleVar, descriptionVar, previewVar } from "@/app/apollo/client";
+import usePostHandlers from "@/features/posts/model/hooks/usePostHandlers";
+import PostUtils from "@/features/posts/model/utils/PostUtils";
 
 interface FormData {
     title: string;
@@ -16,14 +17,7 @@ interface FormData {
 }
 
 const MyPostsPage: FC = () => {
-    const { register, handleSubmit, reset, trigger } = useForm<FormData>({
-        defaultValues: {
-            title: titleVar(),
-            description: descriptionVar(),
-            image: imageVar(),
-        }
-    });
-
+    const { register, handleSubmit, reset, trigger, setValue } = useForm<FormData>();
     const { handleDrop, handleFileChange, handleCancel, onSubmit } = usePostHandlers({ reset, trigger });
 
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -32,8 +26,17 @@ const MyPostsPage: FC = () => {
     const title = useReactiveVar(titleVar);
     const description = useReactiveVar(descriptionVar);
     const isFormValid = title && description && imageFile;
+
     // Состояние для изменения фона
     const [isActive, setIsActive] = useState(false);
+
+    useEffect(() => {
+        setValue("title", titleVar() || "");
+        setValue("description", descriptionVar() || "");
+        setValue("image", imageVar() || null);
+    }, [titleVar(), descriptionVar(), imageVar(), setValue]);
+
+
     return (
         <div className="add-posts__wrapper">
             <div className="add-posts__navigate-wrapper">
@@ -49,7 +52,10 @@ const MyPostsPage: FC = () => {
                         <input type="text" className="add-posts__input" placeholder="Введите название поста"
                                {...register("title", { required: true })}
                                value={title}
-                               onChange={(e) => titleVar(e.target.value)} />
+                               onChange={(e) => {
+                                   setValue("title", e.target.value);
+                                   titleVar(e.target.value); // Записываем в Apollo Cache
+                               }} />
                     </div>
 
                     <div className="add-posts__container-add-photo"
@@ -57,22 +63,13 @@ const MyPostsPage: FC = () => {
                              e.preventDefault();
                              e.stopPropagation();
                              e.dataTransfer.dropEffect = "copy";
-                             setIsActive(true); // Добавляем активное состояние при перетаскивании
+                             setIsActive(true);
                          }}
                          onDrop={(e) => {
                              handleDrop(e);
-                             setIsActive(false); // Убираем фон после загрузки
+                             setIsActive(false);
                          }}>
-                        <label
-                            className={`add-posts__photo-label ${isActive ? "active" : ""}`}
-                            onClick={() => {
-                                if (previewImage) {  // Если есть предзагруженное фото, очищаем его
-                                    imageVar(null);
-                                    previewVar(null);
-                                }
-                                setIsActive(true);
-                            }} // Меняем фон при клике
-                        >
+                        <label className={`add-posts__photo-label ${isActive ? "active" : ""}`}>
                             <input
                                 type="file"
                                 ref={fileInputRef}
@@ -80,7 +77,8 @@ const MyPostsPage: FC = () => {
                                 className="add-posts__photo-input"
                                 onChange={(e) => {
                                     handleFileChange(e);
-                                    setIsActive(false); // Убираем фон после загрузки файла
+                                    setIsActive(false);
+                                    e.target.files && PostUtils.handlePostFileChange(e.target.files[0]);
                                 }}
                                 capture="environment"
                             />
@@ -111,7 +109,10 @@ const MyPostsPage: FC = () => {
                         <textarea className="add-posts__input" placeholder="Введите описание"
                                   {...register("description", { required: true })}
                                   value={description}
-                                  onChange={(e) => descriptionVar(e.target.value)} />
+                                  onChange={(e) => {
+                                      setValue("description", e.target.value);
+                                      descriptionVar(e.target.value); // Записываем в Apollo Cache
+                                  }} />
                     </div>
 
                     <div className="add-posts__buttons">
