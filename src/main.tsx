@@ -18,6 +18,8 @@ import ProfilePage from "@/pages/ui/ProfilePage/ProfilePage.tsx";
 import App from "./App.tsx";
 import client from "./app/apollo/client.ts";
 import MyPostsPage from "@/pages/ui/MyPostsPage/MyPostsPage.tsx";
+import MyPostsListPage from "@/pages/ui/MyPostsListPage/MyPostsListPage.tsx";
+
 
 createRoot(window.document.getElementById('root')!).render(
     <StrictMode>
@@ -34,6 +36,9 @@ createRoot(window.document.getElementById('root')!).render(
                                 <Route path="/login" element={<LoginPage/>}/>
                                 <Route path="/register" element={<RegisterPage/>}/>
                                 <Route path="/error-500" element={<Error500 />} />
+                                <Route path="/my-posts/view" element={<MyPostsListPage />}/>
+                                {/*<Route path="/my-posts/redactions" element={<MyPostsRedactionsPage />}/>*/}
+
                             </Route>
                         </Routes>
                     </BrowserRouter>

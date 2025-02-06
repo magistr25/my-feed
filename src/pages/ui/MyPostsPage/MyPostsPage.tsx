@@ -40,10 +40,10 @@ const MyPostsPage: FC = () => {
     return (
         <div className="add-posts__wrapper">
             <div className="add-posts__navigate-wrapper">
-                <Link className="add-posts__navigate" to="/my-posts">← Мои посты</Link>
+                <Link className="add-posts__navigate" to="/my-posts/view">← Мои посты</Link>
             </div>
             <div className="add-posts__page">
-                <Link className="add-posts__navigate_mobile" to="/my-posts">← Мои посты</Link>
+                <Link className="add-posts__navigate_mobile" to="/my-posts/view">← Мои посты</Link>
                 <form className="add-posts__container" onSubmit={handleSubmit(onSubmit)}>
                     <div className="add-posts__container-title">Создание поста</div>
 

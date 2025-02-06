@@ -2,9 +2,10 @@ import { ChangeEvent, DragEvent } from "react";
 import { UseFormReset, UseFormTrigger } from "react-hook-form";
 import { ImageService } from "@/entities/image/model/ImageService";
 import { descriptionVar, imageVar, previewVar, titleVar } from "@/app/apollo/client";
-import { useApolloClient, useMutation } from "@apollo/client";
-import { CREATE_POST } from "@/features/posts/api/mutations/createPost.ts";
-import PostUtils from "@/features/posts/model/utils/PostUtils.ts";
+import { CREATE_POST } from "@/features/posts/api/mutations/createPost";
+import PostUtils from "@/features/posts/model/utils/PostUtils";
+import { useMutation} from "@apollo/client";
+import {usePosts} from "@/pages/model/hooks/usePosts";
 
 interface FormData {
     title: string;
@@ -18,9 +19,9 @@ interface UsePostHandlersParams {
 }
 
 export const usePostHandlers = ({ reset, trigger }: UsePostHandlersParams) => {
-    const client = useApolloClient(); // Доступ к Apollo Cache
-    const [createPostMutation] = useMutation(CREATE_POST);
 
+    const [createPostMutation] = useMutation(CREATE_POST);
+    const { addNewPost } = usePosts("MY");
     const handleDrop = (event: DragEvent<HTMLDivElement>) => {
         ImageService.handleDrop(event, async (file) => {
             imageVar(file);
@@ -66,15 +67,12 @@ export const usePostHandlers = ({ reset, trigger }: UsePostHandlersParams) => {
                 return;
             }
 
-            console.log("📸 Загружаем изображение:", imageVar()?.name);
-
             const mediaUrl = await PostUtils.uploadImageAndGetUrl(imageVar()!);
             if (!mediaUrl) {
                 console.error("Ошибка загрузки изображения.");
                 return;
             }
 
-            // Отправляем мутацию создания поста
             const { data } = await createPostMutation({
                 variables: {
                     input: {
@@ -89,20 +87,10 @@ export const usePostHandlers = ({ reset, trigger }: UsePostHandlersParams) => {
                 console.error("Ошибка: Пост не был создан.");
                 return;
             }
-
             const newPost = data.postCreate;
 
-            // Обновляем кеш Apollo после создания поста
-            client.cache.modify({
-                fields: {
-                    posts(existingPosts = []) { // Если undefined, заменяем пустым массивом
-                        if (!Array.isArray(existingPosts)) {
-                            return [newPost]; // Создаем новый массив с одним постом
-                        }
-                        return [newPost, ...existingPosts]; // Добавляем новый пост в начало списка
-                    },
-                },
-            });
+            addNewPost(newPost);
+
             handleCancel();
         } catch (error) {
             console.error("Ошибка при отправке поста:", error);

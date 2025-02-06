@@ -14,7 +14,6 @@ export const useReadMore = (id: string) => {
         setError(null);
         try {
             const fullPostData = await getFullPost(client, id);
-            console.log('Полный пост:', fullPostData);
             setFullDescription(fullPostData.description);
             setShowFullPost(true);
         } catch (error) {

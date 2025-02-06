@@ -53,8 +53,6 @@ class ProfileUtils {
                 avatarUrl: finalAvatarUrl ?? undefined,
             };
 
-            console.log("📤 Отправляем данные на сервер:", userProfileData);
-
             await updateUserProfile({
                 variables: { input: userProfileData },
                 context: {

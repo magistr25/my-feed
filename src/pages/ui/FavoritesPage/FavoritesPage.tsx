@@ -5,12 +5,13 @@ import { FC, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 
-import { isInProfileVar, loadingStateVar } from '@/app/apollo/client.ts';
+import { isInProfileVar, loadingStateVar } from '@/app/apollo/client';
 import noPostsImage from "@/assets/images/no_posts_image.png";
-import MobileMenu from '@/features/navigation/ui/MobileMenu/MobileMenu.tsx';
+import MobileMenu from '@/features/navigation/ui/MobileMenu/MobileMenu';
 import { usePosts } from '@/pages/model/hooks/usePosts.ts';
-import NoPostsBanner from "@/shared/ui/NoPostsBanner/NoPostsBanner.tsx";
-import HomeContent from '@/widgets/HomeContent/HomeContent.tsx';
+import NoPostsBanner from "@/shared/ui/NoPostsBanner/NoPostsBanner";
+import HomeContent from '@/widgets/HomeContent/HomeContent';
+import { Post } from "@/features/posts/model/types/types";
 
 const FavoritesPage: FC = () => {
     const location = useLocation();
@@ -18,15 +19,15 @@ const FavoritesPage: FC = () => {
     const isLoading = useReactiveVar(loadingStateVar);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const isMobile = window.innerWidth <= 768;
-    const { localPosts = [], loading, hasMore, loadMore, handleLike, fetchLikes } = usePosts('LIKE');
+    const { localPosts = [], loading, hasMore, loadMore, fetchLikes, handleLike } = usePosts('LIKE');
     const [isPageLoading, setIsPageLoading] = useState(true);
-    const [dataLoaded, setDataLoaded] = useState(false); // Флаг для предотвращения мигания
+    const [dataLoaded, setDataLoaded] = useState(false);
+    const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);
     const navigate = useNavigate();
 
     useEffect(() => {
         window.scrollTo({ top: 0, left: 0, behavior: "instant" });
     }, [location.pathname]);
-
 
     // Перезагрузка при изменении маршрута
     useEffect(() => {
@@ -45,6 +46,10 @@ const FavoritesPage: FC = () => {
             });
     }, [fetchLikes, location.pathname]);
 
+    // Фильтруем локальные посты, убирая удалённые лайки
+    useEffect(() => {
+        setFilteredPosts(localPosts.filter((post) => post?.isLiked));
+    }, [localPosts]);
 
     useEffect(() => {
         if (!loading && isPageLoading) {
@@ -63,13 +68,6 @@ const FavoritesPage: FC = () => {
         setDropdownOpen(false);
     };
 
-    // Фильтруем лайкнутые посты
-    const favoritePosts = localPosts
-        .filter((post) => post?.isLiked)
-        .map((post) => ({
-            ...post,
-        }));
-
     if (!isInProfile) {
         return (
             <div className="favorites-wrapper">
@@ -78,9 +76,8 @@ const FavoritesPage: FC = () => {
         );
     }
 
-
-    // Добавляем проверку `dataLoaded`, чтобы избежать мигания
-    if (!loading && !isPageLoading && dataLoaded && favoritePosts.length === 0) {
+    // Если нет избранных постов
+    if (!loading && !isPageLoading && dataLoaded && filteredPosts.length === 0) {
         return (
             <div className="favorites-wrapper">
                 <div className="favorites">
@@ -89,7 +86,6 @@ const FavoritesPage: FC = () => {
                         buttonText="На главную"
                         onButtonClick={() => navigate("/")}
                         imageSrc={noPostsImage}
-
                     />
                 </div>
             </div>
@@ -100,7 +96,7 @@ const FavoritesPage: FC = () => {
         <div className="favorites-wrapper">
             <div className="favorites">
                 <HomeContent
-                    posts={favoritePosts}
+                    posts={filteredPosts} // Используем отфильтрованные посты
                     hasMore={hasMore}
                     loadMore={loadMore}
                     onLike={handleLike}
@@ -110,5 +106,6 @@ const FavoritesPage: FC = () => {
         </div>
     );
 };
+
 
 export default FavoritesPage;
