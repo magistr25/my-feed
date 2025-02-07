@@ -218,8 +218,7 @@
 }
 
 @media (max-width: 823px) {
-
-  .update-posts__page .update-posts__container {
+   .update-posts__page .update-posts__container {
     max-width: 343px;
     width: 100vw;
     margin: 0 auto;
@@ -376,6 +375,7 @@
     max-width: 100%;
     padding: 41.5px;
     background: var(--add-posts__container-big-bg);
+    height: 812px;
 
     &-title {
       margin-left: 0;
@@ -390,7 +390,7 @@
   }
   .update-posts__buttons {
     position: fixed;
-    bottom: 58px;
+    bottom: 0;
     left: 30px;
     width: 100%;
     max-width: 375px;
@@ -408,8 +408,8 @@
     font-size: 14px;
     border-radius: 8px;
     background: var(--add-posts__input-bg);
-
     color: var(--add-posts__input-color);
+    max-height: 110px !important;
   }
   .update-posts__photo-label {
     max-height: 346ppx;
@@ -451,6 +451,9 @@
   }
 }
 
-
+.update-posts__input {
+  width: 100%;
+  min-height: 44px !important;
+}
 
 

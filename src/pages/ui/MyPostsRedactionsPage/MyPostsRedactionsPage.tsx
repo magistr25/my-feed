@@ -1,6 +1,6 @@
 import './MyPostsRedactionsPage.scss';
 
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, useEffect, useRef, useState} from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import Button from "@/shared/ui/Button/Button.tsx";
@@ -59,13 +59,13 @@ const MyPostsRedactionsPage: FC = () => {
         console.log("Обновлённое состояние descriptionVar():", descriptionVar());
     }, [postData, setValue]);
 
-
     return (
         <div className="update-posts__wrapper">
             <div className="update-posts__navigate-wrapper">
                 <Link className="update-posts__navigate" to="/my-posts/view">← Мои посты</Link>
             </div>
             <div className="update-posts__page">
+                <Link className="add-posts__navigate_mobile" to="/my-posts/view">← Мои посты</Link>
                 <form className="update-posts__container" onSubmit={handleSubmit(onSubmit)}>
                     <div className="update-posts__container-title">
                         {postData.title ? "Редактирование поста" : "Создание поста"}
@@ -87,7 +87,7 @@ const MyPostsRedactionsPage: FC = () => {
                     </div>
 
                     <div
-                        className="update__container-add-photo"
+                        className="update-posts__container-add-photo"
                         onDragOver={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
@@ -121,7 +121,7 @@ const MyPostsRedactionsPage: FC = () => {
                         </label>
                     </div>
 
-                    <div className="update__textarea-wrapper">
+                    <div className="update-posts__textarea-wrapper">
                         <p className="update-posts__label_description">Описание</p>
                         <textarea
                             className="update-posts__input"
@@ -129,8 +129,12 @@ const MyPostsRedactionsPage: FC = () => {
                             {...register("description", { required: true })}
                             value={description}  // Используем локальное состояние
                             onChange={(e) => {
-                                setDescription(e.target.value); // Обновляем `useState`
-                                descriptionVar(e.target.value); // Обновляем Apollo Cache
+                                const textarea = e.target;
+                                textarea.style.height = "auto";
+                                textarea.style.height = `${textarea.scrollHeight}px`;
+                                setDescription(textarea.value);
+                                setValue("description", textarea.value);
+                                descriptionVar(textarea.value);
                             }}
                         />
                     </div>

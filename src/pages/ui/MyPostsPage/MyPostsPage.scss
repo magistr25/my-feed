@@ -90,7 +90,6 @@
   .add-posts__textarea-wrapper {
     width: 100%;
     border-radius: 8px !important;
-    max-height: 198px;
     overflow: hidden;
   }
 
@@ -374,7 +373,8 @@
     justify-content: flex-start;
     align-items: flex-start;
     max-width: 100%;
-    padding: 41.5px;
+    height: 812px;
+    padding: 41px;
     background: var(--add-posts__container-big-bg);
 
     &-title {
@@ -390,7 +390,7 @@
   }
   .add-posts__buttons {
     position: fixed;
-    bottom: 58px;
+    bottom: 0;
     left: 30px;
     width: 100%;
     max-width: 375px;
@@ -408,8 +408,8 @@
     font-size: 14px;
     border-radius: 8px;
     background: var(--add-posts__input-bg);
-
     color: var(--add-posts__input-color);
+    max-height: 110px !important;
   }
   .add-posts__photo-label {
     max-height: 346ppx;
@@ -451,6 +451,9 @@
   }
 }
 
-
+.add-posts__input {
+  width: 100%;
+  min-height: 44px;
+}
 
 

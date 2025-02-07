@@ -1,6 +1,6 @@
 import './MyPostsPage.scss';
 
-import { FC, useEffect, useRef, useState } from "react";
+import {ChangeEvent, FC, useEffect, useRef, useState} from "react";
 import { Link } from "react-router-dom";
 import { useReactiveVar } from "@apollo/client";
 import { useForm } from "react-hook-form";
@@ -35,6 +35,14 @@ const MyPostsPage: FC = () => {
         setValue("description", descriptionVar() || "");
         setValue("image", imageVar() || null);
     }, [titleVar(), descriptionVar(), imageVar(), setValue]);
+
+    const handleInput = (e: ChangeEvent<HTMLTextAreaElement>) => {
+        const textarea = e.target;
+        textarea.style.height = "auto"; // Сброс высоты перед пересчётом
+        textarea.style.height = `${textarea.scrollHeight}px`; // Устанавливаем новую высоту
+        setValue("description", textarea.value);
+        descriptionVar(textarea.value);
+    };
 
 
     return (
@@ -109,10 +117,7 @@ const MyPostsPage: FC = () => {
                         <textarea className="add-posts__input" placeholder="Введите описание"
                                   {...register("description", { required: true })}
                                   value={description}
-                                  onChange={(e) => {
-                                      setValue("description", e.target.value);
-                                      descriptionVar(e.target.value); // Записываем в Apollo Cache
-                                  }} />
+                                  onInput={handleInput} />
                     </div>
 
                     <div className="add-posts__buttons">
