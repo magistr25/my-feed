@@ -18,10 +18,26 @@
   overflow: hidden;
   background: var(--primary-bg);
 }
+.my-posts-container__notification {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  position: fixed;
+  top: 160px;
+  left: 0;
+  z-index: 1000;
+  pointer-events: none;
+}
+
 
 @media (min-width: 320px) and (max-width: 823px) {
   .my-posts-wrapper {
     margin-top: 40px;
   }
 }
-
+@media (min-width: 823px) {
+  .my-posts-container__notification {
+    top: 100px;
+  }
+}

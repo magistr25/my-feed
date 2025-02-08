@@ -64,16 +64,25 @@ const authLink = setContext((_, { headers }) => {
 });
 
 // Настройка Apollo Client
-const cache = new InMemoryCache({
+export const cache = new InMemoryCache({
     typePolicies: {
         Query: {
             fields: {
+                posts: {
+                    keyArgs: false, // Отключаем дефолтное поведение Apollo по ключам
+                    merge(existing = [], incoming) {
+                        return [...existing, ...incoming];
+                    },
+                },
                 user: {
                     read() {
                         return cache.readQuery({ query: GET_USER });
                     },
                 },
             },
+        },
+        Post: {
+            keyFields: ["id"], // Указываем, что уникальный идентификатор для Post — это id
         },
     },
 });
@@ -140,6 +149,8 @@ export const previewVar = makeVar<string | null>(null);
 // Переменные для загрузки изображения поста
 export const postFileVar = makeVar<File | null>(null);
 export const postUrlVar = makeVar<string | null>(null);
+
+export const notificationVar = makeVar<{ message: string; type: "success" | "error" } | null>(null);
 
 const client = new ApolloClient({
     link: from([errorLink, authLink.concat(httpLink)]),

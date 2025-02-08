@@ -1,12 +1,12 @@
 import { ChangeEvent, DragEvent } from "react";
 import { UseFormReset, UseFormTrigger } from "react-hook-form";
 import { ImageService } from "@/entities/image/model/ImageService";
-import { descriptionVar, imageVar, previewVar, titleVar } from "@/app/apollo/client";
+import {descriptionVar, imageVar, notificationVar, previewVar, titleVar} from "@/app/apollo/client";
 import { CREATE_POST } from "@/features/posts/api/mutations/createPost";
 import PostUtils from "@/features/posts/model/utils/PostUtils";
 import { useMutation } from "@apollo/client";
 import { DELETE_POST } from "@/features/posts/api/mutations/deletePost";
-
+import {useNavigate} from "react-router-dom";
 
 interface FormData {
     title: string;
@@ -18,40 +18,29 @@ interface UsePostHandlersParams {
     reset: UseFormReset<FormData>;
     trigger: UseFormTrigger<FormData>;
     setValue?: (name: keyof FormData, value: any) => void;
-    oldPostId?: string; // Добавляем старый ID поста
+    oldPostId?: string;
 }
 
 export const usePostHandlers = ({ reset, trigger, setValue, oldPostId = "" }: UsePostHandlersParams) => {
-
     const [createPostMutation] = useMutation(CREATE_POST);
     const [deletePostMutation] = useMutation(DELETE_POST);
+    const navigate = useNavigate();
 
     const handleDrop = (event: DragEvent<HTMLDivElement>) => {
         ImageService.handleDrop(event, async (file) => {
             imageVar(file);
             ImageService.generatePreview(file, (preview) => previewVar(preview));
 
-            try {
-                if (setValue) { // Проверяем, что setValue определён
-                    setValue("image", file); // Устанавливаем файл в useForm
-                    const isValid = await trigger("image");
-                    if (!isValid) console.error("Валидация изображения не прошла.");
-                } else {
-                    console.warn("setValue не передан в usePostHandlers");
-                }
-            } catch (error) {
-                console.error("Ошибка при вызове trigger:", error);
+            if (setValue) {
+                setValue("image", file);
+                await trigger("image");
             }
         });
     };
 
-
     const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
         ImageService.handleFileChange(event, (file) => {
-            if (!file) {
-                console.error("Ошибка: Файл не был получен.");
-                return;
-            }
+            if (!file) return;
             imageVar(file);
             previewVar(URL.createObjectURL(file));
         });
@@ -63,9 +52,10 @@ export const usePostHandlers = ({ reset, trigger, setValue, oldPostId = "" }: Us
         previewVar(null);
         titleVar("");
         descriptionVar("");
+
     };
 
-    const onSubmit = async () => {
+    const onSubmit = async (message: string) => {
         try {
             if (!imageVar()) {
                 console.error("Ошибка: изображение не загружено.");
@@ -77,30 +67,41 @@ export const usePostHandlers = ({ reset, trigger, setValue, oldPostId = "" }: Us
                 return;
             }
 
-            // 1. Удаляем старый пост, если есть
+            // Удаляем старый пост, если редактируем
             if (oldPostId) {
-
-                const { data: deleteResponse } = await deletePostMutation({
+                await deletePostMutation({
                     variables: { input: { id: oldPostId } },
+                    update(cache) {
+                        cache.modify({
+                            fields: {
+                                posts(existingPosts = []) {  // Гарантируем, что existingPosts - это массив
+                                    if (!Array.isArray(existingPosts)) return [];
+                                    return existingPosts.filter((post: any) => post.__ref !== `Post:${oldPostId}`);
+                                },
+                            },
+                        });
+                    },
                 });
-
-                if (!deleteResponse?.postDelete?.ok) {
-                    console.error("Ошибка: Не удалось удалить старый пост. Сервер вернул:", deleteResponse);
-                    return;
-                }
-
             }
 
-            // 2. Загружаем новое изображение
+            // Загружаем новое изображение
             const mediaUrl = await PostUtils.uploadImageAndGetUrl(imageVar()!);
-
             if (!mediaUrl) {
                 console.error("Ошибка загрузки изображения.");
                 return;
             }
 
-            // 3. Создаём новый пост
-            const { data } = await createPostMutation({
+            // Создаём оптимистичный пост
+            const optimisticPost = {
+                __typename: "Post",
+                id: `temp-${Date.now()}`,
+                title: titleVar(),
+                description: descriptionVar(),
+                mediaUrl,
+            };
+
+            // Отправляем мутацию создания поста
+            await createPostMutation({
                 variables: {
                     input: {
                         title: titleVar(),
@@ -108,19 +109,42 @@ export const usePostHandlers = ({ reset, trigger, setValue, oldPostId = "" }: Us
                         mediaUrl,
                     },
                 },
+                optimisticResponse: {
+                    __typename: "Mutation",
+                    postCreate: optimisticPost,
+                },
+                update(cache, { data }) {
+                    if (data?.postCreate) {
+                        cache.modify({
+                            fields: {
+                                posts(existingPosts = []) {  // Проверяем, что это массив
+                                    if (!Array.isArray(existingPosts)) return [data.postCreate];
+                                    return [...existingPosts, data.postCreate];
+                                },
+                            },
+                        });
+                    }
+                },
             });
 
-            if (!data?.postCreate) {
-                console.error("Ошибка: Пост не был создан.");
-                return;
-            }
+            // Уведомление об успешном сохранении
+            notificationVar({ message: message, type: "success" });
 
-            // 4. Очищаем форму после успешного создания
-            handleCancel();
+            // Даем время на отображение уведомления
+            setTimeout(() => {
+                navigate("/my-posts/view");
+                handleCancel();
+            }, 300);
+
         } catch (error) {
             console.error("Ошибка при отправке поста:", error);
+            notificationVar({ message: "Ошибка при сохранении", type: "error" });
         }
     };
+
+
+
+
 
     return { handleDrop, handleFileChange, handleCancel, onSubmit };
 };

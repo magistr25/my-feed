@@ -100,7 +100,7 @@ const MyPostsRedactionsPage: FC = () => {
             </div>
             <div className="update-posts__page">
                 <Link className="add-posts__navigate_mobile" to="/my-posts/view">← Мои посты</Link>
-                <form className="update-posts__container" onSubmit={handleSubmit(onSubmit)}>
+                <form className="update-posts__container" onSubmit={handleSubmit(() => onSubmit('Изменения успешно сохранены'))}>
                     <div className="update-posts__container-title">
                         {postData.title ? "Редактирование поста" : "Создание поста"}
                     </div>
