@@ -1,11 +1,16 @@
 import './Error500.scss';
 
-import React from 'react';
+import React, {useEffect} from 'react';
 
 import err500 from '@/assets/images/err_500.png';
+import {useSelector} from "react-redux";
+import {RootState} from "@/app/store/store.ts";
 
 const Error500: React.FC = () => {
-
+    const theme = useSelector((state: RootState) => state.theme.theme);
+    useEffect(() => {
+        window.document.documentElement.setAttribute("data-theme", theme);
+    }, [theme]);
     return (
         <div className="error-page">
             <div className="error-page__content">
