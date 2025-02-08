@@ -90,7 +90,6 @@
   .update-posts__textarea-wrapper {
     width: 100%;
     border-radius: 8px !important;
-    max-height: 198px;
     overflow: hidden;
   }
 
@@ -377,6 +376,10 @@
     background: var(--add-posts__container-big-bg);
     height: 812px;
 
+    &-add-title {
+      margin-top: 20px;
+    }
+
     &-title {
       margin-left: 0;
       text-align: left;
@@ -390,7 +393,7 @@
   }
   .update-posts__buttons {
     position: fixed;
-    bottom: 0;
+    bottom: -20px;
     left: 30px;
     width: 100%;
     max-width: 375px;
@@ -455,5 +458,11 @@
   width: 100%;
   min-height: 44px !important;
 }
-
-
+.update-posts__container-add-photo {
+  display: flex;
+  flex-direction: column;
+}
+.update-posts__photo-label.uploading {
+  background-color: var(--photo-label-uploading-bg);
+  border: 2px dashed #ff7043;
+}

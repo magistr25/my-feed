@@ -377,6 +377,10 @@
     padding: 41px;
     background: var(--add-posts__container-big-bg);
 
+    &-add-title {
+      margin-top: 20px;
+    }
+
     &-title {
       margin-left: 0;
       text-align: left;
@@ -390,7 +394,7 @@
   }
   .add-posts__buttons {
     position: fixed;
-    bottom: 0;
+    bottom: -20px;
     left: 30px;
     width: 100%;
     max-width: 375px;
@@ -450,10 +454,35 @@
     margin: auto;
   }
 }
-
+.add-posts__container-add-photo {
+  display: flex;
+  flex-direction: column;
+}
 .add-posts__input {
   width: 100%;
   min-height: 44px;
 }
+
+.add-posts__photo-label.uploading {
+  background: var(--photo-label-uploading-bg);
+  border: 2px dashed #ff7043;
+}
+
+.upload-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #ff7043;
+  font-size: 14px;
+}
+.add-posts__input::placeholder {
+  opacity: 1 !important;
+  text-shadow: none !important;
+  filter: none !important;
+}
+
+
+
+
 
 

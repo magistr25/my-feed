@@ -97,7 +97,8 @@ $grey-darker: #BEB9B4;
   --add-posts__photo-label-border:  #BEB9B4;
   --add-posts__input-border: none;
   --add-posts__container-big-bg: #FCFCFC;
-
+  --upload-progress-bar-bg: #FFD1C3;
+  --photo-label-uploading-bg: #FFD1C3;
 
 }
 
@@ -178,6 +179,9 @@ $grey-darker: #BEB9B4;
   --add-posts__photo-label-border: #686868;
   --add-posts__input-border: 1px solid #686868;
   --add-posts__container-big-bg: #303030;
+  --upload-progress-bar-bg: #FD825D;
+  --photo-label-uploading-bg: #D2B7AF;
+
 }
 
 $border-radius: 8px;

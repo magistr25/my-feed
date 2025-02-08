@@ -7,6 +7,8 @@ import Button from "@/shared/ui/Button/Button.tsx";
 import uploadIcon from "@/assets/images/upload.png";
 import usePostHandlers from "@/features/posts/model/hooks/usePostHandlers";
 import {descriptionVar, imageVar, titleVar} from "@/app/apollo/client.ts";
+import UploadProgressBar from "@/shared/ui/UploadProgressBar/UploadProgressBar.tsx";
+import useFileUpload from "@/pages/model/hooks/useFileUpload.ts";
 
 interface FormData {
     title: string;
@@ -18,18 +20,23 @@ const MyPostsRedactionsPage: FC = () => {
     const location = useLocation();
     const postData = location.state || {}; // Получаем переданные данные
     const oldPostId = postData.postId || "";
-
+    const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
     const { register, handleSubmit, setValue, reset, trigger } = useForm<FormData>();
-    const { handleDrop, handleFileChange, handleCancel, onSubmit  } = usePostHandlers({
+    const { handleCancel, onSubmit  } = usePostHandlers({
         setValue,
         reset,
         trigger,
         oldPostId});
 
     const fileInputRef = useRef<HTMLInputElement>(null);
-    const [previewImage, setPreviewImage] = useState<string>(postData.image || "");
+    const [previewImage, setPreviewImage] = useState<string | null>(postData.image || null);
+
     const [title, setTitle] = useState(titleVar() || "");
     const [description, setDescription] = useState(descriptionVar() || "");
+    const { uploadProgress, isUploading, handleFileUpload } = useFileUpload();
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
     useEffect(() => {
         if (postData.title) {
@@ -58,6 +65,33 @@ const MyPostsRedactionsPage: FC = () => {
 
         console.log("Обновлённое состояние descriptionVar():", descriptionVar());
     }, [postData, setValue]);
+    const adjustHeight = () => {
+        if (textAreaRef.current) {
+            const maxHeight = window.innerWidth > 823 ? 110 : 198;
+            textAreaRef.current.style.height = "auto"; // Сбрасываем высоту
+            textAreaRef.current.style.height = `${Math.min(textAreaRef.current.scrollHeight, maxHeight)}px`;
+        }
+    };
+
+// Устанавливаем начальную высоту сразу после монтирования
+    useEffect(() => {
+        adjustHeight();
+    }, []);
+
+// Обновляем высоту при изменении текста
+    useEffect(() => {
+        adjustHeight();
+    }, [description]);
+
+    useEffect(() => {
+        return () => {
+            reset({ title: "", description: "", image: null }); // Очищаем форму
+            titleVar(""); // Очищаем глобальные переменные
+            descriptionVar("");
+            imageVar(null);
+        };
+    }, []);
+
 
     return (
         <div className="update-posts__wrapper">
@@ -76,7 +110,7 @@ const MyPostsRedactionsPage: FC = () => {
                         <input
                             type="text"
                             className="update-posts__input"
-                            placeholder="Введите название поста"
+                            placeholder="Придумайте название для своего поста"
                             {...register("title", { required: true })}
                             value={title}  // Используем локальное состояние
                             onChange={(e) => {
@@ -89,52 +123,92 @@ const MyPostsRedactionsPage: FC = () => {
                     <div
                         className="update-posts__container-add-photo"
                         onDragOver={(e) => {
-                            e.preventDefault();
+                            e.preventDefault(); // Убираем дефолтное поведение браузера
                             e.stopPropagation();
                             e.dataTransfer.dropEffect = "copy";
                         }}
-                        onDrop={(e) => {
-                            handleDrop(e);
+                        onDrop={async (e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+
+                            if (e.dataTransfer.files.length > 0) {
+                                const file = e.dataTransfer.files[0];
+
+                                setPreviewImage(null); // Очищаем превью перед загрузкой
+                                await handleFileUpload(file); // Ждём завершения загрузки
+                                setPreviewImage(URL.createObjectURL(file)); // Показываем загруженное изображение
+                            }
                         }}
                     >
-                        <label className="update-posts__photo-label">
+                        <label className={`update-posts__photo-label ${isUploading ? "uploading" : ""}`}>
                             <input
                                 type="file"
                                 ref={fileInputRef}
                                 accept="image/*"
                                 className="update-posts__photo-input"
-                                onChange={(e) => {
-                                    handleFileChange(e);
-                                    e.target.files && setPreviewImage(URL.createObjectURL(e.target.files[0]));
+                                onChange={async (e) => {
+                                    if (!e.target.files) return;
+
+                                    // Начинаем загрузку, скрываем превью
+                                    const file = e.target.files[0];
+                                    setPreviewImage(null);
+                                    await handleFileUpload(file); // Дожидаемся завершения загрузки
+
+                                    // Показываем изображение после загрузки
+                                    setPreviewImage(URL.createObjectURL(file));
                                 }}
                             />
+
                             <div className="update-posts__photo-placeholder">
-                                {previewImage ? (
+                                {isUploading ? (
+                                    <div className="upload-placeholder">
+                                        <img src={uploadIcon} alt="Upload" className="update-posts__photo-icon" />
+                                        <div className="update-posts__photo-placeholder__caption">Загрузите или сделайте фото</div>
+                                        <div className="update-posts__photo-placeholder__caption-big">
+                                            <div className="update-posts__photo-placeholder__caption-gray">
+                                                Перетащите фото сюда
+                                            </div>
+                                            <div className="update-posts__photo-placeholder__caption-bottom">
+                                                <span className="update-posts__photo-placeholder__caption-gray">или </span>
+                                                <span>выберите фото с вашего устройства</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ) : previewImage ? (
                                     <img src={previewImage} alt="Preview" className="update-posts__photo-preview" />
                                 ) : (
                                     <>
                                         <img src={uploadIcon} alt="Upload" className="update-posts__photo-icon" />
                                         <div className="update-posts__photo-placeholder__caption">Загрузите или сделайте фото</div>
+                                        <div className="update-posts__photo-placeholder__caption-big">
+                                            <div className="update-posts__photo-placeholder__caption-gray">
+                                                Перетащите фото сюда
+                                            </div>
+                                            <div className="update-posts__photo-placeholder__caption-bottom">
+                                                <span className="update-posts__photo-placeholder__caption-gray">или </span>
+                                                <span>выберите фото с вашего устройства</span>
+                                            </div>
+                                        </div>
                                     </>
                                 )}
                             </div>
                         </label>
+                        <UploadProgressBar progress={uploadProgress} isVisible={isUploading} />
                     </div>
 
                     <div className="update-posts__textarea-wrapper">
                         <p className="update-posts__label_description">Описание</p>
                         <textarea
                             className="update-posts__input"
-                            placeholder="Введите описание"
+                            placeholder="Придумайте описание для своего поста"
                             {...register("description", { required: true })}
-                            value={description}  // Используем локальное состояние
+                            ref={textAreaRef}
+                            value={description}
                             onChange={(e) => {
-                                const textarea = e.target;
-                                textarea.style.height = "auto";
-                                textarea.style.height = `${textarea.scrollHeight}px`;
-                                setDescription(textarea.value);
-                                setValue("description", textarea.value);
-                                descriptionVar(textarea.value);
+                                setDescription(e.target.value);
+                                setValue("description", e.target.value);
+                                descriptionVar(e.target.value);
+                                adjustHeight(); // Корректируем высоту при каждом изменении
                             }}
                         />
                     </div>
