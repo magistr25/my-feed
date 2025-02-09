@@ -1,7 +1,7 @@
 import { uploadToS3 } from "@/shared/utils/uploadToS3.ts";
-import { avatarFileVar, avatarUrlVar, showActionBarVar } from "@/app/apollo/client.ts";
+import { avatarFileVar, avatarUrlVar, showActionBarVar, userVar } from "@/app/apollo/client.ts";
 import { UserProfileData } from "@/pages/model/types/UserProfileData.ts";
-import {ApolloCache, DefaultContext, MutationFunctionOptions} from "@apollo/client";
+import { ApolloCache, DefaultContext, MutationFunctionOptions } from "@apollo/client";
 import GET_USER_DATA from "@/pages/api/queries/getUserData.ts";
 
 class ProfileUtils {
@@ -19,7 +19,7 @@ class ProfileUtils {
         reader.readAsDataURL(file);
     }
 
-    // Обновление профиля
+    // Обновление профиля + обновление userVar
     async handleUpdateProfile(
         formData: UserProfileData,
         setNotification: (msg: any) => void,
@@ -61,7 +61,7 @@ class ProfileUtils {
                 avatarUrl: finalAvatarUrl ?? undefined,
             };
 
-            await updateUserProfile({
+            const response = await updateUserProfile({
                 variables: { input: userProfileData },
                 context: {
                     headers: { Authorization: `Bearer ${token}` },
@@ -72,7 +72,7 @@ class ProfileUtils {
                         problem: null,
                         user: {
                             __typename: "UserModel",
-                            id: "temp-id",
+                            id: userVar()?.id ?? "temp-id",
                             ...userProfileData,
                         },
                     },
@@ -98,6 +98,14 @@ class ProfileUtils {
                 },
             });
 
+            if (response?.data?.userEditProfile?.user) {
+                // Обновляем userVar после успешного обновления профиля
+                userVar({
+                    ...userVar() ?? {}, // Гарантия, что userVar не null
+                    ...response.data.userEditProfile.user,
+                    updatedAt: Date.now(), // Принудительное обновление
+                });
+            }
 
             setNotification({ message: "Изменения успешно сохранены!", type: "success" });
             setTimeout(() => setNotification(null), 3000);
@@ -109,7 +117,6 @@ class ProfileUtils {
             });
         }
     }
-
 
     // Форматирование даты перед отправкой
     formatBirthDate(birthDate: string | undefined, setNotification: (msg: any) => void): string | undefined {
@@ -157,4 +164,3 @@ class ProfileUtils {
 }
 
 export default new ProfileUtils();
-
