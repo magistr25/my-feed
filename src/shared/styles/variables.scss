@@ -99,7 +99,11 @@ $grey-darker: #BEB9B4;
   --add-posts__container-big-bg: #FCFCFC;
   --upload-progress-bar-bg: #FFD1C3;
   --photo-label-uploading-bg: #FFD1C3;
-
+  --posts__modal-bg: #FCFCFC;
+  --posts__modal-header-border: 1.5px solid #F2F2F2;
+  --posts__modal-color:  #212121;
+  --posts__modal-header: #EE683E;
+  --close-svg-color: #BDBDBD
 }
 
 [data-theme="dark"] {
@@ -181,6 +185,13 @@ $grey-darker: #BEB9B4;
   --add-posts__container-big-bg: #303030;
   --upload-progress-bar-bg: #FD825D;
   --photo-label-uploading-bg: #D2B7AF;
+  --posts__modal-bg: #303030;
+  --posts__modal-header-border: 1.5px solid #373737;
+  --posts__modal-color: #F6F6F6;
+  --posts__modal-header: #CD4E27;
+  --close-svg-color: #686868;
+
+
 
 }
 

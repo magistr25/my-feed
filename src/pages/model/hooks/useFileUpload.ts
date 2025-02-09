@@ -11,7 +11,7 @@ const useFileUpload = () => {
 
         if (input instanceof File) {
             file = input;
-        } else if (input.target.files) {
+        } else if (input?.target?.files?.length) {
             file = input.target.files[0];
         }
 
@@ -41,7 +41,8 @@ const useFileUpload = () => {
     };
 
 
-    return { uploadProgress, isUploading, handleFileUpload, previewUrl };
+
+    return { uploadProgress, isUploading, handleFileUpload, previewUrl, setPreviewUrl };
 };
 
 export default useFileUpload;

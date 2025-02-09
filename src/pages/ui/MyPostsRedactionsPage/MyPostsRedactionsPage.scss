@@ -466,3 +466,176 @@
   background-color: var(--photo-label-uploading-bg);
   border: 2px dashed #ff7043;
 }
+
+.update-posts__photo-label {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: hidden;
+}
+.update-posts__modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.update-posts__modal {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  width: 300px;
+  text-align: center;
+}
+
+.update-posts__modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  color: #ff7043;
+}
+
+.update-posts__modal-close {
+  border: none;
+  background: transparent;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.update-posts__modal-content button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+@media (min-width: 824px) {
+  .update-posts__photo-label {
+    &:hover::before {
+      content: "Загрузить другое изображение";
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      color: #ffffff;
+      font-family: Gilroy, sans-serif;
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 22px;
+      letter-spacing: 0.01em;
+      text-align: center;
+      z-index: 2;
+    }
+  }
+}
+
+/* Модальное окно */
+
+.update-posts__modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+/* Контейнер модального окна */
+.update-posts__modal {
+  background: var(--posts__modal-bg);
+  width: 280px;
+  min-height: 162px;
+  padding: 0;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: left;
+  position: relative;
+  animation: fadeIn 0.2s ease-in-out;
+  box-sizing: border-box;
+}
+
+/* Заголовок модального окна */
+.update-posts__modal-header {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ff5722;
+  display: flex;
+  align-items: center;
+  padding-left: 15px;
+  min-height: 50px;
+  border-bottom: 1.5px solid #F2F2F2;
+  justify-content: space-between;
+}
+
+/* Кнопка закрытия */
+.update-posts__modal-close {
+  position: absolute;
+  top: 12px;
+  right: 15px;
+  font-size: 20px;
+  cursor: pointer;
+  background: none !important;
+  border: none;
+  svg {
+    color: var(--close-svg-color);
+  }
+}
+
+.update-posts__modal-close:hover {
+  color: #ff5722;
+}
+
+/* Контент модального окна */
+.update-posts__modal-content {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Общие стили кнопок */
+.update-posts__modal-content button {
+  width: 100%;
+  padding: 12px;
+  min-height: 56px;
+  font-size: 14px;
+  background: #fff;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  color: #333;
+  display: flex;
+  align-items: center;
+  border-radius: 0 0 16px 16px;
+}
+
+/* Кнопка удаления фото */
+.update-posts__modal-content button:first-child {
+  border-top: 2px solid #F2F2F2;
+}
+
+/* Кнопка загрузки фото */
+.update-posts__modal-content .last-button {
+  border-radius: 0 0 16px 16px;
+}
+
+/* Эффект при наведении */
+.update-posts__modal-content button:hover {
+  background: #FFD1C3;
+}

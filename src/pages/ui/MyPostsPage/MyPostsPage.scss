@@ -453,6 +453,15 @@
     display: block;
     margin: auto;
   }
+
+  .add-posts__photo-label {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    overflow: hidden;
+  }
 }
 .add-posts__container-add-photo {
   display: flex;
@@ -481,7 +490,137 @@
   filter: none !important;
 }
 
+@media (min-width: 824px) {
+  .add-posts__photo-label {
+    position: relative;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    pointer-events: auto;
 
+    /* Отключаем затемнение по умолчанию */
+    &:not(.has-uploaded-image) {
+      pointer-events: auto;
+    }
 
+    /* Затемнение и текст при наведении только если фото загружено */
+    &.has-uploaded-image:hover::before {
+      content: "Загрузить другое изображение";
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      color: #ffffff;
+      font-family: Gilroy, sans-serif;
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 22px;
+      letter-spacing: 0.01em;
+      text-align: center;
+      z-index: 2;
+    }
+  }
+}
 
+/* Модальное окно */
+.add-posts__modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-in-out;
+}
 
+/* Контейнер модального окна */
+.add-posts__modal {
+  background: var(--posts__modal-bg);
+  width: 292px;
+  min-height: 162px;
+  padding: 0;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: left;
+  position: relative;
+  animation: fadeIn 0.2s ease-in-out;
+  box-sizing: border-box;
+}
+
+/* Заголовок модального окна */
+.add-posts__modal-header {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--posts__modal-header);
+  display: flex;
+  align-items: center;
+  padding-left: 15px;
+  min-height: 50px;
+  border-bottom: var(--posts__modal-header-border);
+  justify-content: space-between;
+  font-family: Gilroy, sans-serif;
+  line-height: 20px;
+  letter-spacing: 0.03em;
+
+}
+
+/* Кнопка закрытия */
+.add-posts__modal-close {
+  position: absolute;
+  top: 12px;
+  right: 15px;
+  font-size: 20px;
+  cursor: pointer;
+  background: none !important;
+  border: none;
+  svg {
+    color: var(--close-svg-color);
+  }
+}
+
+.add-posts__modal-close:hover {
+  color: #ff5722;
+}
+
+/* Контент модального окна */
+.add-posts__modal-content {
+  display: flex;
+  flex-direction: column;
+
+}
+
+/* Общие стили кнопок */
+.add-posts__modal-content button {
+  width: 292px;
+  padding: 12px 17px;
+  min-height: 56px;
+  background:  var(--posts__modal-bg);
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  color: var(--posts__modal-color);
+  display: flex;
+  align-items: center;
+  font-family: Gilroy, sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 16px;
+  letter-spacing: 0.03em;
+
+}
+
+/* Кнопка загрузки фото */
+.add-posts__modal-content .last-button {
+  border-radius: 0 0 12px 12px;
+}
+
+/* Эффект при наведении */
+.add-posts__modal-content button:hover {
+  background: #FFD1C3;
+}
