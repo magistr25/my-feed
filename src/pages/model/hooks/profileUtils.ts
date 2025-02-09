@@ -1,6 +1,8 @@
 import { uploadToS3 } from "@/shared/utils/uploadToS3.ts";
-import { avatarFileVar, avatarUrlVar, profileVar, showActionBarVar } from "@/app/apollo/client.ts";
+import { avatarFileVar, avatarUrlVar, showActionBarVar } from "@/app/apollo/client.ts";
 import { UserProfileData } from "@/pages/model/types/UserProfileData.ts";
+import {ApolloCache, DefaultContext, MutationFunctionOptions} from "@apollo/client";
+import GET_USER_DATA from "@/pages/api/queries/getUserData.ts";
 
 class ProfileUtils {
     constructor() {
@@ -18,7 +20,13 @@ class ProfileUtils {
     }
 
     // Обновление профиля
-    async handleUpdateProfile(formData: UserProfileData, setNotification: (msg: any) => void, updateUserProfile: any) {
+    async handleUpdateProfile(
+        formData: UserProfileData,
+        setNotification: (msg: any) => void,
+        updateUserProfile: (
+            options?: MutationFunctionOptions<any, DefaultContext>
+        ) => Promise<any>
+    ) {
         try {
             const token = localStorage.getItem("authToken");
             if (!token) {
@@ -41,7 +49,7 @@ class ProfileUtils {
                 }
             }
 
-            const userProfileData = {
+            const userProfileData: Partial<UserProfileData> = {
                 firstName: formData.firstName ?? undefined,
                 lastName: formData.lastName ?? undefined,
                 middleName: formData.middleName ?? undefined,
@@ -58,9 +66,39 @@ class ProfileUtils {
                 context: {
                     headers: { Authorization: `Bearer ${token}` },
                 },
+                optimisticResponse: {
+                    userEditProfile: {
+                        __typename: "EditProfileResponse",
+                        problem: null,
+                        user: {
+                            __typename: "UserModel",
+                            id: "temp-id",
+                            ...userProfileData,
+                        },
+                    },
+                },
+                update: (cache: ApolloCache<any>, { data }: { data?: { userEditProfile: { user: UserProfileData } } }) => {
+                    if (!data?.userEditProfile?.user) return;
+
+                    const existingData = cache.readQuery<{ userMe: UserProfileData }>({
+                        query: GET_USER_DATA,
+                    });
+
+                    if (existingData?.userMe) {
+                        cache.writeQuery({
+                            query: GET_USER_DATA,
+                            data: {
+                                userMe: {
+                                    ...existingData.userMe,
+                                    ...data.userEditProfile.user, // Обновляем измененные данные
+                                },
+                            },
+                        });
+                    }
+                },
             });
 
-            profileVar(userProfileData);
+
             setNotification({ message: "Изменения успешно сохранены!", type: "success" });
             setTimeout(() => setNotification(null), 3000);
         } catch (error) {
@@ -71,6 +109,7 @@ class ProfileUtils {
             });
         }
     }
+
 
     // Форматирование даты перед отправкой
     formatBirthDate(birthDate: string | undefined, setNotification: (msg: any) => void): string | undefined {

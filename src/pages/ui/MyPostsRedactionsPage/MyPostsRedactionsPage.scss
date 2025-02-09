@@ -576,12 +576,12 @@
 .update-posts__modal-header {
   font-size: 16px;
   font-weight: 600;
-  color: #ff5722;
+  color: var(--posts__modal-header);
   display: flex;
   align-items: center;
   padding-left: 15px;
   min-height: 50px;
-  border-bottom: 1.5px solid #F2F2F2;
+  border-bottom: var(--posts__modal-header-border);
   justify-content: space-between;
 }
 

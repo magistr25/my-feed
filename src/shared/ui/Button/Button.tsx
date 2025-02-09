@@ -1,6 +1,6 @@
 import "./Button.scss";
 
-import { FC } from "react";
+import { FC, MouseEvent } from "react";
 
 import Spinner from "@/shared/ui/Spinner/Spinner.tsx";
 
@@ -9,7 +9,7 @@ type ButtonSize = "small" | "large";
 
 interface ButtonProps {
     text: string;
-    onClick?: () => void;
+    onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
     variant?: ButtonVariant;
     size?: ButtonSize;
     isLoading?: boolean;

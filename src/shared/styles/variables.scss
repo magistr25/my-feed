@@ -103,7 +103,9 @@ $grey-darker: #BEB9B4;
   --posts__modal-header-border: 1.5px solid #F2F2F2;
   --posts__modal-color:  #212121;
   --posts__modal-header: #EE683E;
-  --close-svg-color: #BDBDBD
+  --close-svg-color: #BDBDBD;
+  --profile__content-btn-hover-color: #212121;
+  --profile__content-btn-hover-bg: #FFD1C3;
 }
 
 [data-theme="dark"] {
@@ -190,6 +192,8 @@ $grey-darker: #BEB9B4;
   --posts__modal-color: #F6F6F6;
   --posts__modal-header: #CD4E27;
   --close-svg-color: #686868;
+  --profile__content-btn-hover-color: #101010;
+  --profile__content-btn-hover-bg: #FD825D;
 
 
 

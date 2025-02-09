@@ -61,12 +61,23 @@ const ProfilePage: FC = () => {
     }, [data, setValue]);
 
     const [updateUserProfile] = useMutation(UPDATE_USER_PROFILE, {
-        refetchQueries: [{ query: GET_USER_DATA }],
+        update: (cache, { data }) => {
+            if (!data?.updateUserProfile) return;
+
+            cache.modify({
+                fields: {
+                    userMe(existingUserRef = {}) {
+                        return { ...existingUserRef, ...data.updateUserProfile };
+                    },
+                },
+            });
+        },
         onError: (error) => {
             console.error("Ошибка при обновлении профиля:", error);
             setNotification({ message: "Ошибка при обновлении профиля", type: "error" });
         },
     });
+
 
     const isMobileMenuOpen = useReactiveVar(mobileMenuVar);
     const isMobileActionBarOpen = useReactiveVar(mobileActionBarVar);
