@@ -1,39 +1,69 @@
+// Подключение стилей
 import './ProfilePage.scss';
 import "react-datepicker/dist/react-datepicker.css";
 
-import {FC, useEffect, useRef, useState} from 'react';
-
-import {useRegistration} from '@/features/auth/model/hooks/useRegistration.ts';
-import {formatPhoneNumber} from "@/pages/ui/lib/formatPhoneNumber.ts";
-import CustomDatePicker from "@/shared/ui/CustomDatePicker/CustomDatePicker.tsx";
-import FormInputGroup from "@/shared/ui/FormInputGroup/FormInputGroup.tsx";
+import { FC, useRef, useState } from 'react';
+import { useRegistration } from '@/features/auth/model/hooks/useRegistration';
+import { formatPhoneNumber } from "@/pages/ui/lib/formatPhoneNumber";
+import CustomDatePicker from "@/shared/ui/CustomDatePicker/CustomDatePicker";
+import FormInputGroup from "@/shared/ui/FormInputGroup/FormInputGroup";
 import Notification from '@/shared/ui/Notification/Notification';
-import AvatarUpload from "@/shared/ui/AvatarUpload/AvatarUpload.tsx";
+import AvatarUpload from "@/shared/ui/AvatarUpload/AvatarUpload";
 import Button from "@/shared/ui/Button/Button.tsx";
-import CalendarIcon from "@/shared/ui/CalendarIcon/CalendarIcon.tsx";
-import MobileActionBar from "@/shared/ui/MobileActionBar/MobileActionBar.tsx";
-import {useMutation, useQuery, useReactiveVar} from "@apollo/client";
+import CalendarIcon from "@/shared/ui/CalendarIcon/CalendarIcon";
+import MobileActionBar from "@/shared/ui/MobileActionBar/MobileActionBar";
+
+// Импорты Apollo Client для работы с GraphQL
+import { useQuery, useReactiveVar } from "@apollo/client";
 import {
-    avatarUrlVar,
     mobileActionBarVar,
     mobileMenuVar,
     showActionBarVar,
     userVar
 } from "@/app/apollo/client.ts";
+
+// ГрафQL-запросы
 import GET_USER_DATA from "@/pages/api/queries/getUserData.ts";
-import UPDATE_USER_PROFILE from "@/pages/api/mutations/updateUserProfile.ts";
+
+// Хуки и утилиты, связанные с профилем
 import profileUtils from "@/pages/model/hooks/profileUtils.ts";
+import { useScreenSize } from "@/pages/model/hooks/useScreenSize.ts";
+import { useMobileActionBarFocus } from "@/pages/model/hooks/useMobileActionBarFocus.ts";
+import { useAutoScroll } from "@/pages/model/hooks/useAutoScroll.ts";
+import { useUserDataPrefill } from "@/pages/model/hooks/useUserDataPrefill.ts";
+import { useScrollToAvatar } from "@/pages/model/hooks/useScrollToAvatar.ts";
+import { usePrefillUserForm } from "@/pages/model/hooks/usePrefillUserForm.ts";
+import { useAutoScrollToInput } from "@/pages/model/hooks/useAutoScrollToInput.ts";
+import { useFormattedBirthDate } from "@/pages/model/hooks/useFormattedBirthDate.ts";
+import { useAvatarUrlSync } from "@/pages/model/hooks/useAvatarUrlSync.ts";
+import { useUpdateUserProfile } from "@/pages/model/hooks/useUpdateUserProfile.ts";
 
 const ProfilePage: FC = () => {
+    // Состояние для даты рождения и фокуса ввода
     const [birthDate, setBirthDate] = useState<Date | null>(null);
     const [isFocused, setIsFocused] = useState(false);
-    const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 824);
-    const [isMobile, setIsMobile] = useState(window.innerWidth < 824);
+
+    // Получение данных о размере экрана (мобильная/десктопная версия)
+    const { isDesktop, isMobile } = useScreenSize();
+
+    // Состояние реактивных переменных (открыто ли мобильное меню и ActionBar)
+    const isMobileMenuOpen = useReactiveVar(mobileMenuVar);
+    const isMobileActionBarOpen = useReactiveVar(mobileActionBarVar);
+    const isShowActionBar = useReactiveVar(showActionBarVar);
+
+    // Рефы для управления прокруткой
+    const avatarRef = useRef<HTMLDivElement | null>(null);
     const pageRef = useRef<HTMLDivElement | null>(null);
 
-    const isShowActionBar = useReactiveVar(showActionBarVar);
-    // Запрос для получения данных пользователя
+    // Подключение пользовательских хуков для автофокуса и автоскролла
+    useMobileActionBarFocus();
+    useAutoScroll(isMobileActionBarOpen);
+    useScrollToAvatar(avatarRef);
+
+    // Запрос данных пользователя
     const { data, loading, error } = useQuery(GET_USER_DATA);
+
+    // Хук регистрации и управления формой
     const {
         notification,
         register,
@@ -46,168 +76,24 @@ const ProfilePage: FC = () => {
         navigate,
         setValue
     } = useRegistration();
-    // Заполнение формы после получения данных
-    useEffect(() => {
-        if (data && data.userMe) {
-            setValue('firstName', data.userMe.firstName || '');
-            setValue('lastName', data.userMe.lastName || '');
-            setValue('middleName', data.userMe.middleName || '');
-            setValue('birthDate', data.userMe.birthDate || '');
-            setValue('gender', data.userMe.gender || '');
-            setValue('email', data.userMe.email || '');
-            setValue('phone', data.userMe.phone || '');
-            setValue('country', data.userMe.country || '');
-        }
-    }, [data, setValue]);
 
-    const [updateUserProfile] = useMutation(UPDATE_USER_PROFILE, {
-        update: (cache, { data }) => {
-            if (!data?.updateUserProfile) return;
+    // Заполнение формы данными пользователя
+    useUserDataPrefill(data, setValue);
+    usePrefillUserForm(data, setValue, setBirthDate);
 
-            cache.modify({
-                fields: {
-                    userMe(existingUserRef = {}) {
-                        return { ...existingUserRef, ...data.updateUserProfile };
-                    },
-                },
-            });
-        },
-        onError: (error) => {
-            console.error("Ошибка при обновлении профиля:", error);
-            setNotification({ message: "Ошибка при обновлении профиля", type: "error" });
-        },
-    });
+    // Использование хука для обновления профиля пользователя
+    const { updateUserProfile } = useUpdateUserProfile(setNotification);
 
+    // Автоматический скролл к активному полю при открытом ActionBar
+    useAutoScrollToInput(isMobileActionBarOpen);
 
-    const isMobileMenuOpen = useReactiveVar(mobileMenuVar);
-    const isMobileActionBarOpen = useReactiveVar(mobileActionBarVar);
-    useEffect(() => {
-        const handleResize = () => setIsMobile(window.innerWidth < 824);
+    // Форматирование даты перед отображением в инпуте
+    useFormattedBirthDate(watch, setValue);
 
-        handleResize();
+    // Синхронизация аватара пользователя
+    useAvatarUrlSync(data);
 
-        window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
-    }, []);
-
-    const avatarRef = useRef<HTMLDivElement | null>(null);
-
-    useEffect(() => {
-        if (avatarRef.current) {
-            setTimeout(() => {
-                requestAnimationFrame(() => {
-                    avatarRef.current?.scrollIntoView({behavior: "smooth", block: "end"});
-                });
-            }, 100);
-        }
-    }, []);
-
-    useEffect(() => {
-        const handleResize = () => {
-            const width = window.innerWidth;
-            setIsMobile(width < 824);
-            setIsDesktop(width >= 824);
-        };
-
-        handleResize();
-        window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
-    }, []);
-
-    useEffect(() => {
-        const inputs = document.querySelectorAll("input, textarea");
-        if (inputs.length > 0) {
-            const lastInput = inputs[inputs.length - 1] as HTMLElement;
-
-            if (isMobileActionBarOpen) {
-                lastInput.style.marginBottom = "50px";
-            } else {
-                lastInput.style.marginBottom = "";
-            }
-        }
-    }, [isMobileActionBarOpen]);
-
-    useEffect(() => {
-        if (isMobileActionBarOpen) {
-            const activeElement = document.activeElement as HTMLElement;
-            if (
-                activeElement &&
-                (activeElement.tagName === "INPUT" || activeElement.tagName === "TEXTAREA") &&
-                activeElement.closest(".profile-wrapper-down")
-            )  {
-                setTimeout(() => {
-                    activeElement.scrollIntoView({
-                        behavior: "smooth",
-                        block: "start",
-                    });
-                }, 100);
-            }
-        }
-    }, [isMobileActionBarOpen]);
-
-    useEffect(() => {
-        if (data?.userMe) {
-            setValue('gender', data.userMe.gender?.toLowerCase() || ''); // Приводим gender к нижнему регистру
-            setValue('phone', formatPhoneNumber(data.userMe.phone || ''));
-        }
-    }, [data, setValue]);
-    useEffect(() => {
-        if (data?.userMe) {
-            setValue('birthDate', data.userMe.birthDate || '');
-        }
-    }, [data, setValue]);
-
-    useEffect(() => {
-        if (data?.userMe?.birthDate) {
-            const parsedDate = new Date(data.userMe.birthDate);
-            if (!isNaN(parsedDate.getTime())) {
-                setBirthDate(parsedDate);
-            }
-        }
-    }, [data]);
-    useEffect(() => {
-        const handleFocusIn = (event: FocusEvent) => {
-            if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) {
-                showActionBarVar(true); // Показываем MobileActionBar
-            }
-        };
-
-        document.addEventListener("focusin", handleFocusIn);
-
-        return () => {
-            document.removeEventListener("focusin", handleFocusIn);
-        };
-    }, []);
-
-    useEffect(() => {
-        const handleFocusIn = (event: FocusEvent) => {
-            const target = event.target as HTMLElement;
-
-            if (target?.matches("input, textarea")) {
-                showActionBarVar(true); // Показываем MobileActionBar
-
-                setTimeout(() => {
-                    target.scrollIntoView({ behavior: "smooth", block: "center" });
-                }, 200);
-            }
-        };
-
-        document.addEventListener("focusin", handleFocusIn);
-        return () => document.removeEventListener("focusin", handleFocusIn);
-    }, []);
-// Форматирование даты перед отображением в инпуте
-    useEffect(() => {
-        const rawDate = watch("birthDate"); // Получаем значение
-        if (rawDate && /^\d{4}-\d{2}-\d{2}$/.test(rawDate)) {
-            const [year, month, day] = rawDate.split("-");
-            setValue("birthDate", `${day}.${month}.${year}`);
-        }
-    }, [watch("birthDate"), setValue]);
-
-    useEffect(() => {
-        avatarUrlVar(data?.userMe?.avatarUrl ?? null);
-    }, [data])
-
+    // Проверка состояния загрузки данных
     if (loading) return <div>Загрузка...</div>;
     if (error) return <div>Ошибка: {error.message}</div>;
 
