@@ -5,7 +5,7 @@ import ReactDOM from "react-dom";
 
 interface AvatarUploadProps {
     userAvatarUrl?: string | null;
-    onAvatarChange: (file: File) => void;
+    onAvatarChange: (file: File | null) => void;
 }
 
 const AvatarUpload: FC<AvatarUploadProps> = ({ userAvatarUrl, onAvatarChange }) => {
@@ -53,7 +53,10 @@ const AvatarUpload: FC<AvatarUploadProps> = ({ userAvatarUrl, onAvatarChange }) 
                     <div className="modal-overlay-profile" onClick={() => setIsModalOpen(false)}>
                         <div className="modal-overlay-profile__content" onClick={(e) => e.stopPropagation()}>
                             <h2 className="modal-overlay-profile__title">Аватар профиля</h2>
-                            <button onClick={() => setPreview(null)}>Удалить фото</button>
+                            <button onClick={() => {
+                                setPreview(null);
+                                onAvatarChange(null);
+                            }}>Удалить фото</button>
                             <button className="last-button" onClick={openFileDialog}>Загрузить фото</button>
                             <button className="modal-overlay-profile__close-btn" onClick={() => setIsModalOpen(false)}>✕</button>
                         </div>

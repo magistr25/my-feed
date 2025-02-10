@@ -6,18 +6,26 @@ import GET_USER_DATA from "@/pages/api/queries/getUserData.ts";
 
 class ProfileUtils {
     constructor() {
-        this.handleFocusIn = this.handleFocusIn.bind(this); // Привязываем контекст
+        this.handleFocusIn = this.handleFocusIn.bind(this);
     }
 
     // Изменение аватара
-    handleAvatarChange(file: File) {
-        avatarFileVar(file);
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            avatarUrlVar(reader.result as string);
-        };
-        reader.readAsDataURL(file);
-    }
+    handleAvatarChange = (file: File | null) => {
+        // Сбрасываем URL перед установкой нового значения
+        avatarUrlVar(null);
+
+        if (file === null) {
+            avatarFileVar(null);
+            avatarUrlVar(null); // Очищаем URL аватарки
+        } else {
+            avatarFileVar(file);
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                avatarUrlVar(reader.result as string);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
 
     // Обновление профиля + обновление userVar
     async handleUpdateProfile(
@@ -36,7 +44,11 @@ class ProfileUtils {
 
             let finalAvatarUrl = avatarUrlVar();
 
-            if (avatarFileVar()) {
+            // Если аватар удалён, отправляем null
+            if (avatarFileVar() === null) {
+                finalAvatarUrl = null;
+                avatarUrlVar(null);
+            } else if (avatarFileVar()) {
                 try {
                     const uploadedUrl = await uploadToS3(avatarFileVar()!);
                     if (!uploadedUrl) throw new Error("Ошибка загрузки файла");
@@ -58,7 +70,7 @@ class ProfileUtils {
                 email: formData.email,
                 phone: this.formatPhoneNumber(formData.phone ?? undefined),
                 country: formData.country ?? undefined,
-                avatarUrl: finalAvatarUrl ?? undefined,
+                avatarUrl: finalAvatarUrl, // Теперь точно null при удалении
             };
 
             const response = await updateUserProfile({
@@ -90,7 +102,7 @@ class ProfileUtils {
                             data: {
                                 userMe: {
                                     ...existingData.userMe,
-                                    ...data.userEditProfile.user, // Обновляем измененные данные
+                                    ...data.userEditProfile.user,
                                 },
                             },
                         });
@@ -101,9 +113,9 @@ class ProfileUtils {
             if (response?.data?.userEditProfile?.user) {
                 // Обновляем userVar после успешного обновления профиля
                 userVar({
-                    ...userVar() ?? {}, // Гарантия, что userVar не null
+                    ...userVar() ?? {},
                     ...response.data.userEditProfile.user,
-                    updatedAt: Date.now(), // Принудительное обновление
+                    updatedAt: Date.now(),
                 });
             }
 
