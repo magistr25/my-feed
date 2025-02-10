@@ -1,8 +1,7 @@
-// Подключение стилей
 import './ProfilePage.scss';
 import "react-datepicker/dist/react-datepicker.css";
 
-import {FC, useEffect, useRef, useState} from 'react';
+import {FC, MouseEvent, useEffect, useRef, useState} from 'react';
 import { useRegistration } from '@/features/auth/model/hooks/useRegistration';
 import { formatPhoneNumber } from "@/pages/ui/lib/formatPhoneNumber";
 import CustomDatePicker from "@/shared/ui/CustomDatePicker/CustomDatePicker";
@@ -13,12 +12,12 @@ import Button from "@/shared/ui/Button/Button.tsx";
 import CalendarIcon from "@/shared/ui/CalendarIcon/CalendarIcon";
 import MobileActionBar from "@/shared/ui/MobileActionBar/MobileActionBar";
 
-// Импорты Apollo Client для работы с GraphQL
 import { useQuery, useReactiveVar } from "@apollo/client";
 import {
     mobileActionBarVar,
     mobileMenuVar,
     showActionBarVar,
+    User,
     userVar
 } from "@/app/apollo/client.ts";
 
@@ -42,6 +41,8 @@ const ProfilePage: FC = () => {
     // Состояние для даты рождения и фокуса ввода
     const [birthDate, setBirthDate] = useState<Date | null>(null);
     const [isFocused, setIsFocused] = useState(false);
+    const [initialValues, setInitialValues] =  useState<User | null>(null);
+    const [avatar, setAvatar] = useState<string | null>(null);
 
     // Получение данных о размере экрана (мобильная/десктопная версия)
     const { isDesktop, isMobile } = useScreenSize();
@@ -74,7 +75,7 @@ const ProfilePage: FC = () => {
         clearErrors,
         setNotification,
         navigate,
-        setValue
+        setValue, reset
     } = useRegistration();
 
     // Заполнение формы данными пользователя
@@ -100,6 +101,49 @@ const ProfilePage: FC = () => {
         }
     }, [userVar()]);
 
+    useEffect(() => {
+        if (data?.userMe) {
+            const userData: User = {
+                id: data.userMe.id,
+                firstName: data.userMe.firstName || "",
+                lastName: data.userMe.lastName || "",
+                middleName: data.userMe.middleName || "",
+                birthDate: data.userMe.birthDate ? new Date(data.userMe.birthDate).toISOString().split("T")[0] : "",
+                gender: data.userMe.gender ? data.userMe.gender.toLowerCase() : "",
+                email: data.userMe.email || "",
+                phone: formatPhoneNumber(data.userMe.phone || ""),
+                country: data.userMe.country || "",
+                avatarUrl: data.userMe.avatarUrl ?? null,
+            };
+
+            setInitialValues(userData);
+            reset(userData);
+            setBirthDate(data.userMe.birthDate ? new Date(data.userMe.birthDate) : null);
+            setAvatar(userData.avatarUrl ?? null);
+
+        }
+    }, [data, reset, setValue]);
+
+    const handleResetForm = (event?: MouseEvent<HTMLButtonElement>) => {
+        event?.preventDefault();
+
+        if (!initialValues) return; // Если `initialValues` отсутствует, выходим из функции
+
+        reset(initialValues);
+        setBirthDate(initialValues.birthDate ? new Date(initialValues.birthDate) : null);
+        setValue("gender", initialValues.gender);
+        setAvatar(initialValues.avatarUrl ?? null);
+    };
+
+
+// После сброса формы явно обновляем `gender`, так как `reset` не всегда корректно обновляет radio-кнопки
+    useEffect(() => {
+        if (initialValues) {
+            setValue("gender", initialValues.gender);
+            setAvatar(initialValues.avatarUrl ?? null); // Теперь сброшенная аватарка обновляется
+        }
+    }, [initialValues, setValue]);
+
 
     // Проверка состояния загрузки данных
     if (loading) return <div>Загрузка...</div>;
@@ -113,7 +157,7 @@ const ProfilePage: FC = () => {
                     <form
                         onSubmit={handleSubmit((data) =>
                             profileUtils.handleUpdateProfile(
-                                { ...data, id: userVar()?.id ?? "" },
+                                { ...data, id: userVar()?.id ?? "", avatarUrl: avatar },
                                 setNotification,
                                 updateUserProfile
                             )
@@ -123,8 +167,16 @@ const ProfilePage: FC = () => {
                         noValidate
                     >
                         <div ref={avatarRef}>
-                            <AvatarUpload userAvatarUrl={data?.userMe?.avatarUrl ?? null} onAvatarChange={profileUtils.handleAvatarChange} />
-
+                            <AvatarUpload
+                                userAvatarUrl={avatar}
+                                onAvatarChange={(newAvatar) => {
+                                    if (newAvatar instanceof File) {
+                                        setAvatar(URL.createObjectURL(newAvatar)); // Создаём временный URL для превью
+                                    } else {
+                                        setAvatar(newAvatar); // null, если сбрасываем фото
+                                    }
+                                }}
+                            />
                         </div>
                         <FormInputGroup
                             label="Имя"
@@ -287,7 +339,7 @@ const ProfilePage: FC = () => {
                         <div className="profile-form__actions"   style={{ display: isDesktop || !isShowActionBar ? "flex" : "none" }}>
                             <Button
                                 type="button"
-                                onClick={() => navigate(-1)}
+                                onClick={handleResetForm}
                                 text="Отменить"
                                 variant="secondary"
                                 size="small"
