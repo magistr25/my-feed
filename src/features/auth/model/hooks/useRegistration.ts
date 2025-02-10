@@ -15,6 +15,13 @@ interface RegisterFormInputs {
     firstName: string;
     lastName: string;
     middleName: string;
+    gender?: string;
+    birthDate?: string;
+    phone?: string;
+    placeholder: string;
+    country?: string;
+    avatar?: string;
+
 }
 
 export const useRegistration = () => {
@@ -26,11 +33,20 @@ export const useRegistration = () => {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
-    const { register, handleSubmit, formState: { errors }, watch, setError, reset } = useForm<RegisterFormInputs>({
+    const { register, handleSubmit, formState: { errors }, watch, setError, reset, trigger, clearErrors,
+        setValue } = useForm<RegisterFormInputs>({
         defaultValues: {
             firstName: '',
             lastName: '',
             middleName: '',
+            gender: '',
+            birthDate: '',
+            phone: '',
+            email: '',
+            password: '',
+            confirmPassword: '',
+            country: '',
+            avatar: '',
         },
         mode: 'onBlur',
         reValidateMode: 'onBlur',
@@ -61,7 +77,7 @@ export const useRegistration = () => {
             return 'Пароль обязателен';
         }
         if (value.length < 6) {
-            return 'Пароль должен содержать минимум 6 символов';
+            return 'Пароль должен содержать минимум 8 символов';
         }
         if (!/^[A-Za-z0-9]*$/.test(value)) {
             return 'Пароль должен содержать только латинские буквы и цифры';
@@ -69,6 +85,8 @@ export const useRegistration = () => {
         if (!/[A-Z]/.test(value)) {
             return 'Пароль должен содержать хотя бы одну заглавную букву';
         }
+        if (!/[a-z]/.test(value))
+            return 'Пароль должен содержать хотя бы одну строчную букву';
         if (!/[0-9]/.test(value)) {
             return 'Пароль должен содержать хотя бы одну цифру';
         }
@@ -167,5 +185,8 @@ export const useRegistration = () => {
         completing,
         setNotification,
         navigate,
+        trigger,
+        clearErrors,
+        setValue,
     };
 };

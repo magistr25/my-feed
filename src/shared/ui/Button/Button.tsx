@@ -15,6 +15,7 @@ interface ButtonProps {
     isLoading?: boolean;
     isDisabled?: boolean;
     type?: string;
+    autoFocus?: boolean;
 }
 
 const Button: FC<ButtonProps> = ({ text, onClick, variant = "primary", size = "large", isLoading = false, isDisabled = false}) => {

@@ -5,9 +5,9 @@ import { FC, useEffect, useState } from 'react';
 
 import { isInProfileVar, loadingStateVar } from '@/app/apollo/client.ts';
 import MobileMenu from '@/features/navigation/ui/MobileMenu/MobileMenu.tsx';
-import { usePosts } from '@/pages/hooks/usePosts.ts';
+import { usePosts } from '@/pages/model/hooks/usePosts.ts';
+import Header from '@/widgets/Header/Header.tsx';
 import HomeContent from '@/widgets/HomeContent/HomeContent.tsx';
-import HomeHeader from '@/widgets/HomeHeader/HomeHeader.tsx';
 
 const HomePage: FC = () => {
     const isInProfile = useReactiveVar(isInProfileVar);
@@ -26,13 +26,6 @@ const HomePage: FC = () => {
     }, [loading, isPageLoading]);
 
     useEffect(() => {
-        const newState = isPageLoading;
-        if (loadingStateVar() !== newState) {
-            loadingStateVar(newState);
-        }
-    }, [isPageLoading]);
-
-    useEffect(() => {
         if (!isInProfile) {
             setDropdownOpen(true);
         }
@@ -46,22 +39,18 @@ const HomePage: FC = () => {
         }
     };
 
-    const handleMenuClose = () => {
-        setDropdownOpen(false);
-    };
-
     if (!isInProfile) {
         return (
             <div className="homepage-wrapper">
-                {isMobile && <MobileMenu isOpen={dropdownOpen} onClose={handleMenuClose} />}
+                {isMobile && <MobileMenu isOpen={dropdownOpen} onClose={() => setDropdownOpen(false)} />}
             </div>
         );
     }
 
     return (
         <div className="homepage-wrapper">
+            <Header onSelect={handleSelect} isLoading={isLoading} />
             <div className="homepage">
-                <HomeHeader onSelect={handleSelect} isLoading={isLoading} />
                 <HomeContent
                     posts={localPosts}
                     hasMore={hasMore}

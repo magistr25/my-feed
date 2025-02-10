@@ -3,8 +3,8 @@ import { useCallback, useEffect, useState } from "react";
 
 import { likeVar } from "@/app/apollo/client.ts";
 import GET_FAVOURITE_POSTS from "@/features/posts/api/queries/getFavouritePosts.ts";
-import { usePostsQuery } from "@/features/posts/model/hooks/UsePostsQuery";
-import { Post } from "@/features/posts/model/types/types";
+import { usePostsQuery } from "@/features/posts/model/hooks/UsePostsQuery.ts";
+import { Post } from "@/features/posts/model/types/types.ts";
 
 export const usePosts = (type: "NEW" | "TOP" | "LIKE") => {
     const { posts, loading, hasMore, loadMore } = usePostsQuery(type);

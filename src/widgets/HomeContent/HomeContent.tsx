@@ -1,6 +1,6 @@
 import './HomeContent.scss';
 
-import { FC } from 'react';
+import {FC} from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 import PostList from "@/features/posts/ui/PostList/PostList.tsx";
@@ -14,7 +14,7 @@ interface HomeContentProps {
     isLoading: boolean;
 }
 
-const HomeContent: FC<HomeContentProps> = ({ posts, hasMore, loadMore, onLike, isLoading }) => {
+const HomeContent: FC<HomeContentProps> = ({posts, hasMore, loadMore, onLike, isLoading}) => {
     const shouldStopLoading = !hasMore && posts.length > 0;
 
     return (
@@ -23,13 +23,16 @@ const HomeContent: FC<HomeContentProps> = ({ posts, hasMore, loadMore, onLike, i
                 dataLength={posts.length}
                 next={loadMore}
                 hasMore={!shouldStopLoading} // Прекращаем прокрутку, если больше данных нет
-                loader={isLoading && !shouldStopLoading ? <h4><LoadingPost /></h4> : null} // Показываем скелетон только при загрузке
+                loader={isLoading && !shouldStopLoading ?
+                    <h4><LoadingPost/></h4> : null} // Показываем скелетон только при загрузке
                 endMessage={<p>Постов больше нет</p>}
             >
                 {isLoading ? (
-                    <LoadingPost /> // Отображаем скелетон, если данные загружаются
+                    <LoadingPost/> // Отображаем скелетон, если данные загружаются
                 ) : (
-                    <PostList posts={posts} isLoading={false} onLike={onLike} />
+                    <div className="homepage__content__postlist">
+                        <PostList posts={posts} isLoading={false} onLike={onLike}/>
+                    </div>
                 )}
             </InfiniteScroll>
         </main>

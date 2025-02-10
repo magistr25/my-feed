@@ -3,6 +3,8 @@ import { setContext } from '@apollo/client/link/context';
 import { onError } from "@apollo/client/link/error";
 
 import GET_USER from "@/features/auth/api/queries/getUser.ts";
+import {UserProfileData} from "@/pages/model/types/UserProfileData.ts";
+
 
 export interface User {
     avatarUrl?: string;
@@ -112,6 +114,23 @@ userVar.onNextChange((value) => {
 
 // Переменная для хранения состояния лайков
 export const likeVar = makeVar<Record<string, boolean>>({});
+
+// Переменная состояния мобильного меню
+export const mobileMenuVar = makeVar<boolean>(false);
+
+// Глобальная переменная для состояния MobileActionBar
+export const mobileActionBarVar = makeVar<boolean>(false);
+// export const scrollVar = makeVar<number | null>(null);
+
+export const profileVar = makeVar<UserProfileData | null>(null);
+
+// Глобальная переменная для управления видимостью MobileActionBar
+export const showActionBarVar = makeVar<boolean>(false);
+
+// Глобальная переменная для хранения аватарки
+export const avatarFileVar = makeVar<File | null>(null);
+export const avatarUrlVar = makeVar<string | null>(null);
+
 
 const client = new ApolloClient({
     link: from([errorLink, authLink.concat(httpLink)]),
