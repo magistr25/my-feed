@@ -2,7 +2,7 @@
 import './ProfilePage.scss';
 import "react-datepicker/dist/react-datepicker.css";
 
-import { FC, useRef, useState } from 'react';
+import {FC, useEffect, useRef, useState} from 'react';
 import { useRegistration } from '@/features/auth/model/hooks/useRegistration';
 import { formatPhoneNumber } from "@/pages/ui/lib/formatPhoneNumber";
 import CustomDatePicker from "@/shared/ui/CustomDatePicker/CustomDatePicker";
@@ -93,6 +93,14 @@ const ProfilePage: FC = () => {
     // Синхронизация аватара пользователя
     useAvatarUrlSync(data);
 
+    useEffect(() => {
+        const user = userVar(); // Получаем актуальные данные пользователя
+        if (user) {
+            localStorage.setItem("user", JSON.stringify(user));
+        }
+    }, [userVar()]);
+
+
     // Проверка состояния загрузки данных
     if (loading) return <div>Загрузка...</div>;
     if (error) return <div>Ошибка: {error.message}</div>;
@@ -156,8 +164,17 @@ const ProfilePage: FC = () => {
                             {isDesktop ? (
                                 <CustomDatePicker
                                     selectedDate={birthDate}
-                                    onChange={(date) => setBirthDate(date)}
+                                    onChange={async (date) => {
+                                        if (!date || date.toISOString().split("T")[0] === watch("birthDate")) {
+                                            return; // Не обновляем, если дата не изменилась
+                                        }
+
+                                        setBirthDate(date);
+                                        setValue("birthDate", date.toISOString().split("T")[0]); // Приводим к строке (YYYY-MM-DD)
+                                        await trigger("birthDate"); // Ожидаем завершения валидации
+                                    }}
                                 />
+
                             ) : (
                                 <FormInputGroup
                                     label=""

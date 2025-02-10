@@ -30,7 +30,13 @@ const CustomDateInput = forwardRef<HTMLInputElement, CustomDateInputProps>(({ va
                 className="datepicker__input"
                 placeholder="Выберите дату"
             />
-            <button className="datepicker__button" onClick={onClick}>
+            <button
+                className="datepicker__button"
+                onClick={(event) => {
+                    event.preventDefault(); // Предотвращаем отправку формы
+                    onClick?.(); // Вызываем переданный обработчик
+                }}
+            >
                 <img src={img} alt="Выбрать дату" className="datepicker__icon" />
             </button>
         </div>
