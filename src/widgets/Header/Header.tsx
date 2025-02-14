@@ -69,9 +69,11 @@ const Header: FC<HeaderProps> = ({ onSelect, isLoading }) => {
             {/* Активная вкладка в мобильной версии */}
             <div className="header__mobile-active-tab">
                 {isActive("/") && "Главная"}
-                {isActive("/my-posts") && "Мои посты"}
                 {isActive("/favorites") && "Избранное"}
                 {isActive("/profile") && "Мой профиль"}
+                {isActive("/my-posts") && "Создание поста"}
+                {isActive("/my-posts/view") && "Мои посты"}
+                {isActive("/my-posts/redactions") && "Редактирование"}
             </div>
 
             <MobileMenu isOpen={menuOpen} onClose={() => setMenuOpen(false)} />

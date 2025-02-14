@@ -98,8 +98,8 @@
     &__list {
       position: absolute;
       top: 100%;
-      left: -30px;
-      width: 93vw;
+      left: -20px;
+      width: 91vw;
       max-width: 700px;
       border: none;
       border-radius: $border-radius;
@@ -110,6 +110,7 @@
       list-style: none;
       overflow: hidden;
     }
+
     &__item {
       display: flex;
       height: 46px;

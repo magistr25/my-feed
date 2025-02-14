@@ -36,9 +36,11 @@
   .homepage {
     &__header {
       top: 118px;
-      width: 101vw;
+      width: 102vw;
       margin: 0 auto;
       height: 86px;
+      background: var(--homepage-header-bg);
+
     }
     &__nav {
       background: var(--homepage-header-bg);

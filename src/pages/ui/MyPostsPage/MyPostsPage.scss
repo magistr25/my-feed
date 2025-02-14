@@ -1,0 +1,626 @@
+.add-posts__page {
+  background-color: var(--login-page-bg);
+  margin-top: 118px;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  left: 0;
+
+
+  .add-posts__container {
+    width: 100%;
+    max-width: 375px;
+    height: auto;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    position: relative;
+  }
+}
+
+.add-posts__container {
+  max-width: 375px;
+  width: 100%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: #fff;
+  border-radius: 16px;
+
+  &-title {
+    font-size: 24px;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  &-add-title,
+  &-add-description {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .add-posts__label {
+    font-family: Gilroy, sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 22px;
+    letter-spacing: 0.01em;
+    text-align: left;
+    color: var(--add-posts__input-color);
+  }
+
+  .add-posts__label_description {
+    margin-top: 5px;
+    margin-bottom: 15px;
+    color: var(--add-posts__input-color);
+  }
+
+  .add-posts__input {
+    width: 100%;
+    height: 44px;
+    padding: 12px;
+    font-size: 14px;
+    border-radius: 8px;
+    background: var(--add-posts__input-bg);
+
+    color: var(--add-posts__input-color);
+
+    &::placeholder {
+      font-family: Gilroy, sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 22px;
+      letter-spacing: 0.01em;
+      text-align: left;
+      text-underline-position: from-font;
+      text-decoration-skip-ink: none;
+      color: #BDBDBD;
+    }
+
+    &:focus {
+      outline: none;
+      border: none;
+
+    }
+  }
+
+  /* Контейнер для скрытия скролла */
+  .add-posts__textarea-wrapper {
+    width: 100%;
+    border-radius: 8px !important;
+    overflow: hidden;
+  }
+
+  /* Стили textarea */
+  .add-posts__input {
+    width: 100%;
+    min-height: 44px;
+    max-height: 198px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: var(--add-posts__input-border);
+    resize: none;
+    overflow-y: auto;
+    outline: none;
+    font-family: Gilroy, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 22px;
+    letter-spacing: 0.01em;
+    text-align: left;
+    &:focus {
+      border: var(--add-posts__input-border);
+    }
+    &:active {
+      border: var(--add-posts__input-border);
+    }
+
+    &::placeholder {
+      font-family: Gilroy, sans-serif;
+      text-wrap: nowrap;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 22px;
+      letter-spacing: 0.01em;
+      text-align: left;
+      color: #bdbdbd;
+    }
+
+    /* Полностью скрываем скроллбар в Chrome, Safari */
+    &::-webkit-scrollbar {
+      width: 0 !important;
+      height: 0 !important;
+      display: none !important;
+    }
+
+    /* Прозрачный скролл в Firefox */
+    scrollbar-width: none;
+
+    /* Для Edge и IE */
+    -ms-overflow-style: none;
+  }
+
+  &-add-photo {
+    display: flex;
+    justify-content: center;
+  }
+
+  .add-posts__photo-label {
+    width: 100%;
+    height: 212px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed var(--add-posts__photo-label-border);
+    border-radius: 12px;
+    cursor: pointer;
+    text-align: center;
+    position: relative;
+
+
+    .add-posts__photo-input {
+      display: none;
+    }
+
+    .add-posts__photo-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #ff7043;
+      font-size: 14px;
+    }
+
+  }
+
+  .add-posts__buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    background: var(--login-page-bg);
+  }
+
+  .add-posts__button {
+    flex: 1;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+
+    &.cancel {
+      background: #fff;
+      border: 1px solid #ccc;
+      color: #333;
+    }
+
+    &.save {
+      background: #ff7043;
+      color: #fff;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}
+.add-posts__photo-label {
+  transition: background-color 0.3s ease;
+
+  &.active {
+    background-color: #ffbfa3;
+    border: 2px dashed #ff784f;
+  }
+}
+
+@media (max-width: 823px) {
+
+  .add-posts__page .add-posts__container {
+    max-width: 343px;
+    width: 100vw;
+    margin: 0 auto;
+    padding: 0;
+
+    &-title {
+      display: none;
+    }
+
+    &-add-title {
+      width: 100%;
+    }
+
+    &-add-photo {
+      width: 100%;
+    }
+
+    &-add-description {
+      width: 100%;
+    }
+  }
+  .add-posts__navigate {
+    display: none;
+
+  }
+  .add-posts__navigate-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  .add-posts__navigate_mobile {
+    display: block;
+    margin: 12px 16px 25px 16px;
+    width: fit-content;
+    text-align: center;
+    font-family: Gilroy, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 22px;
+    letter-spacing: 0.01em;
+    text-decoration: none;
+    color: var(--add-posts__navigate-color);
+  }
+  .add-posts__photo-label {
+    max-width: 343px;
+    height: 212px;
+
+  }
+  .add-posts__photo-placeholder__caption-big {
+    display: none;
+  }
+  .add-posts__photo-preview {
+    width: 100%;
+    height: 200px;
+    max-width: 100%;
+    max-height: 200px;
+    object-fit: contain;
+    border-radius: 12px;
+    display: block;
+    margin: auto;
+  }
+}
+
+@media (max-width: 823px) {
+  .add-posts__container {
+    width: 375px;
+    max-width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--login-page-bg);
+  }
+
+  .add-posts__container-title {
+    display: none;
+  }
+
+  .add-posts__buttons {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    max-width: 375px;
+    display: flex;
+    justify-content: space-between;
+    padding: 12px;
+    z-index: 1000;
+  }
+
+  .add-posts__photo-icon {
+    width: 53.38px;
+    height: 41.94px;
+    margin-bottom: 25px;
+  }
+  .add-posts__photo-placeholder__caption {
+    font-family: Gilroy, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 22px;
+    letter-spacing: 0.01em;
+    text-align: center;
+
+  }
+  .add-posts__label_description {
+    margin-top: 5px;
+    margin-bottom: 15px;
+  }
+}
+@media (min-width: 824px) {
+
+  .add-posts__wrapper {
+    width: 1440px;
+    max-width: 105vw;
+    height: 100vh;
+    min-height: 1024px;
+    background: var(--my-post-page-max-bg);
+    display: flex;
+    flex-direction: row;
+    position: relative;
+
+  }
+  .add-posts__page {
+    width: 743px;
+    height: 746px;
+    border-radius: 16px;
+    display: flex;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--add-post-page-bg);
+  }
+  .add-posts__navigate {
+    position: absolute;
+    top: 96px;
+    left: 0;
+    padding-left: 50px;
+    max-width: 100%;
+    font-family: Gilroy, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 22px;
+    letter-spacing: 0.01em;
+    text-decoration: none;
+    color: var(--add-posts__navigate-color);
+
+    &_mobile {
+      display: none;
+    }
+  }
+  .add-posts__page .add-posts__container {
+    justify-content: flex-start;
+    align-items: flex-start;
+    max-width: 100%;
+    height: 812px;
+    padding: 41px;
+    background: var(--add-posts__container-big-bg);
+
+    &-add-title {
+      margin-top: 20px;
+    }
+
+    &-title {
+      margin-left: 0;
+      text-align: left;
+      font-family: Gilroy, sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 20px;
+      letter-spacing: 0.01em;
+      color: var(--posts__container-title-color);
+    }
+  }
+  .add-posts__buttons {
+    position: fixed;
+    bottom: -20px;
+    left: 30px;
+    width: 100%;
+    max-width: 375px;
+    display: flex;
+    justify-content: space-between;
+    padding: 12px;
+    z-index: 1000;
+   background: var(--add-posts__container-big-bg) !important;
+
+  }
+  .add-posts__input {
+    width:663px !important;
+    height: 44px;
+    padding: 12px;
+    font-size: 14px;
+    border-radius: 8px;
+    background: var(--add-posts__input-bg);
+    color: var(--add-posts__input-color);
+    max-height: 110px !important;
+  }
+  .add-posts__photo-label {
+    max-height: 346ppx;
+    width: 663px !important;
+    height: 346px !important;
+  }
+  .add-posts__input {
+    max-width: 660px !important;
+  }
+  .add-posts__photo-placeholder__caption {
+    display: none;
+  }
+  .add-posts__photo-placeholder__caption-big {
+    font-family: Gilroy, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 22px;
+    letter-spacing: 0.01em;
+    text-align: center;
+    margin-top: 20px;
+    display: flex;
+    gap: 5px;
+    flex-direction: column;
+  }
+  .add-posts__photo-placeholder__caption-gray {
+    color: #686868;
+  }
+  .add-posts__photo-placeholder__caption-bottom {
+    display: flex;
+    gap: 10px;
+  }
+  .add-posts__photo-preview {
+    max-width: 100%;
+    max-height: 340px;
+    object-fit: contain;
+    border-radius: 12px;
+    display: block;
+    margin: auto;
+  }
+
+  .add-posts__photo-label {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    overflow: hidden;
+  }
+}
+.add-posts__container-add-photo {
+  display: flex;
+  flex-direction: column;
+}
+.add-posts__input {
+  width: 100%;
+  min-height: 44px;
+}
+
+.add-posts__photo-label.uploading {
+  background: var(--photo-label-uploading-bg);
+  border: 2px dashed #ff7043;
+}
+
+.upload-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #ff7043;
+  font-size: 14px;
+}
+.add-posts__input::placeholder {
+  opacity: 1 !important;
+  text-shadow: none !important;
+  filter: none !important;
+}
+
+@media (min-width: 824px) {
+  .add-posts__photo-label {
+    position: relative;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    pointer-events: auto;
+
+    /* Отключаем затемнение по умолчанию */
+    &:not(.has-uploaded-image) {
+      pointer-events: auto;
+    }
+
+    /* Затемнение и текст при наведении только если фото загружено */
+    &.has-uploaded-image:hover::before {
+      content: "Загрузить другое изображение";
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      color: #ffffff;
+      font-family: Gilroy, sans-serif;
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 22px;
+      letter-spacing: 0.01em;
+      text-align: center;
+      z-index: 2;
+    }
+  }
+}
+
+/* Модальное окно */
+.add-posts__modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+/* Контейнер модального окна */
+.add-posts__modal {
+  background: var(--posts__modal-bg);
+  width: 292px;
+  min-height: 162px;
+  padding: 0;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: left;
+  position: relative;
+  animation: fadeIn 0.2s ease-in-out;
+  box-sizing: border-box;
+
+}
+
+/* Заголовок модального окна */
+.add-posts__modal-header {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--posts__modal-header);
+  display: flex;
+  align-items: center;
+  padding-left: 15px;
+  min-height: 50px;
+  border-bottom: var(--posts__modal-header-border);
+  justify-content: space-between;
+  font-family: Gilroy, sans-serif;
+  line-height: 20px;
+  letter-spacing: 0.03em;
+}
+
+/* Кнопка закрытия */
+.add-posts__modal-close {
+  position: absolute;
+  top: 12px;
+  right: 15px;
+  font-size: 20px;
+  cursor: pointer;
+  background: none !important;
+  border: none;
+  svg {
+    color: var(--close-svg-color);
+  }
+}
+
+.add-posts__modal-close:hover {
+  color: #ff5722;
+}
+
+/* Контент модального окна */
+.add-posts__modal-content {
+  display: flex;
+  flex-direction: column;
+
+}
+
+/* Общие стили кнопок */
+.add-posts__modal-content button {
+  width: 292px;
+  padding: 12px 17px;
+  min-height: 56px;
+  background:  var(--posts__modal-bg);
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  color: var(--posts__modal-color);
+  display: flex;
+  align-items: center;
+  font-family: Gilroy, sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 16px;
+  letter-spacing: 0.03em;
+
+}
+
+/* Кнопка загрузки фото */
+.add-posts__modal-content .last-button {
+  border-radius: 0 0 12px 12px;
+}
+
+/* Эффект при наведении */
+.add-posts__modal-content button:hover {
+  background: #FFD1C3;
+}

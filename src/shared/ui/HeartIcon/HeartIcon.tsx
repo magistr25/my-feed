@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import {FC, useState} from 'react';
 
 interface HeartIconProps {
     onClick?: () => void;
     isActive?: boolean;
 }
 
-const HeartIcon: React.FC<HeartIconProps> = ({ onClick, isActive = false }) => {
+const HeartIcon: FC<HeartIconProps> = ({ onClick, isActive = false }) => {
     const [liked, setLiked] = useState(isActive);
 
     const handleClick = () => {

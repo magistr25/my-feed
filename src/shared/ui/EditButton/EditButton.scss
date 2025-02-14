@@ -1,0 +1,17 @@
+.edit-button {
+  all: unset;
+  cursor: pointer;
+    svg {
+      margin-top: -4px;
+      stroke: #BDBDBD;
+      transition: stroke 0.2s ease-in-out;
+    }
+
+  &:hover svg path {
+    stroke: var(--share-btn-svg-hover);
+  }
+
+  &:active svg path {
+    stroke: var(--share-btn-svg-active)
+  }
+}

@@ -88,7 +88,24 @@ $grey-darker: #BEB9B4;
   --disabled-btn-color: #F2F2F2;
   --disabled-btn-bg: #BEB9B4;
   --mobile-action-bar-bg: #FCFCFC;
-
+  --my-post-page-max-bg: #F6F6F6;
+  --add-post-page-bg: #FCFCFC;
+  --add-posts__navigate-color: #BDBDBD;
+  --posts__container-title-color: #EE683E;
+  --add-posts__input-bg: #F6F6F6;
+  --add-posts__input-color: #212121;
+  --add-posts__photo-label-border:  #BEB9B4;
+  --add-posts__input-border: none;
+  --add-posts__container-big-bg: #FCFCFC;
+  --upload-progress-bar-bg: #FFD1C3;
+  --photo-label-uploading-bg: #FFD1C3;
+  --posts__modal-bg: #FCFCFC;
+  --posts__modal-header-border: 1.5px solid #F2F2F2;
+  --posts__modal-color:  #212121;
+  --posts__modal-header: #EE683E;
+  --close-svg-color: #BDBDBD;
+  --profile__content-btn-hover-color: #212121;
+  --profile__content-btn-hover-bg: #FFD1C3;
 }
 
 [data-theme="dark"] {
@@ -159,6 +176,26 @@ $grey-darker: #BEB9B4;
   --disabled-btn-color: #FCFCFC;
   --disabled-btn-bg: #686868;
   --mobile-action-bar-bg: #171717;
+  --my-post-page-max-bg: #212121;
+  --add-post-page-bg: #303030;
+  --add-posts__navigate-color:  #686868;
+  --posts__container-title-color: #CD4E27;
+  --add-posts__input-bg: #303030;
+  --add-posts__input-color: #F6F6F6;
+  --add-posts__photo-label-border: #686868;
+  --add-posts__input-border: 1px solid #686868;
+  --add-posts__container-big-bg: #303030;
+  --upload-progress-bar-bg: #FD825D;
+  --photo-label-uploading-bg: #D2B7AF;
+  --posts__modal-bg: #303030;
+  --posts__modal-header-border: 1.5px solid #373737;
+  --posts__modal-color: #F6F6F6;
+  --posts__modal-header: #CD4E27;
+  --close-svg-color: #686868;
+  --profile__content-btn-hover-color: #101010;
+  --profile__content-btn-hover-bg: #FD825D;
+
+
 
 }
 
