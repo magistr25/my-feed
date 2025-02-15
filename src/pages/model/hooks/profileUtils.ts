@@ -31,7 +31,7 @@ class ProfileUtils {
     async handleUpdateProfile(
         formData: UserProfileData,
         setNotification: (msg: any) => void,
-        updateUserProfile: (
+        userEditProfile: (
             options?: MutationFunctionOptions<any, DefaultContext>
         ) => Promise<any>
     ) {
@@ -73,7 +73,7 @@ class ProfileUtils {
                 avatarUrl: finalAvatarUrl, // Теперь точно null при удалении
             };
 
-            const response = await updateUserProfile({
+            const response = await userEditProfile({
                 variables: { input: userProfileData },
                 context: {
                     headers: { Authorization: `Bearer ${token}` },

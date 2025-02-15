@@ -1,22 +1,23 @@
 import { useMutation } from "@apollo/client";
-import UPDATE_USER_PROFILE from "@/pages/api/mutations/updateUserProfile.ts";
+
+
 import { userVar } from "@/app/apollo/client.ts";
+import EDIT_USER_PROFILE from "../../api/mutations/updateUserProfile";
 
 export const useUpdateUserProfile = (setNotification: any) => {
-    const [updateUserProfile] = useMutation(UPDATE_USER_PROFILE, {
+    const [userEditProfile] = useMutation(EDIT_USER_PROFILE, {
         update: (cache, { data }) => {
-            if (!data?.updateUserProfile) return;
-
+            if (!data?.userEditProfile?.user) return;
             cache.modify({
                 fields: {
                     userMe(existingUserRef = {}) {
-                        return { ...existingUserRef, ...data.updateUserProfile };
+                        return { ...existingUserRef, ...data.userEditProfile.user };
                     },
                 },
             });
         },
         optimisticResponse: ({ input }) => ({
-            updateUserProfile: {
+            userEditProfile: {
                 __typename: "User",
                 id: userVar()?.id ?? "",
                 firstName: input.firstName,
@@ -36,5 +37,5 @@ export const useUpdateUserProfile = (setNotification: any) => {
         },
     });
 
-    return { updateUserProfile };
+    return { userEditProfile };
 };

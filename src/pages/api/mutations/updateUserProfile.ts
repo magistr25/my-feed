@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
-const UPDATE_USER_PROFILE = gql`
-    mutation UpdateUserProfile($input: EditProfileRequest!) {
+const EDIT_USER_PROFILE = gql`
+    mutation EditUserProfile($input: EditProfileRequest!) {
         userEditProfile(input: $input) {
             problem {
                 __typename
@@ -28,4 +28,4 @@ const UPDATE_USER_PROFILE = gql`
     }
 `;
 
-export default UPDATE_USER_PROFILE;
+export default EDIT_USER_PROFILE;

@@ -84,7 +84,7 @@ const ProfilePage: FC = () => {
     usePrefillUserForm(data, setValue, setBirthDate);
 
     // Использование хука для обновления профиля пользователя
-    const { updateUserProfile } = useUpdateUserProfile(setNotification);
+    const { userEditProfile } = useUpdateUserProfile(setNotification);
 
     // Автоматический скролл к активному полю при открытом ActionBar
     useAutoScrollToInput(isMobileActionBarOpen);
@@ -103,6 +103,8 @@ const ProfilePage: FC = () => {
     }, [userVar()]);
 
     useEffect(() => {
+        console.log("🛠 Обновляем initialValues, если пришли новые данные:", data?.userMe);
+
         if (data?.userMe) {
             const userData: User = {
                 id: data.userMe.id,
@@ -120,10 +122,19 @@ const ProfilePage: FC = () => {
             setInitialValues(userData);
             reset(userData);
             setBirthDate(data.userMe.birthDate ? new Date(data.userMe.birthDate) : null);
-            setAvatar(userData.avatarUrl ?? null);
 
+            // Обновляем `avatar`, но только если `userMe` обновился
+            setAvatar(prevAvatar => (prevAvatar !== userData.avatarUrl ? userData.avatarUrl ?? null : prevAvatar));
+
+        } else {
+            console.log("⚠ Нет данных о пользователе, сбрасываем форму");
+            setInitialValues(null);
+            reset({});
+            setBirthDate(null);
+            setAvatar(null); // Теперь точно сбросится дефолтная аватарка
         }
     }, [data, reset, setValue]);
+
 
     const handleResetForm = (event?: MouseEvent<HTMLButtonElement>) => {
         event?.preventDefault();
@@ -160,7 +171,7 @@ const ProfilePage: FC = () => {
                             await profileUtils.handleUpdateProfile(
                                 { ...data, id: userVar()?.id ?? "", avatarUrl: avatarUrlVar() },
                                 setNotification,
-                                updateUserProfile
+                                userEditProfile
                             )
                         })}
 
