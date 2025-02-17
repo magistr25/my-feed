@@ -1,0 +1,174 @@
+input CreatePostRequest {
+  description: String!
+  mediaUrl: String!
+  title: String!
+}
+
+type DeletePostResponse {
+  id: String!
+  ok: Boolean!
+}
+
+union EditProfileProblemUnion =
+    EmailAlreadyUsedProblem
+  | PhoneAlreadyUsedProblem
+
+input EditProfileRequest {
+  avatarUrl: String
+
+  # ex. 1996-09-23
+  birthDate: String
+  country: String
+  email: String!
+  firstName: String
+  gender: GenderType
+  lastName: String
+  middleName: String
+  phone: String
+}
+
+type EditProfileResponse {
+  problem: EditProfileProblemUnion
+  user: UserModel
+}
+
+type EmailAlreadyUsedProblem {
+  message: String!
+}
+
+type EmailOrPasswordIncorrectProblem {
+  message: String!
+}
+
+type FindFavouritePostsPaginationResponse {
+  data: [PostModel!]
+  pageInfo: PageAfterCursorInfo
+}
+
+input FindFavouritePostsRequest {
+  afterCursor: String
+  limit: Int = 10
+}
+
+type FindMyPostsPaginationResponse {
+  data: [PostModel!]
+  pageInfo: PageAfterCursorInfo
+}
+
+input FindMyPostsRequest {
+  afterCursor: String
+  limit: Int = 10
+}
+
+type FindPostsPaginationResponse {
+  data: [PostModel!]
+  pageInfo: PageAfterCursorInfo
+}
+
+input FindPostsRequest {
+  afterCursor: String
+  limit: Int = 10
+  type: PostFilterType!
+}
+
+enum GenderType {
+  FEMALE
+  MALE
+}
+
+type Mutation {
+  postCreate(input: CreatePostRequest!): PostModel!
+  postDelete(input: PostIdRequest!): DeletePostResponse!
+  postLike(input: PostIdRequest!): PostModel!
+  postUnlike(input: PostIdRequest!): PostModel!
+  userEditProfile(input: EditProfileRequest!): EditProfileResponse!
+  userSignIn(input: SignInRequest!): SignInResponse!
+  userSignUp(input: SignUpRequest!): SignUpResponse!
+}
+
+type PageAfterCursorInfo {
+  afterCursor: String
+  count: Float!
+  perPage: Float!
+}
+
+type PhoneAlreadyUsedProblem {
+  message: String!
+}
+
+enum PostFilterType {
+  NEW
+  TOP
+}
+
+input PostIdRequest {
+  # post id
+  id: String!
+}
+
+type PostModel {
+  author: UserModel!
+  authorId: String!
+  createdAt: String!
+  deletedAt: String
+  description: String!
+
+  # ex. 2cdc8ab1-6d50-49cc-ba14-54e4ac7ec231
+  id: String!
+  isLiked: Boolean!
+  likesCount: Float!
+  mediaUrl: String!
+  title: String!
+  updatedAt: String!
+}
+
+type Query {
+  favouritePosts(
+    input: FindFavouritePostsRequest!
+  ): FindFavouritePostsPaginationResponse!
+  myPosts(input: FindMyPostsRequest!): FindMyPostsPaginationResponse!
+  post(input: PostIdRequest!): PostModel!
+  posts(input: FindPostsRequest!): FindPostsPaginationResponse!
+  userMe: UserModel!
+}
+
+input SignInRequest {
+  email: String!
+  password: String!
+}
+
+type SignInResponse {
+  problem: EmailOrPasswordIncorrectProblem
+  token: String
+  user: UserModel
+}
+
+input SignUpRequest {
+  email: String!
+  password: String!
+  passwordConfirm: String!
+}
+
+type SignUpResponse {
+  problem: EmailAlreadyUsedProblem
+  token: String
+  user: UserModel
+}
+
+type UserModel {
+  avatarUrl: String
+  birthDate: String
+  country: String
+  createdAt: String!
+  deletedAt: String
+  email: String!
+  firstName: String
+  gender: String
+
+  # ex. 2cdc8ab1-6d50-49cc-ba14-54e4ac7ec231
+  id: String!
+  lastName: String
+  middleName: String
+  phone: String
+  updatedAt: String!
+}
