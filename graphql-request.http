@@ -4,7 +4,7 @@
 
 
 ### Запрос постов
-POST https://internship-social-media.purrweb.com/graphql
+POST https://internship-social-media.purrweb.net/graphql
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI4MTY2MGMzLWJiNmYtNDE1Ny1iN2FkLTYwYjBhNTg2YWNhZSIsImVtYWlsIjoidGVzdEBleGFtcGxlNjU1MzguY29tIiwidG9rZW5UeXBlIjoiVVNFUiIsImV4cGlyYXRpb24iOiIyMDI1LTAxLTI2VDA5OjQ1OjU1LjY4NFoiLCJpYXQiOjE3Mzc4MjQyNzUsImV4cCI6MTczNzg4NDc1NX0.KdMAGoSt638bfGIgRFPxSMMpjRv2i3TEAf8o3Xpcao0
 

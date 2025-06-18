@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const SERVER_URL = "https://internship-social-media.purrweb.com";
+const SERVER_URL = "https://internship-social-media.purrweb.net";
 
 export const uploadToS3 = async (file: File): Promise<string> => {
     try {
