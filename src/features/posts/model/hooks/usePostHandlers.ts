@@ -56,25 +56,30 @@ export const usePostHandlers = ({ reset, trigger, setValue, oldPostId = "" }: Us
     };
 
     const onSubmit = async (message: string) => {
+        const titleValue = titleVar() || "";
+        const descriptionValue = descriptionVar() || "";
+
+        if (!titleValue.trim() && !descriptionValue.trim() && oldPostId) {
+            await deletePostMutation({ variables: { input: { id: oldPostId } } });
+            return;
+        }
+
         try {
             if (!imageVar()) {
-                console.error("Ошибка: изображение не загружено.");
                 return;
             }
 
             if (descriptionVar().length < 40) {
-                console.error("Ошибка: Описание должно содержать минимум 40 символов.");
                 return;
             }
 
-            // Удаляем старый пост, если редактируем
             if (oldPostId) {
                 await deletePostMutation({
                     variables: { input: { id: oldPostId } },
                     update(cache) {
                         cache.modify({
                             fields: {
-                                posts(existingPosts = []) {  // Гарантируем, что existingPosts - это массив
+                                posts(existingPosts = []) {
                                     if (!Array.isArray(existingPosts)) return [];
                                     return existingPosts.filter((post: any) => post.__ref !== `Post:${oldPostId}`);
                                 },
@@ -84,23 +89,12 @@ export const usePostHandlers = ({ reset, trigger, setValue, oldPostId = "" }: Us
                 });
             }
 
-            // Загружаем новое изображение
             const mediaUrl = await PostUtils.uploadImageAndGetUrl(imageVar()!);
             if (!mediaUrl) {
                 console.error("Ошибка загрузки изображения.");
                 return;
             }
 
-            // Создаём оптимистичный пост
-            const optimisticPost = {
-                __typename: "Post",
-                id: `temp-${Date.now()}`,
-                title: titleVar(),
-                description: descriptionVar(),
-                mediaUrl,
-            };
-
-            // Отправляем мутацию создания поста
             await createPostMutation({
                 variables: {
                     input: {
@@ -109,28 +103,10 @@ export const usePostHandlers = ({ reset, trigger, setValue, oldPostId = "" }: Us
                         mediaUrl,
                     },
                 },
-                optimisticResponse: {
-                    __typename: "Mutation",
-                    postCreate: optimisticPost,
-                },
-                update(cache, { data }) {
-                    if (data?.postCreate) {
-                        cache.modify({
-                            fields: {
-                                posts(existingPosts = []) {  // Проверяем, что это массив
-                                    if (!Array.isArray(existingPosts)) return [data.postCreate];
-                                    return [...existingPosts, data.postCreate];
-                                },
-                            },
-                        });
-                    }
-                },
             });
 
-            // Уведомление об успешном сохранении
             notificationVar({ message: message, type: "success" });
 
-            // Даем время на отображение уведомления
             setTimeout(() => {
                 navigate("/my-posts/view");
                 handleCancel();
@@ -141,10 +117,6 @@ export const usePostHandlers = ({ reset, trigger, setValue, oldPostId = "" }: Us
             notificationVar({ message: "Ошибка при сохранении", type: "error" });
         }
     };
-
-
-
-
 
     return { handleDrop, handleFileChange, handleCancel, onSubmit };
 };

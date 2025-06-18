@@ -33,21 +33,7 @@ export const useRegistration = () => {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
-    const { register, handleSubmit, formState: { errors }, watch, setError, reset, trigger, clearErrors,
-        setValue } = useForm<RegisterFormInputs>({
-        defaultValues: {
-            firstName: '',
-            lastName: '',
-            middleName: '',
-            gender: '',
-            birthDate: '',
-            phone: '',
-            email: '',
-            password: '',
-            confirmPassword: '',
-            country: '',
-            avatar: '',
-        },
+    const { register, handleSubmit, formState: { errors }, watch, setError, reset, trigger, clearErrors, setValue } = useForm<RegisterFormInputs>({
         mode: 'onBlur',
         reValidateMode: 'onBlur',
     });
@@ -94,8 +80,12 @@ export const useRegistration = () => {
     };
 
     const handleGraphQLErrors = (e: unknown) => {
+        console.error("🚨 GraphQL Ошибка:", e);
+
         if (e instanceof ApolloError) {
             e.graphQLErrors.forEach((graphQLError: GraphQLFormattedError) => {
+                console.error("🛑 GraphQL Response Error:", graphQLError);
+
                 if (graphQLError.extensions?.code === 'UNAUTHENTICATED') {
                     setNotification({ message: 'Этот email уже используется. Необходима авторизация.', type: 'error' });
                     localStorage.removeItem('authToken');
@@ -107,10 +97,13 @@ export const useRegistration = () => {
                 }
             });
         } else {
+            console.error("❌ Неизвестная ошибка:", e);
             setNotification({ message: 'Произошла неизвестная ошибка. Пожалуйста, попробуйте снова.', type: 'error' });
-            navigate('/error-500');
+            // УБИРАЕМ редирект на страницу 500
+            // navigate('/error-500');
         }
     };
+
 
     const onSubmit: SubmitHandler<RegisterFormInputs> = async (data) => {
         if (step === 1) {
@@ -142,10 +135,22 @@ export const useRegistration = () => {
                     middleName: '',
                 });
             } catch (e) {
+                console.error("🚨 Ошибка при отправке запроса:", e);
                 handleGraphQLErrors(e);
             }
         } else {
             try {
+                setValue("firstName", watch("firstName") || "");
+                setValue("lastName", watch("lastName") || "");
+                setValue("middleName", watch("middleName") || "");
+                const token = localStorage.getItem("authToken");
+                console.log("📤 Данные перед отправкой:", {
+                    email: email,
+                    firstName: data.firstName,
+                    lastName: data.lastName,
+                    middleName: data.middleName,
+                });
+
                 const response = await completeProfile({
                     variables: {
                         input: {
@@ -153,6 +158,11 @@ export const useRegistration = () => {
                             firstName: data.firstName,
                             lastName: data.lastName,
                             middleName: data.middleName,
+                        },
+                    },
+                    context: {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
                         },
                     },
                 });

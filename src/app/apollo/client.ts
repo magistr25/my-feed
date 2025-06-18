@@ -43,7 +43,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 });
 // Создаем ссылку на GraphQL endpoint
 const httpLink = createHttpLink({
-    uri: 'https://internship-social-media.purrweb.com/graphql',
+    uri: 'https://internship-social-media.purrweb.net/graphql',
 });
 
 // Middleware для добавления токена в заголовки

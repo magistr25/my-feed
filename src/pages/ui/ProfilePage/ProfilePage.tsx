@@ -14,6 +14,7 @@ import MobileActionBar from "@/shared/ui/MobileActionBar/MobileActionBar";
 
 import { useQuery, useReactiveVar } from "@apollo/client";
 import {
+    avatarUrlVar,
     mobileActionBarVar,
     mobileMenuVar,
     showActionBarVar,
@@ -83,7 +84,7 @@ const ProfilePage: FC = () => {
     usePrefillUserForm(data, setValue, setBirthDate);
 
     // Использование хука для обновления профиля пользователя
-    const { updateUserProfile } = useUpdateUserProfile(setNotification);
+    const { userEditProfile } = useUpdateUserProfile(setNotification);
 
     // Автоматический скролл к активному полю при открытом ActionBar
     useAutoScrollToInput(isMobileActionBarOpen);
@@ -102,6 +103,8 @@ const ProfilePage: FC = () => {
     }, [userVar()]);
 
     useEffect(() => {
+        console.log("🛠 Обновляем initialValues, если пришли новые данные:", data?.userMe);
+
         if (data?.userMe) {
             const userData: User = {
                 id: data.userMe.id,
@@ -119,10 +122,19 @@ const ProfilePage: FC = () => {
             setInitialValues(userData);
             reset(userData);
             setBirthDate(data.userMe.birthDate ? new Date(data.userMe.birthDate) : null);
-            setAvatar(userData.avatarUrl ?? null);
 
+            // Обновляем `avatar`, но только если `userMe` обновился
+            setAvatar(prevAvatar => (prevAvatar !== userData.avatarUrl ? userData.avatarUrl ?? null : prevAvatar));
+
+        } else {
+            console.log("⚠ Нет данных о пользователе, сбрасываем форму");
+            setInitialValues(null);
+            reset({});
+            setBirthDate(null);
+            setAvatar(null); // Теперь точно сбросится дефолтная аватарка
         }
     }, [data, reset, setValue]);
+
 
     const handleResetForm = (event?: MouseEvent<HTMLButtonElement>) => {
         event?.preventDefault();
@@ -155,13 +167,14 @@ const ProfilePage: FC = () => {
                 <div className="profile-page-container">
                     <h1 className="profile-page__title">Мой профиль</h1>
                     <form
-                        onSubmit={handleSubmit((data) =>
-                            profileUtils.handleUpdateProfile(
-                                { ...data, id: userVar()?.id ?? "", avatarUrl: avatar },
+                        onSubmit={handleSubmit(async (data) => {
+                            await profileUtils.handleUpdateProfile(
+                                { ...data, id: userVar()?.id ?? "", avatarUrl: avatarUrlVar() },
                                 setNotification,
-                                updateUserProfile
+                                userEditProfile
                             )
-                        )}
+                        })}
+
                         className="profile-form"
                         autoComplete="off"
                         noValidate
@@ -171,12 +184,15 @@ const ProfilePage: FC = () => {
                                 userAvatarUrl={avatar}
                                 onAvatarChange={(newAvatar) => {
                                     if (newAvatar instanceof File) {
-                                        setAvatar(URL.createObjectURL(newAvatar)); // Создаём временный URL для превью
+                                        profileUtils.handleAvatarChange(newAvatar);
+                                        setAvatar(URL.createObjectURL(newAvatar));
                                     } else {
-                                        setAvatar(newAvatar); // null, если сбрасываем фото
+                                        profileUtils.handleAvatarChange(null); // Если удаляем, передаём null
+                                        setAvatar(null);
                                     }
                                 }}
                             />
+
                         </div>
                         <FormInputGroup
                             label="Имя"

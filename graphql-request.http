@@ -1,0 +1,149 @@
+### Запрос авторизации (получение токена)
+
+
+
+
+### Запрос постов
+POST https://internship-social-media.purrweb.net/graphql
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI4MTY2MGMzLWJiNmYtNDE1Ny1iN2FkLTYwYjBhNTg2YWNhZSIsImVtYWlsIjoidGVzdEBleGFtcGxlNjU1MzguY29tIiwidG9rZW5UeXBlIjoiVVNFUiIsImV4cGlyYXRpb24iOiIyMDI1LTAxLTI2VDA5OjQ1OjU1LjY4NFoiLCJpYXQiOjE3Mzc4MjQyNzUsImV4cCI6MTczNzg4NDc1NX0.KdMAGoSt638bfGIgRFPxSMMpjRv2i3TEAf8o3Xpcao0
+
+{
+  "operationName": "GetPosts",
+  "variables": {
+    "input": {
+      "limit": 10,
+      "type": "NEW",
+      "afterCursor": null
+    }
+  },
+  "query": "query GetPosts($input: FindPostsRequest!) { posts(input: $input) { data { id title description mediaUrl createdAt author { id firstName lastName avatarUrl __typename } __typename } pageInfo { afterCursor count perPage __typename } __typename } }"
+}
+
+###
+
+### Request to get GraphQL Schema
+// Our server works with the following GraphQL schema
+GET http://{{$exampleServer}}/graphql
+
+>> {{$historyFolder}}/examples.graphqls
+
+### Simple Query over HTTP
+// We just write a GraphQL query in the request body
+GRAPHQL http://{{$exampleServer}}/graphql
+
+query {
+    getUser(userName: "My Favorite User") {
+        name
+        comments {
+            text
+            by
+        }
+    }
+}
+
+### Query with variables
+// To specify GraphQL variables, add JSON after a query
+GRAPHQL https://{{$exampleServer}}/graphql
+
+query retrivingComments($commentsInfix: String) {
+    getCommentsWith(text: $commentsInfix) {
+        text
+        by
+    }
+}
+
+{
+  "commentsInfix": "GraphQL in HTTP Client!"
+}
+
+### Queries over WebSocket
+// If server supports WebSocket for GraphQL, we can use it for sending requests via WebSocket
+GRAPHQL ws://{{$exampleServer}}/graphql-ws
+
+mutation creatingNewComment($text: String) {
+    newComment(userName: "JetBrains user", text: $text) {
+        by
+        text
+    }
+}
+
+{
+  "text": "GraphQL over WebSocket!"
+}
+
+### Subscriptions over WebSockets
+// WebSockets are handy for GraphQL subscriptions
+GRAPHQL ws://{{$exampleServer}}/graphql-ws
+
+subscription {
+    newComments {
+        text
+        by
+    }
+}
+
+
+### Response Scripts for GraphQL over HTTP
+GRAPHQL https://{{$exampleServer}}/graphql
+
+query retrivingRequests($commentsInfix: String) {
+    getCommentsWith(text: $commentsInfix) {
+        text
+        by
+    }
+}
+
+{
+  "commentsInfix": "Inside script!"
+}
+
+> {%
+  // In HTTP, our response is just a JSON object
+  response.body.data.getCommentsWith.forEach((comment, i) => {
+    client.test("Checking " + i, () => {
+      client.assert(comment.text.includes("Inside script!"))
+      client.assert(comment.by !== undefined)
+    })
+  })
+%}
+
+### Response Scripts for GraphQL over WebSocket
+GRAPHQL ws://{{$exampleServer}}/graphql-ws
+
+subscription {
+    newComments {
+        text
+        by
+    }
+}
+
+> {%
+  let i = 0;
+  // In WebSocket, response is a stream
+  response.body.onEachMessage((message, unsubscribe) => {
+    i++;
+    client.test("Response " + i + " contains 'text' and 'by'", () => {
+      client.assert(message.text !== undefined)
+      client.assert(message.by !== undefined)
+    });
+    if (i === 10) {
+      unsubscribe()
+    }
+  });
+%}
+
+### Realtime request to AWS AppSync
+// HTTP Client support protocol over WebSocket for realtime requests in AWS AppSync
+// 'header' query parameter is mandatory for AWS AppSync, and HTTP Client can automatically encode it with Base64.
+// So in '.http' file 'header' param can be plain JSON with required for authorization fields only.
+GRAPHQL wss://{{$placeholder}}.appsync-realtime-api.eu-west-1.amazonaws.com/graphql?
+    header={"host": "{{$placeholder}}.appsync-api.eu-west-1.amazonaws.com", "x-api-key": "{{aws-key}}"}
+Sec-WebSocket-Protocol: aws-app-sync // With 'aws-app-sync' HTTP Client sends GraphQL request to AWS with proper protocol
+
+subscription SubscribeToData {
+    subscribe(name:"robots") {
+        name
+        data
+    }
+}
