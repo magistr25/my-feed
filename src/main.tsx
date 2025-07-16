@@ -4,7 +4,7 @@ import {ApolloProvider} from "@apollo/client";
 import {StrictMode} from 'react'
 import {createRoot} from 'react-dom/client'
 import {Provider} from "react-redux";
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import {HashRouter, Route, Routes} from "react-router-dom";
 import {PersistGate} from 'redux-persist/integration/react';
 
 import {persistor, store} from "@/app/store/store";
@@ -27,7 +27,7 @@ createRoot(window.document.getElementById('root')!).render(
         <ApolloProvider client={client}>
             <Provider store={store}>
                 <PersistGate loading={null} persistor={persistor}>
-                    <BrowserRouter>
+                    <HashRouter>
                         <Routes>
                             <Route path="/" element={<App/>}>
                                 <Route index element={<HomePage/>}/>
@@ -41,7 +41,7 @@ createRoot(window.document.getElementById('root')!).render(
                                 <Route path="/my-posts/redactions" element={<MyPostsRedactionsPage />}/>
                             </Route>
                         </Routes>
-                    </BrowserRouter>
+                    </HashRouter>
                 </PersistGate>
             </Provider>
         </ApolloProvider>
